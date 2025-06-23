@@ -1,18 +1,13 @@
 const express = require('express');
 // Import des routes
 const userRoute = require('./routes/UserRoute');
-const doctorRoute = require('./routes/doctorRoute');
-const patientRoute = require('./routes/PatientRoute');
 const fournisseurRoute = require('./routes/FournisseurRoute');
-const materielRoute = require('./routes/MaterielRoute');
-const traitementRoute = require('./routes/TraitementRoute');
-const chambreRoute = require('./routes/ChambreRoute');
-const medicamentRoute = require('./routes/MedicamentRoute');
-const ordonnanceRoute = require('./routes/OrdonnanceRoute');
+const produitRoute = require('./routes/ProduittRoute');
+const commandeRoute = require('./routes/CommandeRoute');
 const paiementRoute = require('./routes/PaiementRoute');
 const approvisonementsRoute = require('./routes/ApprovisonementRoute');
-const appointmentRoute = require('./routes/AppointementRoute');
 const depenseRoute = require('./routes/DepenseRoute');
+const appointmentRoute = require('./routes/AppointementRoute');
 
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -30,37 +25,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Utilisation des routes étudiant
 // Ajoute un préfixe /api à toutes les routes
 
-app.use('/', patientRoute);
+app.use('/', userRoute);
 
 // Utilisation des routes Utilisateur
 app.use('/api/users', userRoute);
 
-// Utilisation des routes Année Scolaire
-app.use('/api/patients', patientRoute);
-
-// Utilisation des routes Année Scolaire
-app.use('/api/doctors', doctorRoute);
-
 // Utilisation des routes Classe
-app.use('/api/medicaments', medicamentRoute);
+app.use('/api/produits', produitRoute);
 
 // Utilisation des routes Etudiant
 app.use('/api/fournisseurs', fournisseurRoute);
 
-// Utilisation des routes Enseignant
-app.use('/api/materiels', materielRoute);
-
-// Utilisation des routes Paiement
-app.use('/api/traitements', traitementRoute);
-
-// Utilisation des routes Chambre
-app.use('/api/chambres', chambreRoute);
-
-// Utilisation des routes Medicaments
-app.use('/api/medicaments', medicamentRoute);
-
 // Utilisation des routes Ordonnance
-app.use('/api/ordonnances', ordonnanceRoute);
+app.use('/api/commandes', commandeRoute);
 
 // Utilisation des routes Ordonnance
 app.use('/api/paiements', paiementRoute);

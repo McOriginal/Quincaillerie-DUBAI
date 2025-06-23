@@ -1,23 +1,23 @@
 const Approvisonement = require('../models/ApprovisonementModel');
-const Medicament = require('../models/MedicamentModel');
+const Produit = require('../models/ProduitModel');
 
 // Create a new approvisonement
 exports.createApprovisonement = async (req, res) => {
   try {
-    const { medicament, quantity, price, ...restOfData } = req.body;
+    const { produit, quantity, price, ...restOfData } = req.body;
     // On change les valeurs quantity et price en nombres
     formatQuantity = Number(quantity);
     formatPrice = Number(price);
 
-    // Medicament ID
-    // const medicamentID = await Medicament.findById(req.params.medicament_id);
-    if (!medicament) {
-      return res.status(404).json({ message: 'Médicament non trouvée' });
+    // Produit ID
+    // const ProduitID = await Produit.findById(req.params.Produit_id);
+    if (!produit) {
+      return res.status(404).json({ message: 'Produit non trouvée' });
     }
 
-    // On ajoute la quantité sur le stock disponible de médicament
-    await Medicament.findByIdAndUpdate(
-      medicament,
+    // On ajoute la quantité sur le stock disponible de Produit
+    await Produit.findByIdAndUpdate(
+      produit,
       { $inc: { stock: formatQuantity } },
       { new: true }
     );
@@ -27,7 +27,7 @@ exports.createApprovisonement = async (req, res) => {
       ...restOfData,
       quantity: formatQuantity,
       price: formatPrice,
-      medicament,
+      Produit,
     });
 
     return res.status(201).json(approvisonement);
@@ -42,7 +42,7 @@ exports.getAllApprovisonements = async (req, res) => {
     const approvisonements = await Approvisonement.find()
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 })
-      .populate('medicament')
+      .populate('Produit')
       .populate('fournisseur');
     return res.status(200).json(approvisonements);
   } catch (error) {
@@ -54,7 +54,7 @@ exports.getAllApprovisonements = async (req, res) => {
 exports.getApprovisonementById = async (req, res) => {
   try {
     const approvisonement = await Approvisonement.findById(req.params.id)
-      .populate('medicament')
+      .populate('Produit')
       .populate('fournisseur');
 
     if (!approvisonement) {
@@ -78,9 +78,9 @@ exports.deleteApprovisonement = async (req, res) => {
       return res.status(404).json({ message: 'Approvisonement not found' });
     }
 
-    // On décrémente le stock du médicament associé
-    await Medicament.findByIdAndUpdate(
-      approvisonement.medicament,
+    // On décrémente le stock du Produit associé
+    await Produit.findByIdAndUpdate(
+      approvisonement.Produit,
       { $inc: { stock: -approvisonement.quantity } },
       { new: true }
     );

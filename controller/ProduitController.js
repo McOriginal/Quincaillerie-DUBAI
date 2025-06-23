@@ -106,8 +106,8 @@ exports.getAllProduits = async (req, res) => {
 //  Afficher une seule Produit
 exports.getOneProduit = async (req, res) => {
   try {
-    const Produits = await Produit.findById(req.params.id);
-    return res.status(200).json(Produits);
+    const produits = await Produit.findById(req.params.id);
+    return res.status(200).json(produits);
   } catch (err) {
     return res.status(400).json({ status: 'error', message: err.message });
   }

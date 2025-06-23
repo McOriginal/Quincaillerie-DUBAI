@@ -29,13 +29,7 @@ exports.getAllPaiements = async (req, res) => {
     const paiements = await Paiement.find()
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 })
-      .populate({
-        path: 'traitement',
-        populate: {
-          path: 'patient',
-        },
-      })
-      .populate('ordonnance');
+      .populate('commande');
     return res.status(200).json(paiements);
   } catch (err) {
     res.status(400).json({ status: 'error', message: err.message });
@@ -45,13 +39,7 @@ exports.getAllPaiements = async (req, res) => {
 exports.getPaiement = async (req, res) => {
   try {
     const paiements = await Paiement.findById(req.params.id)
-      .populate({
-        path: 'traitement',
-        populate: {
-          path: 'patient',
-        },
-      })
-      .populate('ordonnance');
+    .populate('commande');
     return res.status(200).json(paiements);
   } catch (err) {
     res.status(400).json({ status: 'error', message: err.message });

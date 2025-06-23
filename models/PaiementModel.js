@@ -33,15 +33,11 @@ const paiementSchema = new mongoose.Schema(
       default: 'Payé',
       required: true,
     },
-    // Clé de rélation Traitement
-    traitement: {
+
+    // Clé de rélation COMMANDE
+    commande: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Traitement',
-    },
-    // Clé de rélation Patient
-    ordonnance: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ordonnance',
+      ref: 'Commande',
     },
   },
   { timestamps: true }

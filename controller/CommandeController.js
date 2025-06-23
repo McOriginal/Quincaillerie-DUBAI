@@ -4,29 +4,27 @@ const Produit = require('../models/ProduitModel');
 // Créer une COMMANDE
 exports.createCommande = async (req, res) => {
   try {
-    const { items, ...restOfData } = req.body;
+    const { fullName, phoneNumber, adresse, items, ...restOfData } = req.body;
+    const lowerName = fullName.toLowerCase();
+    const lowerAdresse = adresse.toLowerCase();
+    const formattedPhoneNumber = Number(phoneNumber);
 
-    // Vérification des items et existence des produits
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: 'Les articles sont requis.' });
-    }
+    // Vérification si le numéro de téléphone n'existe pas déjà pour un autre client
+    const existePhoneNumber = await Commande.findOne({
+      phoneNumber: formattedPhoneNumber,
+    }).exec();
 
-    for (const item of items) {
-      const produit = await produit.findById(item.produit);
-      if (!produit) {
-        return res
-          .status(404)
-          .json({ message: `produit introuvable: ${item.produit}` });
-      }
-      if (item.quantity < 1) {
-        return res
-          .status(400)
-          .json({ message: 'Quantité invalide pour un produit.' });
-      }
+    if (existePhoneNumber) {
+      return res
+        .status(400)
+        .json({ message: 'Ce number de téléphone existe déjà.' });
     }
 
     const newCommande = await Commande.create({
       items,
+      fullName: lowerName,
+      adresse: lowerAdresse,
+      phoneNumber: formattedPhoneNumber,
       ...restOfData,
     });
 
@@ -43,7 +41,6 @@ exports.getAllCommandes = async (req, res) => {
     const commandes = await Commande.find()
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 })
-      .populate('produit')
       .populate('items.produit');
     return res.status(201).json(commandes);
   } catch (e) {
