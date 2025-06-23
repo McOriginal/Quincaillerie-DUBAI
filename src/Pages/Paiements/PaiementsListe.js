@@ -4,7 +4,11 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import FormModal from '../components/FormModal';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
+import {
+  capitalizeWords,
+  formatPhoneNumber,
+  formatPrice,
+} from '../components/capitalizeFunction';
 import { deleteButton } from '../components/AlerteModal';
 import { useAllPaiements, useDeletePaiement } from '../../Api/queriesPaiement';
 import PaiementForm from './PaiementForm';
@@ -23,11 +27,9 @@ export default function PaiementsListe() {
   const filterSearchPaiement = paiementsData?.filter((paiement) => {
     const search = searchTerm.toLowerCase();
     return (
-      `${paiement.traitement['patient'].firstName} ${paiement.traitement['patient'].lastName}`
-        .toLowerCase()
-        .includes(search) ||
-      paiement.traitement['patient'].gender.toLowerCase().includes(search) ||
-      paiement.traitement['motif'].toLowerCase().includes(search) ||
+      `${paiement?.commande?.fulltName}`.toLowerCase().includes(search) ||
+      paiement?.commande?.adresse.toLowerCase().includes(search) ||
+      (paiement?.commande?.phoneNumber || '').toString().includes(search) ||
       paiement.totalAmount.toString().includes(search) ||
       (paiement.totalPaye || '').toString().includes(search) ||
       (paiement.reduction || 0).toString().includes(search) ||
@@ -136,13 +138,16 @@ export default function PaiementsListe() {
                                 >
                                   Date de Paiement
                                 </th>
-                                <th data-sort='paiement_name'>Patient(e)</th>
+                                <th data-sort='client'>Client</th>
 
-                                <th data-sort='genre'>Genre</th>
-                                <th data-sort='date'>Date de naissance</th>
-                                <th data-sort='traitement'>Maladie Traitée</th>
+                                <th data-sort='phoneNumber'>Téléphone</th>
+                                <th data-sort='adresse'>
+                                  Adresse de Livraison
+                                </th>
 
-                                <th data-sort='totaAmount'>Somme Total</th>
+                                <th data-sort='totaAmount'>
+                                  Somme sur Facture
+                                </th>
                                 <th className='sort' data-sort='totaPayer'>
                                   Somme Payé
                                 </th>
@@ -171,28 +176,17 @@ export default function PaiementsListe() {
                                     ></td>
                                     <td>
                                       {capitalizeWords(
-                                        paiement.traitement['patient'].firstName
-                                      )}{' '}
-                                      {capitalizeWords(
-                                        paiement.traitement['patient'].lastName
+                                        paiement?.commande?.fullName
+                                      )}
+                                    </td>
+                                    <td>
+                                      {formatPhoneNumber(
+                                        paiement?.commande?.phoneNumber
                                       )}
                                     </td>
                                     <td>
                                       {capitalizeWords(
-                                        paiement.traitement['patient'].gender
-                                      )}{' '}
-                                    </td>
-                                    <td>
-                                      {new Date(
-                                        paiement.traitement[
-                                          'patient'
-                                        ].dateOfBirth
-                                      ).toLocaleDateString()}{' '}
-                                    </td>
-
-                                    <td>
-                                      {capitalizeWords(
-                                        paiement.traitement['motif']
+                                        paiement?.commande?.adresse
                                       )}
                                     </td>
 

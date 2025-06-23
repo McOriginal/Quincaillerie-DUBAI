@@ -16,30 +16,29 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 
-import { useAllMedicamentWithStockFinish } from '../../Api/queriesMedicament';
 import imgMedicament from './../../assets/images/medicament.jpg';
 import { useNavigate } from 'react-router-dom';
 
 export default function MedicamentSansStock() {
-  const {
-    data: medicaments,
-    isLoading,
-    error,
-  } = useAllMedicamentWithStockFinish();
+  // const {
+  //   data: medicaments,
+  //   isLoading,
+  //   error,
+  // } = useAllMedicamentWithStockFinish();
 
   // Recherche State
   const [searchTerm, setSearchTerm] = useState('');
 
   // Fontion pour Rechercher
-  const filterSearchMedicaments = medicaments?.filter((medica) => {
-    const search = searchTerm.toLowerCase();
+  // const filterSearchMedicaments = medicaments?.filter((medica) => {
+  //   const search = searchTerm.toLowerCase();
 
-    return (
-      medica.name.toString().toLowerCase().includes(search) ||
-      medica.price.toString().includes(search) ||
-      medica.stock.toString().includes(search)
-    );
-  });
+  //   return (
+  //     medica.name.toString().toLowerCase().includes(search) ||
+  //     medica.price.toString().includes(search) ||
+  //     medica.stock.toString().includes(search)
+  //   );
+  // });
 
   // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
@@ -85,7 +84,7 @@ export default function MedicamentSansStock() {
             </Col>
           </Row>
           <Row>
-            {isLoading && <LoadingSpiner />}
+            {/* {isLoading && <LoadingSpiner />}
             {error && (
               <div className='text-danger text-center'>
                 Erreur lors de chargement des données
@@ -185,7 +184,7 @@ export default function MedicamentSansStock() {
                     </CardBody>
                   </Card>
                 </Col>
-              ))}
+              ))} */}
           </Row>
         </Container>
       </div>

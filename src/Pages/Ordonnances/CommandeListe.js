@@ -3,33 +3,21 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords } from '../components/capitalizeFunction';
 import { Link } from 'react-router-dom';
-import {
-  deleteButton,
-  errorMessageAlert,
-  successMessageAlert,
-} from '../components/AlerteModal';
-import {
-  useAllOrdonnances,
-  useDeleteOrdonnance,
-} from '../../Api/queriesOrdonnance';
+import { deleteButton } from '../components/AlerteModal';
 import React, { useState } from 'react';
-import OrdonnanceDetails from './OrdonnanceDetails';
-import { useCancelDecrementMultipleStocks } from '../../Api/queriesMedicament';
 import Swal from 'sweetalert2';
+import { useAllCommandes, useDeleteCommande } from '../../Api/queriesCommande';
 
-export default function OrdonnanceListe() {
-  // Afficher toutes les ordonnances
-  const { data: ordonnances, isLoading, error } = useAllOrdonnances();
+export default function CommandeListe() {
+  // Afficher toutes les commandes
+  const { data: commandes, isLoading, error } = useAllCommandes();
 
   // Suprimer une ordonnance
-  const { mutate: deleteOrdonnance, isLoading: isDeleting } =
-    useDeleteOrdonnance();
+  const { mutate: deleteCommande, isLoading: isDeleting } = useDeleteCommande();
 
   // ID de l'ordonnance sélectionnée pour les détails
   const [selectedOrdonnanceID, setSelectedOrdonnanceID] = useState(false);
   // Annuler une Ordonnance
-  const { mutate: cancelDecrementMultipleStocks } =
-    useCancelDecrementMultipleStocks();
 
   // ---------------------------
   const [show_modal, setShow_modal] = useState(false);
@@ -42,105 +30,95 @@ export default function OrdonnanceListe() {
     setShow_modal(!show_modal);
   }
 
-  // Cancel Ordonnances function
+  // Cancel commandes function
   // Annulé l'ordonnace et ajouté ses médicaments au stock
-  function cancelOrdonnance(ordo) {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success ms-2',
-        cancelButton: 'btn btn-danger me-2',
-      },
-      buttonsStyling: false,
-    });
+  // function cancelOrdonnance(ordo) {
+  //   const swalWithBootstrapButtons = Swal.mixin({
+  //     customClass: {
+  //       confirmButton: 'btn btn-success ms-2',
+  //       cancelButton: 'btn btn-danger me-2',
+  //     },
+  //     buttonsStyling: false,
+  //   });
 
-    swalWithBootstrapButtons
-      .fire({
-        title: `Attention après l'Annulation les médicaments dans l'ordonnance seront ajouter sur votre STOCK !  `,
-        text: ordo?.traitement['motif'],
-        icon: 'question',
-        iconColor: 'red',
-        showCancelButton: true,
-        confirmButtonText: 'Oui, Continuer',
-        cancelButtonText: 'Non, Annuler!',
-        reverseButtons: true,
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          try {
-            const payload = {
-              ordonnanceId: ordo._id,
-              items: ordo.items.map((item) => ({
-                medicamentId: item.medicaments, // ou item.ordonnance._id selon ta donnée
-                quantity: item.quantity,
-              })),
-            };
-            cancelDecrementMultipleStocks(payload, {
-              onSuccess: () => {
-                swalWithBootstrapButtons.fire({
-                  title: 'Supprimé!',
-                  text: `Ordonnance Annulé avec succès les médicaments sont ajouté sur le STOCK.`,
-                  icon: 'success',
-                });
-              },
-              onError: (e) => {
-                swalWithBootstrapButtons.fire({
-                  title: 'Erreur',
-                  text:
-                    e?.response?.data?.message ||
-                    'Une erreur est survenue lors de la suppression.',
-                  icon: 'error',
-                });
-              },
-            });
-          } catch (e) {
-            swalWithBootstrapButtons.fire({
-              title: 'Erreur',
-              text:
-                e ||
-                e?.response?.data?.message ||
-                "Une erreur est survenue lors de l'Annulation.",
-              icon: 'error',
-            });
-          }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: 'Ordonnance non Annulée',
-            icon: 'error',
-          });
-        }
-      });
-  }
+  //   swalWithBootstrapButtons
+  //     .fire({
+  //       title: `Attention après l'Annulation les médicaments dans l'ordonnance seront ajouter sur votre STOCK !  `,
+  //       text: ordo?.traitement['motif'],
+  //       icon: 'question',
+  //       iconColor: 'red',
+  //       showCancelButton: true,
+  //       confirmButtonText: 'Oui, Continuer',
+  //       cancelButtonText: 'Non, Annuler!',
+  //       reverseButtons: true,
+  //     })
+  //     .then((result) => {
+  //       if (result.isConfirmed) {
+  //         try {
+  //           const payload = {
+  //             ordonnanceId: ordo._id,
+  //             items: ordo.items.map((item) => ({
+  //               medicamentId: item.medicaments, // ou item.ordonnance._id selon ta donnée
+  //               quantity: item.quantity,
+  //             })),
+  //           };
+  //           cancelDecrementMultipleStocks(payload, {
+  //             onSuccess: () => {
+  //               swalWithBootstrapButtons.fire({
+  //                 title: 'Supprimé!',
+  //                 text: `Ordonnance Annulé avec succès les médicaments sont ajouté sur le STOCK.`,
+  //                 icon: 'success',
+  //               });
+  //             },
+  //             onError: (e) => {
+  //               swalWithBootstrapButtons.fire({
+  //                 title: 'Erreur',
+  //                 text:
+  //                   e?.response?.data?.message ||
+  //                   'Une erreur est survenue lors de la suppression.',
+  //                 icon: 'error',
+  //               });
+  //             },
+  //           });
+  //         } catch (e) {
+  //           swalWithBootstrapButtons.fire({
+  //             title: 'Erreur',
+  //             text:
+  //               e ||
+  //               e?.response?.data?.message ||
+  //               "Une erreur est survenue lors de l'Annulation.",
+  //             icon: 'error',
+  //           });
+  //         }
+  //       } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //         swalWithBootstrapButtons.fire({
+  //           title: 'Ordonnance non Annulée',
+  //           icon: 'error',
+  //         });
+  //       }
+  //     });
+  // }
   // ------------------------------------------------------------
 
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Traitements' breadcrumbItem='Ordonnances' />
+          <Breadcrumbs title='Commande' breadcrumbItem='Nouvelle Commande' />
           {/* -------------------------- */}
-          <OrdonnanceDetails
+          {/* <OrdonnanceDetails
             show_modal={show_modal}
             setForm_modal={setShow_modal}
             tog_show_modal={tog_show_modal}
             selectedOrdonnanceID={selectedOrdonnanceID} // Pass the selected ordonnance ID here
-          />
+          /> */}
           <Row>
             <Col lg={12}>
               <Card>
                 <CardBody>
-                  <div id='ordonnanceList'>
+                  <div id='commandeList'>
                     <Row className='g-4 mb-3'></Row>
-                    <p className='text-center my-4 text-warning'>
-                      Pour ajouter une Ordonnance vous devez retourner
-                      sélectionner le Traitement concernée,{' '}
-                      <Link
-                        to='/traitements'
-                        className='text-decoration-underline'
-                      >
-                        Cliquez ici
-                      </Link>{' '}
-                      pour retourner à la liste des Traitements.
-                    </p>
+
                     {error && (
                       <div className='text-danger text-center'>
                         Erreur de chargement des données
@@ -149,9 +127,9 @@ export default function OrdonnanceListe() {
                     {isLoading && <LoadingSpiner />}
 
                     <div className='table-responsive table-card mt-3 mb-1'>
-                      {ordonnances?.length === 0 && (
+                      {commandes?.length === 0 && (
                         <div className='text-center text-mutate'>
-                          Aucun ordo pour le moment !
+                          Aucune commande pour le moment !
                         </div>
                       )}
                       {!error && !isLoading && (
@@ -183,8 +161,8 @@ export default function OrdonnanceListe() {
                             </tr>
                           </thead>
                           <tbody className='list form-check-all text-center'>
-                            {ordonnances?.length > 0 &&
-                              ordonnances?.map((ordo, index) => (
+                            {commandes?.length > 0 &&
+                              commandes?.map((ordo, index) => (
                                 <tr key={ordo._id}>
                                   <th scope='row'>{index + 1}</th>
 
@@ -224,7 +202,6 @@ export default function OrdonnanceListe() {
                                           className='btn btn-sm btn-warning show-item-btn'
                                           data-bs-toggle='modal'
                                           data-bs-target='#showdetails'
-                                          onClick={() => cancelOrdonnance(ordo)}
                                         >
                                           Annuler
                                         </button>
@@ -254,7 +231,7 @@ export default function OrdonnanceListe() {
                                                 ordo._id,
                                                 'ordonnance: ' +
                                                   ordo.traitement['motif'],
-                                                deleteOrdonnance
+                                                deleteCommande
                                               );
                                             }}
                                           >

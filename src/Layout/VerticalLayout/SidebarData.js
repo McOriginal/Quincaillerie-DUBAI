@@ -16,6 +16,30 @@ const SidebarData = [
     isHasArrow: true,
     url: '/appointments',
   },
+  {
+    label: 'Produits',
+    icon: 'mdi mdi-calendar-outline',
+    isHasArrow: true,
+    url: '/produits',
+  },
+
+  {
+    label: 'Traitements & Ordonnances',
+    isMainMenu: true,
+  },
+
+  {
+    label: 'Commande',
+    icon: 'mdi mdi-calendar-outline',
+    isHasArrow: true,
+    url: '/commandes',
+  },
+  {
+    label: 'Nouvelle Commande',
+    icon: 'mdi mdi-calendar-outline',
+    isHasArrow: true,
+    url: '/newCommande',
+  },
 
   // --------------------------------------
 

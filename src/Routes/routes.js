@@ -34,9 +34,6 @@ import FournisseurListe from '../Pages/Fournisseurs/FournisseurListe.js';
 import TraitementDetails from '../Pages/Traitements/TraitementDetails.js';
 import Chambre from '../Pages/OutilsMedicals/Chambre.js';
 import Materiels from '../Pages/OutilsMedicals/MaterielsMedical.js';
-import MedicamentListe from '../Pages/Pharmacy/MedicamentListe.js';
-import NewOrdonance from '../Pages/Ordonnances/NewOrdonance.js';
-import OrdonnanceListe from '../Pages/Ordonnances/OrdonanceListe.js';
 import PaiementsListe from '../Pages/Paiements/PaiementsListe.js';
 import FactureDetails from '../Pages/Paiements/FactureDetails.js';
 import ApprovisonnementListe from '../Pages/Approvisonnements/ApprovisonnementListe.js';
@@ -45,10 +42,13 @@ import AppointmentListe from '../Pages/RendezVous/AppointmentListe.js';
 import FactureListe from '../Pages/Paiements/FactureListe.js';
 import DepenseListe from '../Pages/Depenses/DepenseListe.js';
 import Rapports from '../Pages/Raports/Rapports.js';
-import MedicamentSansStock from '../Pages/Pharmacy/MedicamentSansStock.js';
+import MedicamentSansStock from '../Pages/Produits/MedicamentSansStock.js';
 import UpdatePassword from '../Pages/Authentication/UpdatePassword.js';
 import VerifyCode from '../Pages/Authentication/VerifyCode.js';
 import ResetPassword from '../Pages/Authentication/ResetPassword.js';
+import ProduitListe from '../Pages/Produits/ProduitListe.js';
+import NewCommande from '../Pages/Ordonnances/NewCommande.js';
+import CommandeListe from '../Pages/Ordonnances/CommandeListe.js';
 
 const sharedRoutes = [
   //appointments
@@ -64,7 +64,7 @@ const sharedRoutes = [
   { path: '/traitements/details/:id', component: <TraitementDetails /> },
 
   // Traitement Detail
-  { path: '/traitements/ordonnance/:id', component: <NewOrdonance /> },
+  { path: '/newCommande', component: <NewCommande /> },
 
   // Changer le mot de passe
   { path: '/updatePassword', component: <UpdatePassword /> },
@@ -75,8 +75,8 @@ const authProtectedRoutes = [
   //dashboard
   { path: '/dashboard', component: <Dashboard /> },
 
-  // Ordonnance
-  { path: '/ordonnances', component: <OrdonnanceListe /> },
+  // Commandes
+  { path: '/commandes', component: <CommandeListe /> },
 
   // Doctors
   { path: '/doctors', component: <DoctorsListe /> },
@@ -110,10 +110,10 @@ const authProtectedRoutes = [
   { path: '/materiels', component: <Materiels /> },
 
   // Médicament Pharmaceutique
-  { path: '/medicaments', component: <MedicamentListe /> },
+  { path: '/produits', component: <ProduitListe /> },
 
   // Médicament Pharmaceutique
-  { path: '/medicaments_no_stock', component: <MedicamentSansStock /> },
+  // { path: '/medicaments_no_stock', component: <MedicamentSansStock /> },
 
   // Ajouter une Approvisonnement
   { path: '/approvisonnement/:id', component: <ApprovisonnementForm /> },

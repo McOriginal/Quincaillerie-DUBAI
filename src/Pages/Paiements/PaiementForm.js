@@ -20,9 +20,11 @@ import {
   useCreatePaiement,
   useUpdatePaiement,
 } from '../../Api/queriesPaiement';
-import { capitalizeWords } from '../components/capitalizeFunction';
-import { useAllTraitement } from '../../Api/queriesTraitement';
-import { useAllOrdonnances } from '../../Api/queriesOrdonnance';
+import {
+  capitalizeWords,
+  formatPhoneNumber,
+} from '../components/capitalizeFunction';
+import { useAllCommandes } from '../../Api/queriesCommande';
 
 const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
   // Paiement Query pour créer la Paiement
@@ -30,15 +32,12 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
   // Paiement Query pour Mettre à jour la Paiement
   const { mutate: updatePaiement } = useUpdatePaiement();
 
-  // Query Ordonnance
-  const { data: ordonnanceData } = useAllOrdonnances();
-
-  // Query pour affiche toutes les traitementData
+  // Query pour affiche toutes les commandeData
   const {
-    data: traitementData,
-    isLoading: isFetchingTraitement,
+    data: commandeData,
+    isLoading: isFetchingCommandes,
     error,
-  } = useAllTraitement();
+  } = useAllCommandes();
 
   // State pour gérer le chargement
   const [isLoading, setisLoading] = useState(false);
@@ -49,7 +48,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     enableReinitialize: true,
 
     initialValues: {
-      traitement: paiementToEdit?.traitement._id || '',
+      commande: paiementToEdit?.commande._id || '',
       paiementDate: paiementToEdit?.paiementDate.substring(0, 10) || '',
       totalAmount: paiementToEdit?.totalAmount || undefined,
       reduction: paiementToEdit?.reduction || undefined,
@@ -58,7 +57,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       statut: paiementToEdit?.statut || '',
     },
     validationSchema: Yup.object({
-      traitement: Yup.string().required('Ce champ est obligatoire'),
+      commande: Yup.string().required('Ce champ est obligatoire'),
       paiementDate: Yup.date().required('Ce champ est obligatoire'),
       totalAmount: Yup.number().required('Ce champ est obligatoire'),
       reduction: Yup.number().typeError('Ce doit être un nombre valide'),
@@ -117,35 +116,24 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       }
     },
   });
-  // Calcule de Somme Total en fonction de TRAITEMENT Sélectionné
+  // Calcule de Somme Total en fonction de commande Sélectionné
   useEffect(() => {
-    const selectedTraitement = traitementData?.find(
-      (t) => t._id === validation.values.traitement
+    // La COMMANDE sélectionnée
+    const selectedCommande = commandeData?.find(
+      (t) => t._id === validation.values.commande
     );
 
-    // Trouver l'ordonnaces en fonction de ID de traitement sélectionné
-    const selectedOrdonnance = ordonnanceData?.find(
-      (ordo) => ordo.traitement._id === validation.values.traitement
-    );
-
-    if (selectedTraitement) {
-      const traitementAmount = selectedTraitement.totalAmount || 0;
-      const ordonnancesAmount = selectedOrdonnance?.totalAmount || 0;
-      // Calculer le montant total en ajoutant le montant du traitement et de l'ordonnance
-      const totalTraitementOrdonnance = traitementAmount + ordonnancesAmount;
+    if (selectedCommande) {
+      // Calculer le montant total du commande
+      const commandeAmount = selectedCommande.totalAmount || 0;
       const reduction = Number(validation.values.reduction) || 0;
-      const finalAmount = Math.max(totalTraitementOrdonnance - reduction, 0);
+      const finalAmount = Math.max(commandeAmount - reduction, 0);
 
       if (validation.values.totalAmount !== finalAmount) {
         validation.setFieldValue('totalAmount', finalAmount);
       }
     }
-  }, [
-    ordonnanceData,
-    validation.values.traitement,
-    validation.values.reduction,
-    traitementData,
-  ]);
+  }, [validation.values.commande, validation.values.reduction, commandeData]);
 
   return (
     <Form
@@ -158,50 +146,42 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     >
       <Row>
         <Col md='12'>
-          {!error && isFetchingTraitement && <LoadingSpiner />}
+          {!error && isFetchingCommandes && <LoadingSpiner />}
           {error && (
             <p className='text-getRectCenter text-danger'>
               Erreur de chargement veillez acctualiser la page{' '}
             </p>
           )}
-          {!error && !isFetchingTraitement && (
+          {!error && !isFetchingCommandes && (
             <FormGroup className='mb-3'>
-              <Label htmlFor='traitement'>Traitement</Label>
+              <Label htmlFor='commande'>Commande</Label>
 
               <Input
-                name='traitement'
+                name='commande'
                 type='select'
                 className='form-control'
-                id='traitement'
+                id='commande'
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
-                value={validation.values.traitement || ''}
+                value={validation.values.commande || ''}
                 invalid={
-                  validation.touched.traitement && validation.errors.traitement
+                  validation.touched.commande && validation.errors.commande
                     ? true
                     : false
                 }
               >
-                <option value=''>Sélectionner le traitement</option>
-                {traitementData?.map((trait) => (
-                  <option key={trait._id} value={trait._id}>
-                    {capitalizeWords(trait.patient['firstName'])}{' '}
-                    {capitalizeWords(trait.patient['lastName'])}
-                    {' | '}
-                    {capitalizeWords(trait.motif)}
-                    {' | '}{' '}
-                    {new Date(trait.createdAt).toLocaleDateString('fr-Fr', {
-                      weekday: 'short',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
+                <option value=''>Sélectionner une Commande</option>
+                {commandeData?.map((com) => (
+                  <option key={com._id} value={com._id}>
+                    {capitalizeWords(com.fullName)} {' | '}
+                    {capitalizeWords(com.adresse)}
+                    {' | '} {formatPhoneNumber(com.phoneNumber)}
                   </option>
                 ))}
               </Input>
-              {validation.touched.traitement && validation.errors.traitement ? (
+              {validation.touched.commande && validation.errors.commande ? (
                 <FormFeedback type='invalid'>
-                  {validation.errors.traitement}
+                  {validation.errors.commande}
                 </FormFeedback>
               ) : null}
             </FormGroup>
@@ -212,12 +192,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       <Row>
         <Col md='12'>
           <FormGroup className='mb-3'>
-            <Label htmlFor='totalAmount'>
-              Somme Total{' '}
-              <span className='text-warning' style={{ fontSize: '10px' }}>
-                Traitement + ordonnances
-              </span>{' '}
-            </Label>
+            <Label htmlFor='totalAmount'>Somme Total sur Facture</Label>
 
             <Input
               name='totalAmount'

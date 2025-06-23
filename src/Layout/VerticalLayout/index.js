@@ -155,7 +155,12 @@ const Layout = (props) => {
         {/* ----------------------------------------------------- */}
         {/* ---------- Dinamyque SIDBAR Content------------------------------------ */}
 
-        {contentSidebar}
+        {/* {contentSidebar} */}
+        <Sidebar
+          theme={leftSideBarTheme}
+          type={leftSideBarType}
+          isMobile={isMobile}
+        />
 
         {/* ----------------------------------------------------- */}
 

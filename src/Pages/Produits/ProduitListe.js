@@ -19,32 +19,29 @@ import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 
 import { deleteButton } from '../components/AlerteModal';
-import {
-  useAllMedicament,
-  useDeleteMedicament,
-} from '../../Api/queriesMedicament';
-import MedicamentForm from './MedicamentForm';
-import imgMedicament from './../../assets/images/medicament.jpg';
+import defaultImg from './../../assets/images/medicament.jpg';
 import { useNavigate } from 'react-router-dom';
+import ProduitForm from './ProduitForm';
+import { useAllProduit, useDeleteProduit } from '../../Api/queriesProduits';
 
-export default function MedicamentListe() {
+export default function ProduitListe() {
   const [form_modal, setForm_modal] = useState(false);
-  const { data: medicaments, isLoading, error } = useAllMedicament();
-  const { mutate: deleteMedicament } = useDeleteMedicament();
-  const [medicamentToUpdate, setMedicamentToUpdate] = useState(null);
-  const [formModalTitle, setFormModalTitle] = useState('Ajouter un Médicament');
+  const { data: produits, isLoading, error } = useAllProduit();
+  const { mutate: deleteProduit } = useDeleteProduit();
+  const [produitToUpdate, setProduitToUpdate] = useState(null);
+  const [formModalTitle, setFormModalTitle] = useState('Ajouter un Produit');
 
   // Recherche State
   const [searchTerm, setSearchTerm] = useState('');
 
   // Fontion pour Rechercher
-  const filterSearchMedicaments = medicaments?.filter((medica) => {
+  const filterSearchProduits = produits?.filter((prod) => {
     const search = searchTerm.toLowerCase();
 
     return (
-      medica.name.toString().toLowerCase().includes(search) ||
-      medica.price.toString().includes(search) ||
-      medica.stock.toString().includes(search)
+      prod.name.toString().toLowerCase().includes(search) ||
+      prod.price.toString().includes(search) ||
+      prod.stock.toString().includes(search)
     );
   });
 
@@ -62,7 +59,7 @@ export default function MedicamentListe() {
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Pharmacie' breadcrumbItem='Médicaments' />
+          <Breadcrumbs title='Produits' breadcrumbItem='Liste de Produits' />
 
           {/* -------------------------- */}
           <FormModal
@@ -72,8 +69,8 @@ export default function MedicamentListe() {
             modal_title={formModalTitle}
             size='md'
             bodyContent={
-              <MedicamentForm
-                medicamentToEdit={medicamentToUpdate}
+              <ProduitForm
+                produitToEdit={produitToUpdate}
                 tog_form_modal={tog_form_modal}
               />
             }
@@ -85,7 +82,7 @@ export default function MedicamentListe() {
             <Col lg={12}>
               <Card>
                 <CardBody>
-                  <div id='medicamentList'>
+                  <div id='produitsList'>
                     <Row className='g-4 mb-3'>
                       <Col className='col-sm-auto'>
                         <div className='d-flex gap-1'>
@@ -94,12 +91,12 @@ export default function MedicamentListe() {
                             className='add-btn'
                             id='create-btn'
                             onClick={() => {
-                              setMedicamentToUpdate(null);
+                              setProduitToUpdate(null);
                               tog_form_modal();
                             }}
                           >
                             <i className='fas fa-capsules align-center me-1'></i>{' '}
-                            Ajouter un Médicament
+                            Ajouter un Produit
                           </Button>
                         </div>
                       </Col>
@@ -118,11 +115,6 @@ export default function MedicamentListe() {
                       </Col>
                     </Row>
                   </div>
-
-                  <p className='text-center'>
-                    Liste des médicaments dont la <strong>Stock</strong> est
-                    disponible{' '}
-                  </p>
                 </CardBody>
               </Card>
             </Col>
@@ -134,14 +126,14 @@ export default function MedicamentListe() {
                 Erreur lors de chargement des données
               </div>
             )}
-            {!error && !isLoading && filterSearchMedicaments?.length === 0 && (
-              <div className='text-center'>Aucun Médicament trouvés</div>
+            {!error && !isLoading && filterSearchProduits?.length === 0 && (
+              <div className='text-center'>Aucun Produit trouvés</div>
             )}
             {!error &&
               !isLoading &&
-              filterSearchMedicaments?.length > 0 &&
-              filterSearchMedicaments?.map((medica) => (
-                <Col sm={6} lg={4} key={medica._id}>
+              filterSearchProduits?.length > 0 &&
+              filterSearchProduits?.map((prod) => (
+                <Col sm={6} lg={4} key={prod._id}>
                   <Card
                     style={{
                       boxShadow: '0px 0px 10px rgba(121,3,105,0.5)',
@@ -175,7 +167,7 @@ export default function MedicamentListe() {
                             className='edit-item-btn'
                             onClick={() => {
                               setFormModalTitle('Modifier les données');
-                              setMedicamentToUpdate(medica);
+                              setProduitToUpdate(prod);
                               tog_form_modal();
                             }}
                           >
@@ -185,7 +177,7 @@ export default function MedicamentListe() {
                           <DropdownItem
                             className='edit-item-btn'
                             onClick={() => {
-                              navigateToMedicamentApprovisonnement(medica._id);
+                              navigateToMedicamentApprovisonnement(prod._id);
                             }}
                           >
                             <i className=' bx bx-analyse align-center me-2 text-muted'></i>
@@ -194,11 +186,7 @@ export default function MedicamentListe() {
                           <DropdownItem
                             className='remove-item-btn'
                             onClick={() => {
-                              deleteButton(
-                                medica._id,
-                                medica.name,
-                                deleteMedicament
-                              );
+                              deleteButton(prod._id, prod.name, deleteProduit);
                             }}
                           >
                             {' '}
@@ -216,8 +204,8 @@ export default function MedicamentListe() {
                         width: '30%',
                         objectFit: 'contain',
                       }}
-                      src={medica.imageUrl ? medica.imageUrl : imgMedicament}
-                      alt={medica.name}
+                      src={prod.imageUrl ? prod.imageUrl : defaultImg}
+                      alt={prod.name}
                     />
 
                     <CardBody>
@@ -225,29 +213,16 @@ export default function MedicamentListe() {
                         Nom:
                         <span style={{ color: 'gray' }}>
                           {' '}
-                          {capitalizeWords(medica.name)}
+                          {capitalizeWords(prod.name)}
                         </span>{' '}
                       </CardTitle>
-                      <CardTitle className='fs-6'>
-                        Stock:
-                        {medica.stock >= 10 ? (
-                          <span style={{ color: 'gray' }}>
-                            {' '}
-                            {formatPrice(medica?.stock)}
-                          </span>
-                        ) : (
-                          <span className='text-danger'>
-                            {' '}
-                            {formatPrice(medica?.stock)}
-                          </span>
-                        )}
-                      </CardTitle>
+
                       <CardTitle>
                         {' '}
                         Prix:{' '}
                         <span style={{ color: 'gray' }}>
                           {' '}
-                          {formatPrice(medica.price)} F
+                          {formatPrice(prod.price)} F
                         </span>{' '}
                       </CardTitle>
                     </CardBody>

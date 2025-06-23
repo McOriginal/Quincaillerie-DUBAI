@@ -17,16 +17,13 @@ import {
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
 import { Link } from 'react-router-dom';
-import {
-  useCreateMedicament,
-  useUpdateMedicament,
-} from '../../Api/queriesMedicament';
+import { useCreateProduit, useUpdateProduit } from '../../Api/queriesProduits';
 
-const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
-  // Matériels Query pour créer la Medicament
-  const { mutate: createMedicament } = useCreateMedicament();
-  // Matériels Query pour Mettre à jour la Medicament
-  const { mutate: updateMedicament } = useUpdateMedicament();
+const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
+  // Matériels Query pour créer la Produit
+  const { mutate: createProduit } = useCreateProduit();
+  // Matériels Query pour Mettre à jour la Produit
+  const { mutate: updateProduit } = useUpdateProduit();
   const [isLoading, setIsLoading] = useState(false);
 
   // Form validation
@@ -35,15 +32,13 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
     enableReinitialize: true,
 
     initialValues: {
-      name: medicamentToEdit?.name || '',
-      stock: medicamentToEdit?.stock || undefined,
-      price: medicamentToEdit?.price || undefined,
-      imageUrl: medicamentToEdit?.imageUrl || '',
+      name: produitToEdit?.name || '',
+      price: produitToEdit?.price || undefined,
+      imageUrl: produitToEdit?.imageUrl || '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required('Ce champ est obligatoire'),
 
-      stock: Yup.number().required('Ce champ est obligatoire'),
       price: Yup.number().required('Ce champ est obligatoire'),
     }),
 
@@ -51,7 +46,7 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
       setIsLoading(true);
 
       // Si la méthode est pour mise à jour alors
-      const medicamentDataLoaded = {
+      const produitDataLoaded = {
         ...values,
       };
       if (isLoading) {
@@ -61,9 +56,9 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
         }, 10000);
       }
 
-      if (medicamentToEdit) {
-        updateMedicament(
-          { id: medicamentToEdit._id, data: medicamentDataLoaded },
+      if (produitToEdit) {
+        updateProduit(
+          { id: produitToEdit._id, data: produitDataLoaded },
           {
             onSuccess: () => {
               successMessageAlert('Données mise à jour avec succès');
@@ -84,9 +79,9 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
 
       // Sinon on créer un nouveau étudiant
       else {
-        createMedicament(values, {
+        createProduit(values, {
           onSuccess: () => {
-            successMessageAlert('Médicament ajoutée avec succès');
+            successMessageAlert('Produit ajoutée avec succès');
             setIsLoading(false);
             resetForm();
             tog_form_modal();
@@ -115,10 +110,10 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
       <Row>
         <Col md='12'>
           <FormGroup className='mb-3'>
-            <Label htmlFor='name'>Nom du Médicament</Label>
+            <Label htmlFor='name'>Nom du Produit</Label>
             <Input
               name='name'
-              placeholder='Entrez le nom de médicament'
+              placeholder='Entrez le nom de produit'
               type='text'
               className='form-control'
               id='name'
@@ -139,37 +134,12 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
       </Row>
 
       <Row>
-        <Col sm='6'>
-          <FormGroup className='mb-3'>
-            <Label htmlFor='stock'>Stock Disponible</Label>
-            <Input
-              name='stock'
-              placeholder='10; 4; 0'
-              type='number'
-              className='form-control'
-              id='stock'
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.stock || ''}
-              invalid={
-                validation.touched.stock && validation.errors.stock
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.stock && validation.errors.stock ? (
-              <FormFeedback type='invalid'>
-                {validation.errors.stock}
-              </FormFeedback>
-            ) : null}
-          </FormGroup>
-        </Col>
-        <Col sm='6'>
+        <Col sm='12'>
           <FormGroup className='mb-3'>
             <Label htmlFor='price'>Prix de Vente</Label>
             <Input
               name='price'
-              placeholder='Entrez les prix de médicament'
+              placeholder='Entrez les prix de produit'
               type='number'
               className='form-control'
               id='price'
@@ -194,7 +164,10 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
       <Row>
         <Col md='12'>
           <FormGroup className='mb-3'>
-            <Label htmlFor='imageUrl'>Image de Couverture</Label>
+            <Label htmlFor='imageUrl'>
+              Image de Couverture{' '}
+              <span className='font-size-11 text-secondary'>(facultative)</span>{' '}
+            </Label>
             <Input
               name='imageUrl'
               placeholder='Veillez copiez une image en ligne.....'
@@ -212,7 +185,7 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
             />
             <Link
               to={`https://www.google.com/search?sca_esv=36ac96dba69ebed1&sxsrf=AE3TifPFX9Ag6g7OHGRvbMuvmwEvx86_AA:1748385419157&q=${
-                validation.values.name || 'médicament pharmacy'
+                validation.values.name || 'produit quincaillerie'
               }&udm=2&fbs=AIIjpHx4nJjfGojPVHhEACUHPiMQ_pbg5bWizQs3A_kIenjtcpTTqBUdyVgzq0c3_k8z34GAwf0jHaPgz38H1UrFi4JZ_wsbaZy5bcislJwEjK9aKAAgw7EDHBpnhJERxbAHVFJEPpsPJRN2Lf5NIxh4Y6E23jLfuJM1k2vNHWwZgjeinct1k1SwMNRPIUfhAwFDaWeIbf0gNPayotFQo8sw3bnjAaBRZQ&sa=X&ved=2ahUKEwj6otue28SNAxWJKvsDHURDCkcQtKgLegQIFRAB&biw=1280&bih=585&dpr=1.5`}
               target='blank'
               style={{
@@ -221,7 +194,7 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
                 display: 'block',
               }}
             >
-              cliquer ici pour copier une image en ligne
+              cliquer ici pour rechercher une image en ligne
             </Link>
           </FormGroup>
         </Col>
@@ -239,4 +212,4 @@ const MedicamentForm = ({ medicamentToEdit, tog_form_modal }) => {
   );
 };
 
-export default MedicamentForm;
+export default ProduitForm;
