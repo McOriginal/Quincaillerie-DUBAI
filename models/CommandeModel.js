@@ -1,26 +1,31 @@
 const mongoose = require('mongoose');
 
-const ordonanceSchema = new mongoose.Schema(
+const commandeSchema = new mongoose.Schema(
   {
-    // Clé de rélation Patient
-    traitement: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Traitement',
+    firstName: {
+      type: String,
       required: true,
     },
-
-    // Clé rélation Doctor
-    // doctor: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Doctor',
-    //   required: true,
-    // },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+    adresse: {
+      type: String,
+      required: true,
+      max: 30,
+    },
 
     items: [
       {
-        medicaments: {
+        produit: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Medicament',
+          ref: 'Produit',
           required: true,
         },
         quantity: {
@@ -40,6 +45,6 @@ const ordonanceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Ordonance = mongoose.model('Ordonance', ordonanceSchema);
+const Commande = mongoose.model('Commande', commandeSchema);
 
-module.exports = Ordonance;
+module.exports = Commande;

@@ -1,5 +1,5 @@
 const Produit = require('../models/ProduitModel');
-const Ordonnance = require('../models/OrdonanceModel');
+const Ordonnance = require('../models/CommandeModel');
 // Enregistrer une Produit
 exports.createProduit = async (req, res) => {
   try {
