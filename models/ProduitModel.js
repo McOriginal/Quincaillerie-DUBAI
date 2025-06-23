@@ -1,23 +1,18 @@
 const mongoose = require('mongoose');
 
-const medicamentSchema = new mongoose.Schema(
+const produitSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
-    }, // Ex: Nom de médicament
-    stock: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
+    }, // Ex: Nom de produit
+
     price: {
       type: Number,
       required: true,
       trim: true,
     },
-
     imageUrl: {
       type: String,
     },
@@ -25,6 +20,6 @@ const medicamentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Medicament = mongoose.model('Medicament', medicamentSchema);
+const Produit = mongoose.model('Produit', produitSchema);
 
-module.exports = Medicament;
+module.exports = Produit;
