@@ -27,42 +27,22 @@ import Error404 from '../Pages/Utility/Error404-Page';
 import Error500 from '../Pages/Utility/Error500-Page';
 
 // Importing other pages
-import PatientsListe from '../Pages/Patients/PatientsListe.js';
-import TraitementsListe from '../Pages/Traitements/TraitementsListe.js';
-import DoctorsListe from '../Pages/Doctors/DoctorsListe.js';
 import FournisseurListe from '../Pages/Fournisseurs/FournisseurListe.js';
-import TraitementDetails from '../Pages/Traitements/TraitementDetails.js';
-import Chambre from '../Pages/OutilsMedicals/Chambre.js';
-import Materiels from '../Pages/OutilsMedicals/MaterielsMedical.js';
 import PaiementsListe from '../Pages/Paiements/PaiementsListe.js';
-import FactureDetails from '../Pages/Paiements/FactureDetails.js';
 import ApprovisonnementListe from '../Pages/Approvisonnements/ApprovisonnementListe.js';
 import ApprovisonnementForm from '../Pages/Approvisonnements/ApprovisonnementForm.js';
-import AppointmentListe from '../Pages/RendezVous/AppointmentListe.js';
-import FactureListe from '../Pages/Paiements/FactureListe.js';
 import DepenseListe from '../Pages/Depenses/DepenseListe.js';
 import Rapports from '../Pages/Raports/Rapports.js';
-import MedicamentSansStock from '../Pages/Produits/MedicamentSansStock.js';
 import UpdatePassword from '../Pages/Authentication/UpdatePassword.js';
 import VerifyCode from '../Pages/Authentication/VerifyCode.js';
 import ResetPassword from '../Pages/Authentication/ResetPassword.js';
 import ProduitListe from '../Pages/Produits/ProduitListe.js';
-import NewCommande from '../Pages/Ordonnances/NewCommande.js';
-import CommandeListe from '../Pages/Ordonnances/CommandeListe.js';
+import NewCommande from '../Pages/Commandes/NewCommande.js';
+import CommandeListe from '../Pages/Commandes/CommandeListe.js';
+import FactureListe from '../Pages/Commandes/FactureListe.js';
+import Facture from '../Pages/Commandes/Facture.js';
 
 const sharedRoutes = [
-  //appointments
-  { path: '/appointments', component: <AppointmentListe /> },
-
-  // Patient
-  { path: '/patients', component: <PatientsListe /> },
-
-  // Traitements
-  { path: '/traitements', component: <TraitementsListe /> },
-
-  // Traitement Detail
-  { path: '/traitements/details/:id', component: <TraitementDetails /> },
-
   // Traitement Detail
   { path: '/newCommande', component: <NewCommande /> },
 
@@ -78,9 +58,6 @@ const authProtectedRoutes = [
   // Commandes
   { path: '/commandes', component: <CommandeListe /> },
 
-  // Doctors
-  { path: '/doctors', component: <DoctorsListe /> },
-
   // Fournisseurs
   { path: '/fournisseurs', component: <FournisseurListe /> },
 
@@ -93,7 +70,7 @@ const authProtectedRoutes = [
   { path: '/factures', component: <FactureListe /> },
 
   // Factures Détails
-  { path: '/facture/:id', component: <FactureDetails /> },
+  { path: '/facture/:id', component: <Facture /> },
 
   // Dépenses
   { path: '/depenses', component: <DepenseListe /> },
@@ -103,20 +80,11 @@ const authProtectedRoutes = [
 
   // Outils Médicals
 
-  // Chambre
-  { path: '/chambres', component: <Chambre /> },
-
-  // Matériels
-  { path: '/materiels', component: <Materiels /> },
-
   // Médicament Pharmaceutique
   { path: '/produits', component: <ProduitListe /> },
 
   // Médicament Pharmaceutique
   // { path: '/medicaments_no_stock', component: <MedicamentSansStock /> },
-
-  // Ajouter une Approvisonnement
-  { path: '/approvisonnement/:id', component: <ApprovisonnementForm /> },
 
   // approvisonnements
   { path: '/approvisonnements', component: <ApprovisonnementListe /> },
@@ -150,9 +118,6 @@ const medecinsRoutes = [
   { path: '/dashboard-medecin', component: <Dashboard /> },
   // Profile
   { path: '/userprofile', component: <UserProfile /> },
-
-  // Routes Partagées
-  // ...sharedRoutes,
 ];
 
 const publicRoutes = [

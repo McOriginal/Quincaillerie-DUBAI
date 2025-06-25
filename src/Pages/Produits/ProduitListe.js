@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardText,
   CardTitle,
   Col,
   Container,
@@ -138,11 +139,9 @@ export default function ProduitListe() {
                     style={{
                       boxShadow: '0px 0px 10px rgba(121,3,105,0.5)',
                       borderRadius: '15px',
-                      height: '120px',
+                      height: '200px',
                       padding: '10px 20px',
                       display: 'flex',
-                      gap: '20px',
-                      flexDirection: 'row',
                       flexWrap: 'nowrap',
                       alignItems: 'center',
                       position: 'relative',
@@ -174,15 +173,7 @@ export default function ProduitListe() {
                             <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
                             Modifier
                           </DropdownItem>
-                          <DropdownItem
-                            className='edit-item-btn'
-                            onClick={() => {
-                              navigateToMedicamentApprovisonnement(prod._id);
-                            }}
-                          >
-                            <i className=' bx bx-analyse align-center me-2 text-muted'></i>
-                            Approvisonnée
-                          </DropdownItem>
+
                           <DropdownItem
                             className='remove-item-btn'
                             onClick={() => {
@@ -200,8 +191,8 @@ export default function ProduitListe() {
                       className='img-fluid'
                       style={{
                         borderRadius: '15px 15px 0 0',
-                        height: '100%',
-                        width: '30%',
+                        height: '100px',
+                        width: '60%',
                         objectFit: 'contain',
                       }}
                       src={prod.imageUrl ? prod.imageUrl : defaultImg}
@@ -209,21 +200,12 @@ export default function ProduitListe() {
                     />
 
                     <CardBody>
-                      <CardTitle className='fs-6'>
-                        Nom:
-                        <span style={{ color: 'gray' }}>
-                          {' '}
-                          {capitalizeWords(prod.name)}
-                        </span>{' '}
-                      </CardTitle>
+                      <CardText className='fs-6 text-center'>
+                        {capitalizeWords(prod.name)}
+                      </CardText>
 
-                      <CardTitle>
-                        {' '}
-                        Prix:{' '}
-                        <span style={{ color: 'gray' }}>
-                          {' '}
-                          {formatPrice(prod.price)} F
-                        </span>{' '}
+                      <CardTitle className='text-center'>
+                        {formatPrice(prod.price)} F
                       </CardTitle>
                     </CardBody>
                   </Card>

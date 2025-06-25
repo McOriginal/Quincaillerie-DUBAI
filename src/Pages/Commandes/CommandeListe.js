@@ -1,8 +1,11 @@
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { capitalizeWords } from '../components/capitalizeFunction';
-import { Link } from 'react-router-dom';
+import {
+  capitalizeWords,
+  formatPhoneNumber,
+} from '../components/capitalizeFunction';
+import { Link, useNavigate } from 'react-router-dom';
 import { deleteButton } from '../components/AlerteModal';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
@@ -16,8 +19,15 @@ export default function CommandeListe() {
   const { mutate: deleteCommande, isLoading: isDeleting } = useDeleteCommande();
 
   // ID de l'ordonnance sélectionnée pour les détails
-  const [selectedOrdonnanceID, setSelectedOrdonnanceID] = useState(false);
+  const [selectedOrdonnanceID, setSelectedCommandeID] = useState(false);
   // Annuler une Ordonnance
+
+  const navigate = useNavigate();
+
+  // Navigation ver la FACTURE avec ID de Paiement
+  const handleCommandeClick = (id) => {
+    navigate(`/facture/${id}`);
+  };
 
   // ---------------------------
   const [show_modal, setShow_modal] = useState(false);
@@ -104,7 +114,7 @@ export default function CommandeListe() {
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Commande' breadcrumbItem='Nouvelle Commande' />
+          <Breadcrumbs title='Commande' breadcrumbItem='Historique' />
           {/* -------------------------- */}
           {/* <OrdonnanceDetails
             show_modal={show_modal}
@@ -140,19 +150,19 @@ export default function CommandeListe() {
                           <thead className='table-light'>
                             <tr>
                               <th scope='col' style={{ width: '50px' }}>
-                                ID
+                                Date de Commande
                               </th>
-                              <th className='sort' data-sort='date'>
-                                Date d'ordonnance
+                              <th className='sort' data-sort='fullName'>
+                                Client
                               </th>
-                              <th className='sort' data-sort='ordonnance_name'>
-                                Type de traitement
+                              <th className='sort' data-sort='phoneNumber'>
+                                Téléphone
                               </th>
-                              <th className='sort' data-sort='traitementDate'>
-                                Date de Traitement
+                              <th className='sort' data-sort='adresse'>
+                                Adresse de Livraison
                               </th>
-                              <th className='sort' data-sort='medicamentItems'>
-                                Nombre de Médicaments
+                              <th className='sort' data-sort='items'>
+                                Article
                               </th>
 
                               <th className='sort' data-sort='action'>
@@ -161,37 +171,25 @@ export default function CommandeListe() {
                             </tr>
                           </thead>
                           <tbody className='list form-check-all text-center'>
-                            {commandes?.length > 0 &&
-                              commandes?.map((ordo, index) => (
-                                <tr key={ordo._id}>
-                                  <th scope='row'>{index + 1}</th>
-
-                                  <td>
+                            {commandes?.commandesListe?.length > 0 &&
+                              commandes?.commandesListe?.map((comm) => (
+                                <tr key={comm._id}>
+                                  <th scope='row'>
                                     {new Date(
-                                      ordo.createdAt
+                                      comm.createdAt
                                     ).toLocaleDateString('fr-Fr', {
                                       weekday: 'short',
                                       year: 'numeric',
                                       month: '2-digit',
                                       day: '2-digit',
                                     })}
-                                  </td>
-                                  <td>
-                                    {capitalizeWords(ordo.traitement['motif'])}
-                                  </td>
-                                  <td>
-                                    {new Date(
-                                      ordo.createdAt
-                                    ).toLocaleDateString('fr-Fr', {
-                                      weekday: 'short',
-                                      year: 'numeric',
-                                      month: '2-digit',
-                                      day: '2-digit',
-                                    })}{' '}
-                                  </td>
+                                  </th>
+                                  <td>{capitalizeWords(comm.fullName)}</td>
+                                  <td>{formatPhoneNumber(comm.phoneNumber)}</td>
+                                  <td>{capitalizeWords(comm.adresse)}</td>
 
                                   <td>
-                                    {ordo.items.length} médicaments
+                                    {comm.items.length} acticles
                                     {'  '}
                                   </td>
 
@@ -212,8 +210,7 @@ export default function CommandeListe() {
                                           data-bs-toggle='modal'
                                           data-bs-target='#showdetails'
                                           onClick={() => {
-                                            setSelectedOrdonnanceID(ordo._id);
-                                            tog_show_modal();
+                                            handleCommandeClick(comm._id);
                                           }}
                                         >
                                           <i className=' bx bx-show-alt text-white'></i>
@@ -228,9 +225,11 @@ export default function CommandeListe() {
                                             data-bs-target='#deleteRecordModal'
                                             onClick={() => {
                                               deleteButton(
-                                                ordo._id,
-                                                'ordonnance: ' +
-                                                  ordo.traitement['motif'],
+                                                comm._id,
+                                                'Commande de: ' +
+                                                  capitalizeWords(
+                                                    comm.fullName
+                                                  ),
                                                 deleteCommande
                                               );
                                             }}

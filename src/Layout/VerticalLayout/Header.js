@@ -13,9 +13,9 @@ import {
 } from '../../store/actions';
 import ProfileMenu from '../../components/Common/TopbarDropdown/ProfileMenu';
 import {
-  hospitalLittleName,
-  hospitalName,
-  logoMedical,
+  companyLittleName,
+  companyName,
+  companyLogo,
 } from '../../Pages/Logo/logo';
 
 const Header = (props) => {
@@ -64,13 +64,13 @@ const Header = (props) => {
             <div className='navbar-brand-box text-center'>
               <span>
                 <img
-                  src={logoMedical}
+                  src={companyLogo}
                   style={{
                     width: '80px',
                   }}
                   alt=''
                 />
-                <h5 className='text-white'>{hospitalLittleName} </h5>
+                <h5 className='text-white'>{companyLittleName} </h5>
               </span>
             </div>
 
@@ -91,7 +91,7 @@ const Header = (props) => {
                 color: ' #27548A',
               }}
             >
-              {hospitalName}
+              {companyName}
             </p>
           </div>
 

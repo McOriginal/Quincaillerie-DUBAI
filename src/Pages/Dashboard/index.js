@@ -66,16 +66,15 @@ const Dashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <Row style={{ margin: '50px auto' }}>
+            {/* <Row style={{ margin: '50px auto' }}>
               <Col xl={8}>
                 <BarChartDataRaportsTraitement />
               </Col>
 
               <Col xl={4}>
-                {/* Filtre result by mounth */}
                 <SelectedMounthTotalTraitement />
               </Col>
-            </Row>
+            </Row> */}
           </motion.div>
         </Container>
       </div>

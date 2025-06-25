@@ -1,15 +1,16 @@
-import logoMedical from '../../assets/images/logo_medical.png';
+import companyLogo from '../../assets/images/logo_medical.png';
 
-export { logoMedical };
+export { companyLogo };
 
-const hospitalName = 'Cabinet de soins MARHABA Santé';
-export { hospitalName };
+const companyName = 'Quincaillerie DUBAI';
+export { companyName };
 
-const hospitalLittleName = 'MARHABA Santé';
-export { hospitalLittleName };
+const companyLittleName = 'Quincaillerie DUBAI';
+export { companyLittleName };
 
-const hospitalAdresse = 'Kabala zone universitaire sur le goudron de COURALE';
-export { hospitalAdresse };
+const companyAdresse =
+  "Kabala sur la route d'université en face de station PETRO BAMA";
+export { companyAdresse };
 
-const hospitalTel = '78-87-91-34 / 63-00-67-89';
-export { hospitalTel };
+const companyTel = '78-87-91-34 / 63-00-67-89';
+export { companyTel };

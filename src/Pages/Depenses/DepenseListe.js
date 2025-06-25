@@ -11,10 +11,10 @@ import DepenseForm from './DepenseForm';
 
 export default function DepenseListe() {
   const [form_modal, setForm_modal] = useState(false);
+  const [formModalTitle, setFormModalTitle] = useState('Ajouter une Dépense');
   const { data: depenseData, isLoading, error } = useAllDepenses();
   const { mutate: deleteDepense, isDeleting } = useDeleteDepense();
   const [depenseToUpdate, setDepenseToUpdate] = useState(null);
-  const [formModalTitle, setFormModalTitle] = useState('Ajouter une Dépense');
 
   // Search State
   const [searchTerm, setSearchTerm] = useState('');

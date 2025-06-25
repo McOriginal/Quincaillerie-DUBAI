@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import FormModal from '../components/FormModal';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   capitalizeWords,
@@ -41,12 +41,6 @@ export default function PaiementsListe() {
     );
   });
 
-  const navigate = useNavigate();
-
-  // Navigation ver la FACTURE avec ID de Paiement
-  const handlePaiementClick = (id) => {
-    navigate(`/facture/${id}`);
-  };
   // Ouverture de Modal Form
   function tog_form_modal() {
     setForm_modal(!form_modal);
@@ -239,7 +233,7 @@ export default function PaiementsListe() {
 
                                     <td>
                                       <div className='d-flex gap-2'>
-                                        <div>
+                                        {/* <div>
                                           <button
                                             className='btn btn-sm btn-secondary show-item-btn'
                                             data-bs-toggle='modal'
@@ -250,7 +244,7 @@ export default function PaiementsListe() {
                                           >
                                             <i className='bx bx-show align-center text-white'></i>
                                           </button>
-                                        </div>
+                                        </div> */}
                                         <div className='edit'>
                                           <button
                                             className='btn btn-sm btn-success edit-item-btn'

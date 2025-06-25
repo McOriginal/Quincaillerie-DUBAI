@@ -23,7 +23,7 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { logoMedical } from '../Logo/logo';
+import { companyLogo } from '../Logo/logo';
 
 const Login = () => {
   document.title = 'Connexion | Santé MARHABA ';
@@ -120,7 +120,7 @@ const Login = () => {
                     <div>
                       <div className='text-center'>
                         <img
-                          src={logoMedical}
+                          src={companyLogo}
                           alt=''
                           height='54'
                           className='auth-logo logo-dark mx-auto'

@@ -206,7 +206,7 @@ export default function NewCommande() {
 
           <Row>
             {/* Panier */}
-            <Col sm={6}>
+            <Col sm='7'>
               <Card>
                 <CardBody style={{ height: '280px', overflowY: 'scroll' }}>
                   <CardTitle className='mb-4'>
@@ -237,7 +237,7 @@ export default function NewCommande() {
                           className='fw-bold'
                           onClick={() => validation.handleSubmit()}
                         >
-                          Valide
+                          Enregistrer la Commande
                         </Button>
                       </div>
                     </div>
@@ -263,6 +263,7 @@ export default function NewCommande() {
                           = {formatPrice(item.produit.price * item.quantity)} F
                         </div>
                       </div>
+
                       <div className='d-flex align-items-center gap-2'>
                         <Button
                           color='danger'
@@ -312,7 +313,7 @@ export default function NewCommande() {
             </Col>
 
             {/* Les information sur Client */}
-            <Col sm='6'>
+            <Col sm='5'>
               <Card>
                 <CardBody>
                   <Form
@@ -326,6 +327,7 @@ export default function NewCommande() {
                       <FormGroup>
                         <Label for='fullName'>Nom et Prénom</Label>
                         <Input
+                          name='fullName'
                           id='fullName'
                           type='text'
                           className='form form-control'
@@ -350,8 +352,9 @@ export default function NewCommande() {
                     </Col>
                     <Col sm='12'>
                       <FormGroup>
-                        <Label for='fullName'>Téléphone</Label>
+                        <Label for='phoneNumber'>Téléphone</Label>
                         <Input
+                          name='phoneNumber'
                           id='phoneNumber'
                           type='number'
                           min={0}
@@ -379,6 +382,7 @@ export default function NewCommande() {
                       <FormGroup>
                         <Label for='fullName'>Adresse Domicile</Label>
                         <Input
+                          name='adresse'
                           id='adresse'
                           type='text'
                           className='form form-control'
@@ -444,20 +448,7 @@ export default function NewCommande() {
                               <CardText className='text-center'>
                                 {capitalizeWords(produit.name)}
                               </CardText>
-                              <CardText className='text-center fw-bold'>
-                                Stock:{' '}
-                                {produit.stock >= 10 ? (
-                                  <span className='text-primary'>
-                                    {' '}
-                                    {produit.stock}{' '}
-                                  </span>
-                                ) : (
-                                  <span className='text-danger'>
-                                    {' '}
-                                    {produit.stock}{' '}
-                                  </span>
-                                )}
-                              </CardText>
+
                               <CardText className='text-center fw-bold'>
                                 {formatPrice(produit.price)} F
                               </CardText>

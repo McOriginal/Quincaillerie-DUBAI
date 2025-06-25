@@ -22,7 +22,7 @@ import { useFormik } from 'formik';
 // action
 
 // import images
-import { logoMedical } from '../Logo/logo';
+import { companyLogo } from '../Logo/logo';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   errorMessageAlert,
@@ -85,7 +85,7 @@ const ForgetPasswordPage = () => {
               <Card className='overflow-hidden'>
                 <div className='d-flex justify-content-center align-items-center'>
                   <img
-                    src={logoMedical}
+                    src={companyLogo}
                     style={{
                       height: '100px',
                       objectFit: 'containt',

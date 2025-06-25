@@ -24,7 +24,7 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { logoMedical } from '../Logo/logo';
+import { companyLogo } from '../Logo/logo';
 
 const Register = () => {
   document.title = 'Inscription | Santé MARHABA ';
@@ -97,7 +97,7 @@ const Register = () => {
                 <CardBody className='p-4'>
                   <div className='text-center'>
                     <img
-                      src={logoMedical}
+                      src={companyLogo}
                       alt=''
                       height='54'
                       className='auth-logo logo-dark mx-auto'

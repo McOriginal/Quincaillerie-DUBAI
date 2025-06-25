@@ -60,9 +60,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
       adresse: Yup.string()
         .matches(/^[a-z0-9À-ÿ\s]+$/i, 'Veillez Entrez une valeur correct !')
         .required('Ce champ est obligatoire'),
-      marchandise: Yup.string()
-        .matches(/^[a-z0-9À-ÿ\s]+$/i, 'Veillez Entrez une valeur correct !')
-        .required('Ce champ est obligatoire'),
+      marchandise: Yup.string().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {

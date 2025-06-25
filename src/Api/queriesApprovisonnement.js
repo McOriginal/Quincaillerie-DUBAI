@@ -11,6 +11,16 @@ export const useCreateApprovisonnement = () => {
   });
 };
 
+// Update Approvisonnement
+export const useUpdateApprovisonnement = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }) =>
+      api.put(`/approvisonnements/updateApprovisonement/${id}`, data),
+    onSuccess: () => queryClient.invalidateQueries(['approvisonnements']),
+  });
+};
+
 // Lire toutes les approvisonnements
 export const useAllApprovisonnement = () =>
   useQuery({

@@ -13,10 +13,10 @@ import { useOneOrdonnance } from '../../Api/queriesOrdonnance';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 import html2pdf from 'html2pdf.js';
 import {
-  hospitalAdresse,
-  hospitalName,
-  hospitalTel,
-  logoMedical,
+  companyAdresse,
+  companyName,
+  companyTel,
+  companyLogo,
 } from '../Logo/logo';
 
 const OrdonnanceDetails = ({
@@ -153,7 +153,7 @@ const OrdonnanceDetails = ({
               <CardBody>
                 <CardHeader style={{ background: 'rgba(100, 169, 238, 0.5)' }}>
                   <CardImg
-                    src={logoMedical}
+                    src={companyLogo}
                     style={{
                       width: '70px',
                       position: 'absolute',
@@ -163,12 +163,12 @@ const OrdonnanceDetails = ({
                   />
                   <CardTitle className='text-center '>
                     <h2 className='fs-bold'>Ordonnance Médical </h2>
-                    <h5>{hospitalName} </h5>
+                    <h5>{companyName} </h5>
                     <p style={{ margin: '15px', fontSize: '10px' }}>
-                      {hospitalAdresse}
+                      {companyAdresse}
                     </p>
                     <p style={{ margin: '15px', fontSize: '10px' }}>
-                      {hospitalTel}
+                      {companyTel}
                     </p>
                   </CardTitle>
                   <CardText>
@@ -178,7 +178,7 @@ const OrdonnanceDetails = ({
                     ).toLocaleDateString()}
                   </CardText>
                   <CardImg
-                    src={logoMedical}
+                    src={companyLogo}
                     style={{
                       width: '70px',
                       position: 'absolute',
