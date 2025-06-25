@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 const approvisonementSchema = new mongoose.Schema(
   {
-    medicament: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Medicament',
+    produit: {
+      type: String,
       required: true,
-    }, // Référence au médicament
+    }, // Référence au produit
     quantity: {
       type: Number,
       required: true,
     }, // Quantité approvisionnée
     price: {
       type: Number,
-      required: true, // Prix d'achat du médicament
+      required: true, // Prix d'achat du produit
     },
     deliveryDate: {
       type: Date,

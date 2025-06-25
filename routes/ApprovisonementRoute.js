@@ -4,8 +4,13 @@ const approvisonementController = require('../controller/ApprovisonementContolle
 
 // Route pour créer un approvisionnement
 router.post(
-  '/createApprovisonement', // ID du médicament
+  '/createApprovisonement', // ID du approvisonnement
   approvisonementController.createApprovisonement
+);
+
+router.put(
+  '/updateApprovisonement/:id', // ID du approvisonnement
+  approvisonementController.updateApprovisonement
 );
 
 // Route pour récupérer tous les approvisionnements

@@ -129,8 +129,7 @@ exports.updateFournisseur = async (req, res) => {
     !textValidation.stringValidator(lowerFirstName) ||
     !textValidation.stringValidator(lowerLastName) ||
     !textValidation.stringValidator(lowerAdresse) ||
-    !textValidation.emailValidation(emailAdresse) ||
-    !textValidation.stringValidator(marchandise)
+    !textValidation.emailValidation(emailAdresse)
   ) {
     return res.status(400).json({
       status: 'error',
@@ -141,9 +140,9 @@ exports.updateFournisseur = async (req, res) => {
   // Conversion des numéros (protection contre les strings)
   const phoneNum = Number(phoneNumber);
 
-  // Vérification des doublons (en excluant l'étudiant actuel)
+  // Vérification des doublons (en excluant l'fournisseur actuel)
   const existingFournisseur = await Fournisseur.findOne({
-    _id: { $ne: req.params.id }, // Exclure l'étudiant actuel
+    _id: { $ne: req.params.id }, // Exclure l'fournisseur actuel
     $or: [{ emailAdresse: lowerEmail }, { phoneNumber: phoneNum }],
   }).exec();
 

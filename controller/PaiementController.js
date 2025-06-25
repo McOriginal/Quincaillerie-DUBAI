@@ -23,7 +23,7 @@ exports.updatePaiement = async (req, res) => {
   }
 };
 
-// Historique des paiements d’un étudiant
+// Historique des paiements
 exports.getAllPaiements = async (req, res) => {
   try {
     const paiements = await Paiement.find()
@@ -38,8 +38,11 @@ exports.getAllPaiements = async (req, res) => {
 // Historique des paiements d’un étudiant
 exports.getPaiement = async (req, res) => {
   try {
-    const paiements = await Paiement.findById(req.params.id)
-    .populate('commande');
+    const paiements = await Paiement.findById(req.params.id).populate({
+      path: 'commande',
+      populate: { path: 'items.produit' },
+    });
+
     return res.status(200).json(paiements);
   } catch (err) {
     res.status(400).json({ status: 'error', message: err.message });

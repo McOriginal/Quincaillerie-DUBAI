@@ -1,5 +1,5 @@
 const Commande = require('../models/CommandeModel');
-const Produit = require('../models/ProduitModel');
+const Paiement = require('../models/PaiementModel');
 
 // Créer une COMMANDE
 exports.createCommande = async (req, res) => {
@@ -38,23 +38,38 @@ exports.createCommande = async (req, res) => {
 // Trouver toutes les commandes
 exports.getAllCommandes = async (req, res) => {
   try {
-    const commandes = await Commande.find()
+    const commandesListe = await Commande.find()
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 })
       .populate('items.produit');
-    return res.status(201).json(commandes);
+
+    // Afficher les COMMANDES en fonction des PAIEMENTS effectués
+    const factures = await Paiement.find().populate({
+      path: 'commande',
+      populate: { path: 'items.produit' },
+    });
+    return res.status(201).json({ commandesListe, factures });
   } catch (e) {
     return res.status(404).json(e);
   }
 };
 
+// Trouver une seulle COMMANDE
 exports.getOneCommande = async (req, res) => {
   try {
-    const commande = await Commande.findById(req.params.id).populate(
-      'items.produit'
-    );
+    // const commande = await Commande.findById(req.params.id).populate(
+    //   'items.produit'
+    // );
 
-    return res.status(201).json(commande);
+    // Afficher les COMMANDES en fonction de ID PAIEMENTS effectués
+    const paiements = await Paiement.findOne({
+      commande: req.params.id,
+    }).populate({
+      path: 'commande',
+      populate: { path: 'items.produit' },
+    });
+
+    return res.status(201).json(paiements);
   } catch (e) {
     return res.status(404).json(e);
   }
