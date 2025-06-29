@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
+import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   capitalizeWords,
@@ -11,31 +11,30 @@ import {
 import { deleteButton } from '../components/AlerteModal';
 import {
   useAllApprovisonnement,
+  useCancelApprovisonnement,
   useDeleteApprovisonnement,
 } from '../../Api/queriesApprovisonnement';
-import FormModal from '../components/FormModal';
-import ApprovisonnementForm from './ApprovisonnementForm';
+import Swal from 'sweetalert2';
 
 export default function ApprovisonnementListe() {
+  // Recuperer la Liste des APPROVISONNEMENT
   const {
     data: approvisonnementData,
     isLoading,
     error,
   } = useAllApprovisonnement();
-  const { mutate: deleteApprovisonnement, isDeleting } =
-    useDeleteApprovisonnement();
 
-  const [approvisonnementToUpdate, setApprovisonnementToUpdate] =
-    useState(null);
-  const [form_modal, setForm_modal] = useState(false);
-  const [formModalTitle, setFormModalTitle] = useState(
-    'Faire une Approvisonnement'
-  );
+  // Annuler une APPROVISONNEMENT
+  const { mutate: cancelApprovisonnement } = useCancelApprovisonnement();
 
-  // Ouverture de Modal Form
-  function tog_form_modal() {
-    setForm_modal(!form_modal);
-  }
+  // Supprimer une approvisonnement
+  const { mutate: deleteApprovisonnement } = useDeleteApprovisonnement();
+
+  // State de chargement pour le Bouton
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // State de navigation
+  const navigate = useNavigate();
 
   // Search State
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,7 +49,7 @@ export default function ApprovisonnementListe() {
         .includes(search) ||
       (appro?.fournisseur?.phoneNumber || '').toString().includes(search) ||
       appro?.fournisseur?.adresse.toLowerCase().includes(search) ||
-      appro?.produit.toLowerCase().includes(search) ||
+      appro?.produit?.name.toLowerCase().includes(search) ||
       appro?.quantity.toString().includes(search) ||
       appro?.price.toString().includes(search) ||
       new Date(appro?.delivryDate)
@@ -60,46 +59,89 @@ export default function ApprovisonnementListe() {
     );
   });
 
+  // ---------------------------
+  // Fonction pour exeuter l'annulation de la décrementation des stocks
+  function handleCancelApprovisonnement(appro) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success ms-2',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
+
+    swalWithBootstrapButtons
+      .fire({
+        title: `Attention ${appro?.quantity} quantité sera soustraire de votre STOCK !  `,
+        text: 'Voulez-vous continuer ?',
+        icon: 'question',
+        iconColor: 'red',
+        showCancelButton: true,
+        confirmButtonText: 'Oui, Continuer',
+        cancelButtonText: 'Non',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          try {
+            // --------------------------------
+            // Exécuter l'annulation
+            setIsDeleting(true);
+            cancelApprovisonnement(appro?._id, {
+              onSuccess: () => {
+                setIsDeleting(false);
+                swalWithBootstrapButtons.fire({
+                  title: 'Succès!',
+                  text: `Approvisonnement Annulé avec succès STOCK rétabli.`,
+                  icon: 'success',
+                });
+                navigate('/produits');
+              },
+              onError: (e) => {
+                setIsDeleting(false);
+                swalWithBootstrapButtons.fire({
+                  title: 'Erreur',
+                  text:
+                    e?.response?.data?.message ||
+                    'Une erreur est survenue lors de la suppression.',
+                  icon: 'error',
+                });
+              },
+            });
+          } catch (e) {
+            setIsDeleting(false);
+            swalWithBootstrapButtons.fire({
+              title: 'Erreur',
+              text:
+                e ||
+                e?.response?.data?.message ||
+                "Une erreur est survenue lors de l'Annulation.",
+              icon: 'error',
+            });
+          }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          setIsDeleting(false);
+          swalWithBootstrapButtons.fire({
+            title: "Echec d'Annulation",
+            icon: 'error',
+          });
+        }
+      });
+  }
+  // ------------------------------------------------------------
+
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
           <Breadcrumbs title='Produits' breadcrumbItem='Approvisonnement' />
           {/* -------------------------- */}
-          <FormModal
-            form_modal={form_modal}
-            setForm_modal={setForm_modal}
-            tog_form_modal={tog_form_modal}
-            modal_title={formModalTitle}
-            size='md'
-            bodyContent={
-              <ApprovisonnementForm
-                approvisonnementToEdit={approvisonnementToUpdate}
-                tog_form_modal={tog_form_modal}
-              />
-            }
-          />
+
           <Row>
             <Col lg={12}>
               <Card>
                 <CardBody>
                   <Row className='g-4 mb-3'>
-                    <Col className='col-sm-auto'>
-                      <div className='d-flex gap-1'>
-                        <Button
-                          color='info'
-                          className='add-btn'
-                          id='create-btn'
-                          onClick={() => {
-                            setApprovisonnementToUpdate(null);
-                            tog_form_modal();
-                          }}
-                        >
-                          <i className='fas fa-redo-alt align-center me-1'></i>{' '}
-                          Ajouter une Approvisonnement
-                        </Button>
-                      </div>
-                    </Col>
                     <Col className='col-sm'>
                       <div className='d-flex justify-content-sm-end'>
                         <div className='search-box me-4'>
@@ -140,106 +182,107 @@ export default function ApprovisonnementListe() {
                             <thead className='table-light'>
                               <tr>
                                 <th scope='col' style={{ width: '50px' }}>
-                                  ID
+                                  Date d'arrivée
                                 </th>
                                 <th data-sort='marchandise'>Produit</th>
-                                <th data-sort='marchandise'>
-                                  Quantité arrivée
-                                </th>
+                                <th data-sort='quantity'>Quantité arrivée</th>
                                 <th data-sort='price'>Prix d'achat</th>
-                                <th data-sort='deliveryDate'>Date d'arrivée</th>
                                 <th data-sort='fournisseur_name'>
                                   Fournisseur
                                 </th>
 
                                 <th data-sort='phone'>Téléphone</th>
+                                <th data-sort='adresse'>Adresse</th>
 
                                 <th data-sort='action'>Action</th>
                               </tr>
                             </thead>
 
                             <tbody className='list form-check-all text-center'>
-                              {filterSearchApprovisonnement?.map(
-                                (appro, index) => (
-                                  <tr key={appro._id}>
-                                    <th scope='row'>{index + 1}</th>
-                                    <td>{capitalizeWords(appro.produit)}</td>
+                              {filterSearchApprovisonnement?.map((appro) => (
+                                <tr key={appro._id}>
+                                  <th scope='row'>
+                                    {' '}
+                                    {new Date(
+                                      appro.deliveryDate
+                                    ).toLocaleDateString('fr-Fr', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                      weekday: 'short',
+                                    })}
+                                  </th>
+                                  <td>
+                                    {capitalizeWords(appro?.produit?.name)}
+                                  </td>
 
-                                    <td>{formatPrice(appro.quantity)}</td>
-                                    <td>
-                                      {formatPrice(appro.price)}
-                                      {' F '}
-                                    </td>
+                                  <td>{formatPrice(appro?.quantity)}</td>
+                                  <td>
+                                    {formatPrice(appro?.price)}
+                                    {' F '}
+                                  </td>
 
-                                    <td>
-                                      {new Date(
-                                        appro.deliveryDate
-                                      ).toLocaleDateString('fr-Fr', {
-                                        year: 'numeric',
-                                        month: '2-digit',
-                                        day: '2-digit',
-                                        weekday: 'short',
-                                      })}
-                                    </td>
-                                    <td>
-                                      {capitalizeWords(
-                                        appro.fournisseur['firstName']
-                                      )}{' '}
-                                      {capitalizeWords(
-                                        appro.fournisseur['lastName']
-                                      )}{' '}
-                                    </td>
+                                  <td>
+                                    {capitalizeWords(
+                                      appro.fournisseur?.firstName
+                                    )}{' '}
+                                    {capitalizeWords(
+                                      appro.fournisseur?.lastName
+                                    )}{' '}
+                                  </td>
 
-                                    <td>
-                                      {formatPhoneNumber(
-                                        appro.fournisseur['phoneNumber']
-                                      )}
-                                    </td>
+                                  <td>
+                                    {formatPhoneNumber(
+                                      appro?.fournisseur?.phoneNumber
+                                    )}
+                                  </td>
+                                  <td>
+                                    {capitalizeWords(
+                                      appro?.fournisseur?.adresse
+                                    )}
+                                  </td>
 
-                                    <td>
-                                      <div className='d-flex gap-2'>
-                                        <div className='edit'>
+                                  <td>
+                                    <div className='d-flex gap-2'>
+                                      {isDeleting && <LoadingSpiner />}{' '}
+                                      {!isDeleting && (
+                                        <div className='remove'>
                                           <button
-                                            className='btn btn-sm btn-success edit-item-btn'
+                                            className='btn btn-sm btn-warning remove-item-btn'
                                             data-bs-toggle='modal'
-                                            data-bs-target='#showModal'
-                                            onClick={() => {
-                                              setFormModalTitle(
-                                                'Modifier les données'
-                                              );
-                                              setApprovisonnementToUpdate(
+                                            data-bs-target='#deleteRecordModal'
+                                            onClick={() =>
+                                              handleCancelApprovisonnement(
                                                 appro
-                                              );
-                                              tog_form_modal();
-                                            }}
+                                              )
+                                            }
                                           >
-                                            <i className='ri-pencil-fill text-white'></i>
+                                            Annuler
                                           </button>
                                         </div>
-                                        {isDeleting && <LoadingSpiner />}
-                                        {!isDeleting && (
-                                          <div className='remove'>
-                                            <button
-                                              className='btn btn-sm btn-danger remove-item-btn'
-                                              data-bs-toggle='modal'
-                                              data-bs-target='#deleteRecordModal'
-                                              onClick={() => {
-                                                deleteButton(
-                                                  appro._id,
-                                                  appro.produit,
-                                                  deleteApprovisonnement
-                                                );
-                                              }}
-                                            >
-                                              <i className='ri-delete-bin-fill text-white'></i>
-                                            </button>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )
-                              )}
+                                      )}
+                                      {!isDeleting && (
+                                        <div className='remove'>
+                                          <button
+                                            className='btn btn-sm btn-danger remove-item-btn'
+                                            data-bs-toggle='modal'
+                                            data-bs-target='#deleteRecordModal'
+                                            onClick={() => {
+                                              deleteButton(
+                                                appro?._id,
+                                                appro?.produit?.name,
+                                                deleteApprovisonnement
+                                              );
+                                            }}
+                                          >
+                                            <i className='ri-delete-bin-fill text-white'></i>
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
                           </table>
                         )}

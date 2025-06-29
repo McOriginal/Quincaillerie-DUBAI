@@ -18,7 +18,7 @@ export default function PaiementsListe() {
   const { data: paiementsData, isLoading, error } = useAllPaiements();
   const { mutate: deletePaiement, isDeleting } = useDeletePaiement();
   const [paiementToUpdate, setPaiementToUpdate] = useState(null);
-  const [formModalTitle, setFormModalTitle] = useState('Ajouter un Paiement');
+  const [formModalTitle, setFormModalTitle] = useState('Nouveau Paiement');
 
   // State de Recherche
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,7 +81,7 @@ export default function PaiementsListe() {
                             id='create-btn'
                             onClick={() => {
                               setPaiementToUpdate(null);
-                              setFormModalTitle('Ajouter un Paiement');
+                              setFormModalTitle('Nouveau Paiement');
                               tog_form_modal();
                             }}
                           >
@@ -91,7 +91,15 @@ export default function PaiementsListe() {
                         </div>
                       </Col>
                       <Col className='col-sm'>
-                        <div className='d-flex justify-content-sm-end'>
+                        <div className='d-flex justify-content-sm-end gap-2'>
+                          {searchTerm !== '' && (
+                            <Button
+                              color='danger'
+                              onClick={() => setSearchTerm('')}
+                            >
+                              <i className='fas fa-window-close'></i>
+                            </Button>
+                          )}
                           <div className='search-box me-4'>
                             <input
                               type='text'

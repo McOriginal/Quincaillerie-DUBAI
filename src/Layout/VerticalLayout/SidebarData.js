@@ -20,6 +20,12 @@ const SidebarData = [
     url: '/produits',
   },
   {
+    label: 'Stock Terminé',
+    icon: 'mdi mdi-sitemap',
+    isHasArrow: true,
+    url: '/produit_no_stock',
+  },
+  {
     label: 'Approvisonnement',
     // icon: 'bx bx-rotate-right',
     icon: 'fas fa-redo-alt',

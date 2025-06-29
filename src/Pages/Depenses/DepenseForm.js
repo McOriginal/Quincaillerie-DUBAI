@@ -25,7 +25,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
   const { mutate: updateDepense } = useUpdateDepense();
 
   // State pour gérer le chargement
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form validation
   const validation = useFormik({
@@ -44,7 +44,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
     }),
 
     onSubmit: (values, { resetForm }) => {
-      setisLoading(true);
+      setIsLoading(true);
 
       // Si la méthode est pour mise à jour alors
       const depenseDataLoaded = {
@@ -57,7 +57,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
           {
             onSuccess: () => {
               successMessageAlert('Données mise à jour avec succès');
-              setisLoading(false);
+              setIsLoading(false);
               tog_form_modal();
             },
             onError: (err) => {
@@ -66,7 +66,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
                   err?.message ||
                   'Erreur lors de la mise à jour'
               );
-              setisLoading(false);
+              setIsLoading(false);
             },
           }
         );
@@ -77,7 +77,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
         createDepense(values, {
           onSuccess: () => {
             successMessageAlert('Depense enregistrée avec succès');
-            setisLoading(false);
+            setIsLoading(false);
             resetForm();
             tog_form_modal();
           },
@@ -87,10 +87,16 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
               err?.message ||
               "Oh Oh ! une erreur est survenu lors de l'enregistrement";
             errorMessageAlert(errorMessage);
-            setisLoading(false);
+            setIsLoading(false);
           },
         });
       }
+      setTimeout(() => {
+        if (isLoading) {
+          errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
+          setIsLoading(false);
+        }
+      }, 10000);
     },
   });
   return (

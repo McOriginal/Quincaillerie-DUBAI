@@ -34,11 +34,12 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
     initialValues: {
       name: produitToEdit?.name || '',
       price: produitToEdit?.price || undefined,
+      stock: produitToEdit?.stock || undefined,
       imageUrl: produitToEdit?.imageUrl || '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required('Ce champ est obligatoire'),
-
+      stock: Yup.string().required('Ce champ est obligatoire'),
       price: Yup.number().required('Ce champ est obligatoire'),
     }),
 
@@ -49,12 +50,6 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
       const produitDataLoaded = {
         ...values,
       };
-      if (isLoading) {
-        setTimeout(() => {
-          errorMessageAlert('Une Erreur est survenue veillez réesayer !');
-          setIsLoading(false);
-        }, 10000);
-      }
 
       if (produitToEdit) {
         updateProduit(
@@ -96,8 +91,15 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
           },
         });
       }
+      setTimeout(() => {
+        if (isLoading) {
+          errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
+          setIsLoading(false);
+        }
+      }, 10000);
     },
   });
+
   return (
     <Form
       className='needs-validation'
@@ -134,7 +136,33 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
       </Row>
 
       <Row>
-        <Col sm='12'>
+        <Col md='6'>
+          <FormGroup className='mb-3'>
+            <Label htmlFor='stock'>Stock Disponible</Label>
+            <Input
+              name='stock'
+              placeholder='Stock initial disponible'
+              type='number'
+              min={0}
+              className='form-control'
+              id='stock'
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.stock || ''}
+              invalid={
+                validation.touched.stock && validation.errors.stock
+                  ? true
+                  : false
+              }
+            />
+            {validation.touched.stock && validation.errors.stock ? (
+              <FormFeedback type='invalid'>
+                {validation.errors.stock}
+              </FormFeedback>
+            ) : null}
+          </FormGroup>
+        </Col>
+        <Col md='6'>
           <FormGroup className='mb-3'>
             <Label htmlFor='price'>Prix de Vente</Label>
             <Input

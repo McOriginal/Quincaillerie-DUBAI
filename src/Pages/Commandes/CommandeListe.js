@@ -10,16 +10,16 @@ import { deleteButton } from '../components/AlerteModal';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAllCommandes, useDeleteCommande } from '../../Api/queriesCommande';
+import { useCancelDecrementMultipleStocks } from '../../Api/queriesProduits';
 
 export default function CommandeListe() {
   // Afficher toutes les commandes
   const { data: commandes, isLoading, error } = useAllCommandes();
+  const { mutate: cancelCommandeAndStock } = useCancelDecrementMultipleStocks();
 
   // Suprimer une ordonnance
   const { mutate: deleteCommande, isLoading: isDeleting } = useDeleteCommande();
 
-  // ID de l'ordonnance sélectionnée pour les détails
-  const [selectedOrdonnanceID, setSelectedCommandeID] = useState(false);
   // Annuler une Ordonnance
 
   const navigate = useNavigate();
@@ -30,84 +30,76 @@ export default function CommandeListe() {
   };
 
   // ---------------------------
-  const [show_modal, setShow_modal] = useState(false);
-
   // Fonction pour exeuter l'annulation de la décrementation des stocks
+  function cancelCommande(comm) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success ms-2',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
 
-  // console.log('CANCEL ORDONNANCE : ', result);
+    swalWithBootstrapButtons
+      .fire({
+        title: `Attention après l'Annulation les produits seront ajouter sur votre STOCK !  `,
+        text: 'Voulez-vous continuer ?',
+        icon: 'question',
+        iconColor: 'red',
+        showCancelButton: true,
+        confirmButtonText: 'Oui, Continuer',
+        cancelButtonText: 'Non',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          try {
+            const payload = {
+              commandeId: comm._id,
+              items: comm.items.map((item) => ({
+                produit: item.produit,
+                quantity: item.quantity,
+              })),
+            };
 
-  function tog_show_modal() {
-    setShow_modal(!show_modal);
+            // --------------------------------
+            // Exécuter l'annulation
+            cancelCommandeAndStock(payload, {
+              onSuccess: () => {
+                swalWithBootstrapButtons.fire({
+                  title: 'Succès!',
+                  text: `Commande Annulé avec succès les produits sont ajouté sur le STOCK.`,
+                  icon: 'success',
+                });
+              },
+              onError: (e) => {
+                swalWithBootstrapButtons.fire({
+                  title: 'Erreur',
+                  text:
+                    e?.response?.data?.message ||
+                    'Une erreur est survenue lors de la suppression.',
+                  icon: 'error',
+                });
+              },
+            });
+          } catch (e) {
+            swalWithBootstrapButtons.fire({
+              title: 'Erreur',
+              text:
+                e ||
+                e?.response?.data?.message ||
+                "Une erreur est survenue lors de l'Annulation.",
+              icon: 'error',
+            });
+          }
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: 'Commande non Annulée',
+            icon: 'error',
+          });
+        }
+      });
   }
-
-  // Cancel commandes function
-  // Annulé l'ordonnace et ajouté ses médicaments au stock
-  // function cancelOrdonnance(ordo) {
-  //   const swalWithBootstrapButtons = Swal.mixin({
-  //     customClass: {
-  //       confirmButton: 'btn btn-success ms-2',
-  //       cancelButton: 'btn btn-danger me-2',
-  //     },
-  //     buttonsStyling: false,
-  //   });
-
-  //   swalWithBootstrapButtons
-  //     .fire({
-  //       title: `Attention après l'Annulation les médicaments dans l'ordonnance seront ajouter sur votre STOCK !  `,
-  //       text: ordo?.traitement['motif'],
-  //       icon: 'question',
-  //       iconColor: 'red',
-  //       showCancelButton: true,
-  //       confirmButtonText: 'Oui, Continuer',
-  //       cancelButtonText: 'Non, Annuler!',
-  //       reverseButtons: true,
-  //     })
-  //     .then((result) => {
-  //       if (result.isConfirmed) {
-  //         try {
-  //           const payload = {
-  //             ordonnanceId: ordo._id,
-  //             items: ordo.items.map((item) => ({
-  //               medicamentId: item.medicaments, // ou item.ordonnance._id selon ta donnée
-  //               quantity: item.quantity,
-  //             })),
-  //           };
-  //           cancelDecrementMultipleStocks(payload, {
-  //             onSuccess: () => {
-  //               swalWithBootstrapButtons.fire({
-  //                 title: 'Supprimé!',
-  //                 text: `Ordonnance Annulé avec succès les médicaments sont ajouté sur le STOCK.`,
-  //                 icon: 'success',
-  //               });
-  //             },
-  //             onError: (e) => {
-  //               swalWithBootstrapButtons.fire({
-  //                 title: 'Erreur',
-  //                 text:
-  //                   e?.response?.data?.message ||
-  //                   'Une erreur est survenue lors de la suppression.',
-  //                 icon: 'error',
-  //               });
-  //             },
-  //           });
-  //         } catch (e) {
-  //           swalWithBootstrapButtons.fire({
-  //             title: 'Erreur',
-  //             text:
-  //               e ||
-  //               e?.response?.data?.message ||
-  //               "Une erreur est survenue lors de l'Annulation.",
-  //             icon: 'error',
-  //           });
-  //         }
-  //       } else if (result.dismiss === Swal.DismissReason.cancel) {
-  //         swalWithBootstrapButtons.fire({
-  //           title: 'Ordonnance non Annulée',
-  //           icon: 'error',
-  //         });
-  //       }
-  //     });
-  // }
   // ------------------------------------------------------------
 
   return (
@@ -116,12 +108,7 @@ export default function CommandeListe() {
         <Container fluid>
           <Breadcrumbs title='Commande' breadcrumbItem='Historique' />
           {/* -------------------------- */}
-          {/* <OrdonnanceDetails
-            show_modal={show_modal}
-            setForm_modal={setShow_modal}
-            tog_show_modal={tog_show_modal}
-            selectedOrdonnanceID={selectedOrdonnanceID} // Pass the selected ordonnance ID here
-          /> */}
+
           <Row>
             <Col lg={12}>
               <Card>
@@ -200,6 +187,7 @@ export default function CommandeListe() {
                                           className='btn btn-sm btn-warning show-item-btn'
                                           data-bs-toggle='modal'
                                           data-bs-target='#showdetails'
+                                          onClick={() => cancelCommande(comm)}
                                         >
                                           Annuler
                                         </button>

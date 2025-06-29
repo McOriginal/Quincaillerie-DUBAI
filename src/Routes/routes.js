@@ -41,6 +41,7 @@ import NewCommande from '../Pages/Commandes/NewCommande.js';
 import CommandeListe from '../Pages/Commandes/CommandeListe.js';
 import FactureListe from '../Pages/Commandes/FactureListe.js';
 import Facture from '../Pages/Commandes/Facture.js';
+import ProduitSansStock from '../Pages/Produits/ProduitSansStock.js';
 
 const sharedRoutes = [
   // Traitement Detail
@@ -84,10 +85,11 @@ const authProtectedRoutes = [
   { path: '/produits', component: <ProduitListe /> },
 
   // Médicament Pharmaceutique
-  // { path: '/medicaments_no_stock', component: <MedicamentSansStock /> },
+  { path: '/produit_no_stock', component: <ProduitSansStock /> },
 
   // approvisonnements
   { path: '/approvisonnements', component: <ApprovisonnementListe /> },
+  { path: '/approvisonnement/:id', component: <ApprovisonnementForm /> },
 
   // Raports
   { path: '/rapports', component: <Rapports /> },

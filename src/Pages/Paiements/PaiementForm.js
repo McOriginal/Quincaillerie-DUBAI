@@ -23,6 +23,7 @@ import {
 import {
   capitalizeWords,
   formatPhoneNumber,
+  formatPrice,
 } from '../components/capitalizeFunction';
 import { useAllCommandes } from '../../Api/queriesCommande';
 
@@ -40,7 +41,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
   } = useAllCommandes();
 
   // State pour gérer le chargement
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form validation
   const validation = useFormik({
@@ -67,7 +68,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     }),
 
     onSubmit: (values, { resetForm }) => {
-      setisLoading(true);
+      setIsLoading(true);
 
       // Si la méthode est pour mise à jour alors
       const paiementsDataLoaded = {
@@ -80,7 +81,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
           {
             onSuccess: () => {
               successMessageAlert('Données mise à jour avec succès');
-              setisLoading(false);
+              setIsLoading(false);
               tog_form_modal();
             },
             onError: (err) => {
@@ -89,7 +90,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
                   err?.message ||
                   'Erreur lors de la mise à jour'
               );
-              setisLoading(false);
+              setIsLoading(false);
             },
           }
         );
@@ -100,7 +101,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
         createPaiement(values, {
           onSuccess: () => {
             successMessageAlert('Paiement ajoutée avec succès');
-            setisLoading(false);
+            setIsLoading(false);
             resetForm();
             tog_form_modal();
           },
@@ -110,16 +111,22 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               err?.message ||
               "Oh Oh ! une erreur est survenu lors de l'enregistrement";
             errorMessageAlert(errorMessage);
-            setisLoading(false);
+            setIsLoading(false);
           },
         });
       }
+      setTimeout(() => {
+        if (isLoading) {
+          errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
+          setIsLoading(false);
+        }
+      }, 10000);
     },
   });
   // Calcule de Somme Total en fonction de commande Sélectionné
   useEffect(() => {
     // La COMMANDE sélectionnée
-    const selectedCommande = commandeData?.find(
+    const selectedCommande = commandeData?.commandesListe?.find(
       (t) => t._id === validation.values.commande
     );
 
@@ -146,6 +153,14 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     >
       <Row>
         <Col md='12'>
+          {validation.values.totalAmount !== null && (
+            <p className='text-end text-warning'>
+              {validation.values.totalAmount === null
+                ? formatPrice(validation.values.totalAmount)
+                : 0}{' '}
+              F
+            </p>
+          )}
           {!error && isFetchingCommandes && <LoadingSpiner />}
           {error && (
             <p className='text-getRectCenter text-danger'>
@@ -171,7 +186,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
                 }
               >
                 <option value=''>Sélectionner une Commande</option>
-                {commandeData?.map((com) => (
+                {commandeData?.commandesListe?.map((com) => (
                   <option key={com._id} value={com._id}>
                     {capitalizeWords(com.fullName)} {' | '}
                     {capitalizeWords(com.adresse)}
@@ -192,7 +207,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       <Row>
         <Col md='12'>
           <FormGroup className='mb-3'>
-            <Label htmlFor='totalAmount'>Somme Total sur Facture</Label>
+            <Label htmlFor='totalAmount'>Total Facture</Label>
 
             <Input
               name='totalAmount'

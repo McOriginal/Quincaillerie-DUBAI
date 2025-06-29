@@ -27,7 +27,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
 
   // Patient Query pour Mettre à jour un etudiant
   const { mutate: updateFournisseur } = useUpdateFournisseur();
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form validation
   const validation = useFormik({
@@ -64,7 +64,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
     }),
 
     onSubmit: (values, { resetForm }) => {
-      setisLoading(true);
+      setIsLoading(true);
 
       // Si la méthode est pour mise à jour alors
       const fournisseurDataLoaded = {
@@ -77,7 +77,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
           {
             onSuccess: () => {
               successMessageAlert('Données mise à jour avec succès');
-              setisLoading(false);
+              setIsLoading(false);
               tog_form_modal();
             },
             onError: (err) => {
@@ -86,7 +86,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
                   err?.message ||
                   'Erreur lors de la mise à jour'
               );
-              setisLoading(false);
+              setIsLoading(false);
             },
           }
         );
@@ -97,7 +97,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
         createFournisseur(values, {
           onSuccess: () => {
             successMessageAlert('Fournisseur ajoutée avec succès');
-            setisLoading(false);
+            setIsLoading(false);
             resetForm();
             tog_form_modal();
           },
@@ -107,10 +107,16 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               err?.message ||
               "Oh Oh ! une erreur est survenu lors de l'enregistrement";
             errorMessageAlert(errorMessage);
-            setisLoading(false);
+            setIsLoading(false);
           },
         });
       }
+      setTimeout(() => {
+        if (isLoading) {
+          errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
+          setIsLoading(false);
+        }
+      }, 10000);
     },
   });
   return (

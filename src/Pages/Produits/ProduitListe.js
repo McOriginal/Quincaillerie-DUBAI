@@ -20,7 +20,7 @@ import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 
 import { deleteButton } from '../components/AlerteModal';
-import defaultImg from './../../assets/images/medicament.jpg';
+import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
 import ProduitForm from './ProduitForm';
 import { useAllProduit, useDeleteProduit } from '../../Api/queriesProduits';
@@ -40,16 +40,16 @@ export default function ProduitListe() {
     const search = searchTerm.toLowerCase();
 
     return (
-      prod.name.toString().toLowerCase().includes(search) ||
-      prod.price.toString().includes(search) ||
-      prod.stock.toString().includes(search)
+      prod.name?.toLowerCase().includes(search) ||
+      prod.stock?.toString().includes(search) ||
+      prod.price?.toString().includes(search)
     );
   });
 
   // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
   // Function to handle deletion of a medicament
-  function navigateToMedicamentApprovisonnement(id) {
+  function navigateToProduitApprovisonnement(id) {
     navigate(`/approvisonnement/${id}`);
   }
 
@@ -96,13 +96,21 @@ export default function ProduitListe() {
                               tog_form_modal();
                             }}
                           >
-                            <i className='fas fa-capsules align-center me-1'></i>{' '}
+                            <i className='mdi mdi-sitemap align-center me-1'></i>{' '}
                             Ajouter un Produit
                           </Button>
                         </div>
                       </Col>
-                      <Col className='col-sm'>
-                        <div className='d-flex justify-content-sm-end'>
+                      <Col>
+                        <div className='d-flex justify-content-sm-end gap-2'>
+                          {searchTerm !== '' && (
+                            <Button
+                              color='danger'
+                              onClick={() => setSearchTerm('')}
+                            >
+                              <i className='fas fa-window-close'></i>
+                            </Button>
+                          )}
                           <div className='search-box me-4'>
                             <input
                               type='text'
@@ -139,7 +147,6 @@ export default function ProduitListe() {
                     style={{
                       boxShadow: '0px 0px 10px rgba(121,3,105,0.5)',
                       borderRadius: '15px',
-                      height: '200px',
                       padding: '10px 20px',
                       display: 'flex',
                       flexWrap: 'nowrap',
@@ -172,6 +179,15 @@ export default function ProduitListe() {
                           >
                             <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
                             Modifier
+                          </DropdownItem>
+                          <DropdownItem
+                            className='edit-item-btn'
+                            onClick={() => {
+                              navigateToProduitApprovisonnement(prod._id);
+                            }}
+                          >
+                            <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
+                            Approvisonner
                           </DropdownItem>
 
                           <DropdownItem
@@ -206,6 +222,20 @@ export default function ProduitListe() {
 
                       <CardTitle className='text-center'>
                         {formatPrice(prod.price)} F
+                      </CardTitle>
+                      <CardTitle className='text-center'>
+                        Stock:
+                        {prod.stock >= 10 ? (
+                          <span style={{ color: 'gray' }}>
+                            {' '}
+                            {formatPrice(prod?.stock)}
+                          </span>
+                        ) : (
+                          <span className='text-danger'>
+                            {' '}
+                            {formatPrice(prod?.stock)}
+                          </span>
+                        )}
                       </CardTitle>
                     </CardBody>
                   </Card>

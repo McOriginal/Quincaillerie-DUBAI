@@ -44,6 +44,16 @@ export const useOneApprovisonnement = (id) =>
   });
 
 // Supprimer une approvisonnements
+export const useCancelApprovisonnement = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) =>
+      api.delete(`/approvisonnements/cancelApprovisonement/${id}`),
+    onSuccess: () => queryClient.invalidateQueries(['approvisonnements']),
+  });
+};
+
+// Supprimer une approvisonnements
 export const useDeleteApprovisonnement = () => {
   const queryClient = useQueryClient();
   return useMutation({

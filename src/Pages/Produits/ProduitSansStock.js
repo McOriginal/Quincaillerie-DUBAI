@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Card,
   CardBody,
+  CardText,
   CardTitle,
   Col,
   Container,
@@ -16,34 +18,35 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 
-import imgMedicament from './../../assets/images/medicament.jpg';
+import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
+import { useAllProduitWithStockInferieure } from '../../Api/queriesProduits';
 
-export default function MedicamentSansStock() {
-  // const {
-  //   data: medicaments,
-  //   isLoading,
-  //   error,
-  // } = useAllMedicamentWithStockFinish();
+export default function ProduitSansStock() {
+  const {
+    data: produits,
+    isLoading,
+    error,
+  } = useAllProduitWithStockInferieure();
 
   // Recherche State
   const [searchTerm, setSearchTerm] = useState('');
 
   // Fontion pour Rechercher
-  // const filterSearchMedicaments = medicaments?.filter((medica) => {
-  //   const search = searchTerm.toLowerCase();
+  const filterSearchProduits = produits?.filter((prod) => {
+    const search = searchTerm.toLowerCase();
 
-  //   return (
-  //     medica.name.toString().toLowerCase().includes(search) ||
-  //     medica.price.toString().includes(search) ||
-  //     medica.stock.toString().includes(search)
-  //   );
-  // });
+    return (
+      prod.name?.toLowerCase().includes(search) ||
+      prod.stock?.toString().includes(search) ||
+      prod.price?.toString().includes(search)
+    );
+  });
 
   // Utilisation de useNavigate pour la navigation
   const navigate = useNavigate();
   // Function to handle deletion of a medicament
-  function navigateToMedicamentApprovisonnement(id) {
+  function navigateToProduitApprovisonnement(id) {
     navigate(`/approvisonnement/${id}`);
   }
 
@@ -51,16 +54,27 @@ export default function MedicamentSansStock() {
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Pharmacie' breadcrumbItem='Médicaments' />
+          <Breadcrumbs
+            title='Produits'
+            breadcrumbItem='Produits Stock Terminé'
+          />
 
           <Row>
             <Col lg={12}>
               <Card>
                 <CardBody>
-                  <div id='medicamentList'>
+                  <div id='produitsList'>
                     <Row className='g-4 mb-3'>
-                      <Col className='col-sm'>
-                        <div className='d-flex justify-content-sm-end'>
+                      <Col>
+                        <div className='d-flex justify-content-sm-end gap-2'>
+                          {searchTerm !== '' && (
+                            <Button
+                              color='danger'
+                              onClick={() => setSearchTerm('')}
+                            >
+                              <i className='fas fa-window-close'></i>
+                            </Button>
+                          )}
                           <div className='search-box me-4'>
                             <input
                               type='text'
@@ -74,39 +88,33 @@ export default function MedicamentSansStock() {
                       </Col>
                     </Row>
                   </div>
-
-                  <p className='text-center'>
-                    Liste des médicaments dont la <strong>Stock</strong> est
-                    Finis ou près ce que{' '}
-                  </p>
                 </CardBody>
               </Card>
             </Col>
           </Row>
           <Row>
-            {/* {isLoading && <LoadingSpiner />}
+            {isLoading && <LoadingSpiner />}
             {error && (
               <div className='text-danger text-center'>
                 Erreur lors de chargement des données
               </div>
             )}
-            {!error && !isLoading && filterSearchMedicaments?.length === 0 && (
-              <div className='text-center'>Aucun Médicament trouvés</div>
+            {!error && !isLoading && filterSearchProduits?.length === 0 && (
+              <div className='text-center'>
+                Aucun Produit sans stock pour le moment
+              </div>
             )}
             {!error &&
               !isLoading &&
-              filterSearchMedicaments?.length > 0 &&
-              filterSearchMedicaments?.map((medica) => (
-                <Col md={6} lg={4} key={medica._id}>
+              filterSearchProduits?.length > 0 &&
+              filterSearchProduits?.map((prod) => (
+                <Col sm={6} lg={4} key={prod._id}>
                   <Card
                     style={{
                       boxShadow: '0px 0px 10px rgba(121,3,105,0.5)',
                       borderRadius: '15px',
-                      height: '120px',
                       padding: '10px 20px',
                       display: 'flex',
-                      gap: '20px',
-                      flexDirection: 'row',
                       flexWrap: 'nowrap',
                       alignItems: 'center',
                       position: 'relative',
@@ -130,11 +138,11 @@ export default function MedicamentSansStock() {
                           <DropdownItem
                             className='edit-item-btn'
                             onClick={() => {
-                              navigateToMedicamentApprovisonnement(medica._id);
+                              navigateToProduitApprovisonnement(prod._id);
                             }}
                           >
-                            <i className=' bx bx-analyse align-center me-2 text-muted'></i>
-                            Approvisonnée
+                            <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
+                            Approvisonner
                           </DropdownItem>
                         </DropdownMenu>
                       </UncontrolledDropdown>
@@ -143,48 +151,33 @@ export default function MedicamentSansStock() {
                       className='img-fluid'
                       style={{
                         borderRadius: '15px 15px 0 0',
-                        height: '100%',
-                        width: '30%',
+                        height: '100px',
+                        width: '60%',
                         objectFit: 'contain',
                       }}
-                      src={medica.imageUrl ? medica.imageUrl : imgMedicament}
-                      alt={medica.name}
+                      src={prod.imageUrl ? prod.imageUrl : defaultImg}
+                      alt={prod.name}
                     />
 
                     <CardBody>
-                      <CardTitle className='fs-6'>
-                        Nom:
-                        <span style={{ color: 'gray' }}>
-                          {' '}
-                          {capitalizeWords(medica.name)}
-                        </span>{' '}
+                      <CardText className='fs-6 text-center'>
+                        {capitalizeWords(prod.name)}
+                      </CardText>
+
+                      <CardTitle className='text-center'>
+                        {formatPrice(prod.price)} F
                       </CardTitle>
-                      <CardTitle className='fs-6'>
+                      <CardTitle className='text-center'>
                         Stock:
-                        {medica.stock >= 10 ? (
-                          <span style={{ color: 'gray' }}>
-                            {' '}
-                            {formatPrice(medica?.stock)}
-                          </span>
-                        ) : (
-                          <span className='text-danger'>
-                            {' '}
-                            {formatPrice(medica?.stock)}
-                          </span>
-                        )}
-                      </CardTitle>
-                      <CardTitle>
-                        {' '}
-                        Prix:{' '}
-                        <span style={{ color: 'gray' }}>
+                        <span className='text-danger'>
                           {' '}
-                          {formatPrice(medica.price)} F
-                        </span>{' '}
+                          {formatPrice(prod?.stock)}
+                        </span>
                       </CardTitle>
                     </CardBody>
                   </Card>
                 </Col>
-              ))} */}
+              ))}
           </Row>
         </Container>
       </div>

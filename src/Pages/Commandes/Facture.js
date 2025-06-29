@@ -41,7 +41,9 @@ export default function Facture() {
   const { id } = useParams();
   const { data: selectedCommande, isLoading, error } = useOneCommande(id);
   const { data: commandes } = useAllCommandes();
-  const factureIndex = commandes?.findIndex((p) => p._id === id);
+  const factureIndex = commandes?.commandesListe?.findIndex(
+    (p) => p._id === id
+  );
   // ------------------------------------------
   // ------------------------------------------
   // Export En PDF
