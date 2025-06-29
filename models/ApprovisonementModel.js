@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
+
+// Création de SCHEMA pour APPROVISONNEMENT
 const approvisonementSchema = new mongoose.Schema(
   {
     produit: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Produit',
       required: true,
     }, // Référence au produit
     quantity: {
@@ -27,7 +30,7 @@ const approvisonementSchema = new mongoose.Schema(
 );
 
 const Approvisonement = mongoose.model(
-  'Approvisonement',
+  'Approvisonnement',
   approvisonementSchema
 );
 module.exports = Approvisonement;

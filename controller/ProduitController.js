@@ -1,12 +1,14 @@
 const Produit = require('../models/ProduitModel');
-const Ordonnance = require('../models/CommandeModel');
-// Enregistrer une Produit
+const Commande = require('../models/CommandeModel');
+const Paiement = require('../models/PaiementModel');
+
+// Enregistrer un Produit
 exports.createProduit = async (req, res) => {
   try {
-    const { name, price, ...resOfData } = req.body;
+    const { name, price, stock, ...resOfData } = req.body;
 
     const lowerName = name.toLowerCase();
-    // const formatStock = Number(stock);
+    const formatStock = Number(stock);
     const formatPrice = Number(price);
 
     // Vérifier s'il existe déjà une matière avec ces critères
@@ -24,7 +26,7 @@ exports.createProduit = async (req, res) => {
     // Création de la matière
     const produit = await Produit.create({
       name: lowerName,
-      // stock: formatStock,
+      stock: formatStock,
       price: formatPrice,
       ...resOfData,
     });
@@ -38,10 +40,11 @@ exports.createProduit = async (req, res) => {
 // Mettre à jour une Produit
 exports.updateProduit = async (req, res) => {
   try {
-    const { name, price, ...resOfData } = req.body;
+    const { name, price, stock, ...resOfData } = req.body;
 
     const lowerName = name.toLowerCase();
     const formatPrice = Number(price);
+    const formatStock = Number(stock);
 
     // Vérifier s'il existe déjà un produit avec ces critères
     const existingProduits = await Produit.findOne({
@@ -61,7 +64,7 @@ exports.updateProduit = async (req, res) => {
       req.params.id,
       {
         name: lowerName,
-        // stock: formatStock,
+        stock: formatStock,
         price: formatPrice,
         ...resOfData,
       },
@@ -77,10 +80,10 @@ exports.updateProduit = async (req, res) => {
   }
 };
 
-//  Afficher une seule Produit avec une stock minimum de (1)
+//  Afficher les Produit avec une stock minimum de (1)
 exports.getAllProduits = async (req, res) => {
   try {
-    const Produits = await Produit.find()
+    const Produits = await Produit.find({ stock: { $gt: 1 } })
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 });
 
@@ -91,20 +94,31 @@ exports.getAllProduits = async (req, res) => {
 };
 
 //  Afficher une seule Produit avec une stock terminée (0)
-// exports.getAllProduitWithStockFinish = async (req, res) => {
-//   try {
-//     const Produits = await Produit.find({ stock: { $lt: 5 } })
-//       // Trie par date de création, du plus récent au plus ancien
-//       .sort({ createdAt: -1 });
+exports.getAllProduitWithStockFinish = async (req, res) => {
+  try {
+    // Tous les produits dont le stock mximum est 3
+    const Produits = await Produit.find({ stock: { $lt: 3 } })
+      // Trie par date de création, du plus récent au plus ancien
+      .sort({ createdAt: -1 });
 
-//     return res.status(200).json(Produits);
-//   } catch (err) {
-//     return res.status(400).json({ status: 'error', message: err.message });
-//   }
-// };
+    return res.status(200).json(Produits);
+  } catch (err) {
+    return res.status(400).json({ status: 'error', message: err.message });
+  }
+};
 
 //  Afficher une seule Produit
 exports.getOneProduit = async (req, res) => {
+  try {
+    const produits = await Produit.findById(req.params.id);
+    return res.status(200).json(produits);
+  } catch (err) {
+    return res.status(400).json({ status: 'error', message: err.message });
+  }
+};
+
+//  Afficher Produit lors de l'approvisionnemnet
+exports.getOneProduitWhenApprovisionne = async (req, res) => {
   try {
     const produits = await Produit.findById(req.params.id);
     return res.status(200).json(produits);
@@ -144,73 +158,84 @@ exports.deleteAllProduit = async (req, res) => {
 };
 
 // -----------------------------------------------
-// exports.decrementMultipleStocks = async (req, res) => {
-//   const session = await Produit.startSession();
-//   session.startTransaction();
 
-//   try {
-//     const items = req.body.items; // [{ id, quantity }, ...]
+// Decrementer la Quantité commandé sur le stock du produit
+exports.decrementMultipleStocks = async (req, res) => {
+  const session = await Produit.startSession();
+  session.startTransaction();
 
-//     for (const { Produits, quantity } of items) {
-//       const Produit = await Produit.findById(Produits).session(session);
-//       if (!Produit) {
-//       }
+  try {
+    const items = req.body.items; // [{ id, quantity }, ...]
 
-//       if (Produit.stock < quantity) {
-//         console.log(
-//           `Stock insuffisant pour ${Produit.name}. Disponible : ${Produit.stock}`
-//         );
-//       }
+    for (const { produit, quantity } of items) {
+      const produits = await Produit.findById(produit).session(session);
+      if (!produits) {
+        throw new Error(`Produit ${produit} non trouvé`);
+      }
 
-//       Produit.stock -= quantity;
-//       await Produit.save({ session });
-//     }
+      if (produits.stock < quantity) {
+        console.log(
+          `Stock insuffisant pour ${produits.name}. Disponible : ${produits.stock}`
+        );
+      }
 
-//     await session.commitTransaction();
-//     session.endSession();
+      produits.stock -= quantity;
+      await produits.save({ session });
+    }
 
-//     return res.status(200).json({ message: 'Stocks mis à jour avec succès' });
-//   } catch (err) {
-//     await session.abortTransaction();
-//     session.endSession();
-//     return res.status(400).json({ message: err.message });
-//   }
-// };
+    await session.commitTransaction();
+    session.endSession();
 
-// exports.cancelOrdonnance = async (req, res) => {
-//   const session = await Produit.startSession();
-//   session.startTransaction();
+    return res.status(200).json({ message: 'Stocks mis à jour avec succès' });
+  } catch (err) {
+    console.log(err);
+    await session.abortTransaction();
+    session.endSession();
+    return res.status(400).json({ message: err.message });
+  }
+};
 
-//   try {
-//     const ordonnanceId = req.params.ordonnanceId;
-//     const { items } = req.body; // [{ ProduitId, quantity }, ...]
+// Annuler une COMMANDE et faire retablir le stock de PRODUIT
+exports.cancelCommande = async (req, res) => {
+  const session = await Produit.startSession();
+  session.startTransaction();
 
-//     for (const { ProduitId, quantity } of items) {
-//       const Produit = await Produit.findById(ProduitId).session(session);
-//       if (!Produit) {
-//         throw new Error(`Médicament ${ProduitId} non trouvé`);
-//       }
-//       Produit.stock += quantity;
-//       await Produit.save({ session });
-//     }
+  try {
+    const commandeId = req.params.commandeId;
+    const { items } = req.body; // [{ ProduitId, quantity }, ...]
 
-//     const deletedOrdonnance = await Ordonnance.findByIdAndDelete(ordonnanceId, {
-//       session,
-//     });
-//     if (!deletedOrdonnance) {
-//       throw new Error('Ordonnance non trouvée');
-//     }
+    for (const { produit, quantity } of items) {
+      const produits = await Produit.findById(produit).session(session);
+      if (!produits) {
+        throw new Error(`Produit ${produit} non trouvé`);
+      }
+      produits.stock += quantity;
+      await produits.save({ session });
+    }
 
-//     await session.commitTransaction();
-//     session.endSession();
+    // On supprime le PAIEMENT
+    const paiement = await Paiement.find({ commande: commandeId });
+    const deletePaiement = await Paiement.findByIdAndDelete(paiement);
+    if (!paiement) {
+      throw new Error('Paiement non trouvée');
+    }
+    const deletedCommande = await Commande.findByIdAndDelete(commandeId, {
+      session,
+    });
+    if (!deletedCommande) {
+      throw new Error('Commande non trouvée');
+    }
 
-//     return res
-//       .status(200)
-//       .json({ message: 'Annulation réussie, stock rétabli.' });
-//   } catch (err) {
-//     console.log(err);
-//     await session.abortTransaction();
-//     session.endSession();
-//     return res.status(400).json({ message: err.message });
-//   }
-// };
+    await session.commitTransaction();
+    session.endSession();
+
+    return res
+      .status(200)
+      .json({ message: 'Annulation réussie, stock rétabli.' });
+  } catch (err) {
+    console.log(err);
+    await session.abortTransaction();
+    session.endSession();
+    return res.status(400).json({ message: err.message });
+  }
+};

@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const commandeSchema = new mongoose.Schema(
   {
+    commandeId: {
+      type: Number,
+    },
     fullName: {
       type: String,
       required: true,
@@ -41,6 +45,8 @@ const commandeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Commande = mongoose.model('Commande', commandeSchema);
+// AUTO INCREMENTATION de ID
+commandeSchema.plugin(AutoIncrement, { inc_field: 'commandeId' });
 
+const Commande = mongoose.model('Commande', commandeSchema);
 module.exports = Commande;

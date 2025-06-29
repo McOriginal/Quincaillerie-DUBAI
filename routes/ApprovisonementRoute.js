@@ -8,10 +8,10 @@ router.post(
   approvisonementController.createApprovisonement
 );
 
-router.put(
-  '/updateApprovisonement/:id', // ID du approvisonnement
-  approvisonementController.updateApprovisonement
-);
+// router.put(
+//   '/updateApprovisonement/:id', // ID du approvisonnement
+//   approvisonementController.updateApprovisonement
+// );
 
 // Route pour récupérer tous les approvisionnements
 router.get(
@@ -23,6 +23,12 @@ router.get(
 router.get(
   '/getApprovisonement/:id',
   approvisonementController.getApprovisonementById
+);
+
+// Route pour Annuler une approvisionnement
+router.delete(
+  '/cancelApprovisonement/:id',
+  approvisonementController.cancelApprovisonement
 );
 
 // Route pour supprimer un approvisionnement
