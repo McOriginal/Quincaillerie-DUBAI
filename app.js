@@ -5,9 +5,10 @@ const fournisseurRoute = require('./routes/FournisseurRoute');
 const produitRoute = require('./routes/ProduittRoute');
 const commandeRoute = require('./routes/CommandeRoute');
 const paiementRoute = require('./routes/PaiementRoute');
+const paiementHistoriqueRoute = require('./routes/PaiementHistoriqueRoute');
 const approvisonementsRoute = require('./routes/ApprovisonementRoute');
 const depenseRoute = require('./routes/DepenseRoute');
-const appointmentRoute = require('./routes/AppointementRoute');
+const livraisonHistoriqueRoute = require('./routes/LivraisonHistoriqueRoute');
 
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -30,23 +31,26 @@ app.use('/', userRoute);
 // Utilisation des routes Utilisateur
 app.use('/api/users', userRoute);
 
-// Utilisation des routes Classe
+// Utilisation des routes Produit
 app.use('/api/produits', produitRoute);
 
-// Utilisation des routes Etudiant
+// Utilisation des routes Fournisseur
 app.use('/api/fournisseurs', fournisseurRoute);
 
-// Utilisation des routes Ordonnance
+// Utilisation des routes Commande
 app.use('/api/commandes', commandeRoute);
 
-// Utilisation des routes Ordonnance
+// Utilisation des routes Paiement
 app.use('/api/paiements', paiementRoute);
+
+// Utilisation des routes Paiement
+app.use('/api/paiements_historique', paiementHistoriqueRoute);
 
 // Utilisation des routes Approvisonnement
 app.use('/api/approvisonnements', approvisonementsRoute);
 
-// Utilisation des routes Appointment
-app.use('/api/appointments', appointmentRoute);
+// Utilisation des routes Livraison Historique
+app.use('/api/livraison_historique', livraisonHistoriqueRoute);
 
 // Utilisation des routes Depense
 app.use('/api/depenses', depenseRoute);

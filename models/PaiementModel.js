@@ -27,12 +27,6 @@ const paiementSchema = new mongoose.Schema(
       default: 'cash',
       required: true,
     },
-    statut: {
-      type: String,
-      enum: ['payé', 'partiel', 'non payé'],
-      default: 'Payé',
-      required: true,
-    },
 
     // Clé de rélation COMMANDE
     commande: {

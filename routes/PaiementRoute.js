@@ -11,6 +11,12 @@ router.get('/getAllPaiements', paiementController.getAllPaiements);
 // Trouvez un paiements
 router.get('/getOnePaiement/:id', paiementController.getPaiement);
 
+// Trouvez un PAIEMENT via ID de COMMANDE sélectionnée
+router.get(
+  '/getPaiementBySelectedCommandeID/:id',
+  paiementController.getPaiementBySelectedCommandeID
+);
+
 // Mettre à jour
 router.put('/updatePaiement/:id', paiementController.updatePaiement);
 

@@ -9,17 +9,6 @@ exports.createCommande = async (req, res) => {
     const lowerAdresse = adresse.toLowerCase();
     const formattedPhoneNumber = Number(phoneNumber);
 
-    // Vérification si le numéro de téléphone n'existe pas déjà pour un autre client
-    const existePhoneNumber = await Commande.findOne({
-      phoneNumber: formattedPhoneNumber,
-    }).exec();
-
-    if (existePhoneNumber) {
-      return res
-        .status(400)
-        .json({ message: 'Ce number de téléphone existe déjà.' });
-    }
-
     const newCommande = await Commande.create({
       items,
       fullName: lowerName,
@@ -57,47 +46,23 @@ exports.getAllCommandes = async (req, res) => {
 // Trouver une seulle COMMANDE
 exports.getOneCommande = async (req, res) => {
   try {
-    // const commande = await Commande.findById(req.params.id).populate(
-    //   'items.produit'
-    // );
+    const commandeData = await Commande.findById(req.params.id).populate(
+      'items.produit'
+    );
 
-    // Afficher les COMMANDES en fonction de ID PAIEMENTS effectués
-    const paiements = await Paiement.findOne({
+    // ID de PAIEMENT correspondant au COMMANDE
+    const paiementCommande = await Paiement.findOne({
       commande: req.params.id,
     }).populate({
       path: 'commande',
       populate: { path: 'items.produit' },
     });
 
-    return res.status(201).json(paiements);
+    return res.status(201).json({ commandeData, paiementCommande });
   } catch (e) {
     return res.status(404).json(e);
   }
 };
-
-// Récuperer l'Commande par Traitement
-// exports.getTraitementCommande = async (req, res) => {
-//   try {
-//     // ID de Traitement
-//     const commandeId = req.params.commandeId;
-
-//     // Récupérer les patients à travers le traitement
-//     const trait = await Traitement.findById(commandeId)
-//       .populate('patient')
-//       .populate('doctor');
-
-//     // Récupérer l'Commande dont le traitement correspond à une ID précise
-//     const Commande = await Commande.find({
-//       traitement: commandeId,
-//     })
-//       .populate('traitement')
-//       .populate('items.produits');
-
-//     return res.status(201).json({ Commandes: { Commande, trait } });
-//   } catch (e) {
-//     return res.status(404).json(e);
-//   }
-// };
 
 exports.deleteCommande = async (req, res) => {
   try {

@@ -40,6 +40,12 @@ const commandeSchema = new mongoose.Schema(
       required: [true, "Le total de l'ordonnance est requis"],
       min: [0, 'Le total doit être positif'],
     },
+    status: {
+      type: String,
+      enum: ['livré', 'partiellement livré', 'attente'],
+      default: 'cash',
+      required: true,
+    },
   },
 
   { timestamps: true }
