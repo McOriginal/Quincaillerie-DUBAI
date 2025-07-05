@@ -40,8 +40,9 @@ import ProduitListe from '../Pages/Produits/ProduitListe.js';
 import NewCommande from '../Pages/Commandes/NewCommande.js';
 import CommandeListe from '../Pages/Commandes/CommandeListe.js';
 import FactureListe from '../Pages/Commandes/FactureListe.js';
-import Facture from '../Pages/Commandes/Facture.js';
+import Facture from '../Pages/Commandes/Details/Facture.js';
 import ProduitSansStock from '../Pages/Produits/ProduitSansStock.js';
+import PaiementsHistorique from '../Pages/Commandes/PaiementsHistorique/PaiementsHistorique.js';
 
 const sharedRoutes = [
   // Traitement Detail
@@ -66,6 +67,9 @@ const authProtectedRoutes = [
 
   // Paiements Liste
   { path: '/paiements', component: <PaiementsListe /> },
+
+  // Historique Paiement
+  { path: '/paiements_historique/:id', component: <PaiementsHistorique /> },
 
   //  Factures Liste
   { path: '/factures', component: <FactureListe /> },

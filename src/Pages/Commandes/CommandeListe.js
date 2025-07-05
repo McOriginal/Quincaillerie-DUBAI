@@ -6,7 +6,6 @@ import {
   formatPhoneNumber,
 } from '../components/capitalizeFunction';
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteButton } from '../components/AlerteModal';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAllCommandes, useDeleteCommande } from '../../Api/queriesCommande';
@@ -17,11 +16,10 @@ export default function CommandeListe() {
   const { data: commandes, isLoading, error } = useAllCommandes();
   const { mutate: cancelCommandeAndStock } = useCancelDecrementMultipleStocks();
 
-  // Suprimer une ordonnance
-  const { mutate: deleteCommande, isLoading: isDeleting } = useDeleteCommande();
+  // State de chargement pour la suppression
+  const [isDeleting, setIsDeletting] = useState(false);
 
   // Annuler une Ordonnance
-
   const navigate = useNavigate();
 
   // Navigation ver la FACTURE avec ID de Paiement
@@ -63,9 +61,11 @@ export default function CommandeListe() {
             };
 
             // --------------------------------
+            setIsDeletting(true);
             // Exécuter l'annulation
             cancelCommandeAndStock(payload, {
               onSuccess: () => {
+                setIsDeletting(false);
                 swalWithBootstrapButtons.fire({
                   title: 'Succès!',
                   text: `Commande Annulé avec succès les produits sont ajouté sur le STOCK.`,
@@ -73,6 +73,7 @@ export default function CommandeListe() {
                 });
               },
               onError: (e) => {
+                setIsDeletting(false);
                 swalWithBootstrapButtons.fire({
                   title: 'Erreur',
                   text:
@@ -83,6 +84,7 @@ export default function CommandeListe() {
               },
             });
           } catch (e) {
+            setIsDeletting(false);
             swalWithBootstrapButtons.fire({
               title: 'Erreur',
               text:
@@ -93,6 +95,7 @@ export default function CommandeListe() {
             });
           }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
+          setIsDeletting(false);
           swalWithBootstrapButtons.fire({
             title: 'Commande non Annulée',
             icon: 'error',
@@ -132,7 +135,7 @@ export default function CommandeListe() {
                       {!error && !isLoading && (
                         <table
                           className='table align-middle table-nowrap table-hover'
-                          id='ordonnanceTable'
+                          id='commandeTable'
                         >
                           <thead className='table-light'>
                             <tr>
@@ -150,6 +153,9 @@ export default function CommandeListe() {
                               </th>
                               <th className='sort' data-sort='items'>
                                 Article
+                              </th>
+                              <th className='sort' data-sort='status'>
+                                Status
                               </th>
 
                               <th className='sort' data-sort='action'>
@@ -179,54 +185,57 @@ export default function CommandeListe() {
                                     {comm.items.length} acticles
                                     {'  '}
                                   </td>
+                                  <td>
+                                    <span
+                                      className={`badge badge-soft-${
+                                        comm?.status === 'livré' && 'success'
+                                      }
+                                            ${
+                                              comm?.status ===
+                                                'partiellement livré' &&
+                                              'danger'
+                                            }
+                                            ${
+                                              comm?.status === 'attente' &&
+                                              'warning'
+                                            }
+                                         text-uppercase`}
+                                    >
+                                      {comm?.status}
+                                    </span>
+                                  </td>
 
                                   <td>
-                                    <div className='d-flex gap-2'>
-                                      <div className='show-details'>
-                                        <button
-                                          className='btn btn-sm btn-warning show-item-btn'
-                                          data-bs-toggle='modal'
-                                          data-bs-target='#showdetails'
-                                          onClick={() => cancelCommande(comm)}
-                                        >
-                                          Annuler
-                                        </button>
-                                      </div>
-                                      <div className='show-details'>
-                                        <button
-                                          className='btn btn-sm btn-info show-item-btn'
-                                          data-bs-toggle='modal'
-                                          data-bs-target='#showdetails'
-                                          onClick={() => {
-                                            handleCommandeClick(comm._id);
-                                          }}
-                                        >
-                                          <i className=' bx bx-show-alt text-white'></i>
-                                        </button>
-                                      </div>
-                                      {isDeleting && <LoadingSpiner />}
-                                      {!isDeleting && (
+                                    {isDeleting && <LoadingSpiner />}
+                                    {!isDeleting && (
+                                      <div className='d-flex gap-2'>
+                                        <div className='show-details'>
+                                          <button
+                                            className='btn btn-sm btn-info show-item-btn'
+                                            data-bs-toggle='modal'
+                                            data-bs-target='#showdetails'
+                                            onClick={() => {
+                                              handleCommandeClick(comm?._id);
+                                            }}
+                                          >
+                                            <i className=' bx bx-show-alt text-white'></i>
+                                          </button>
+                                        </div>
+
                                         <div className='remove'>
                                           <button
                                             className='btn btn-sm btn-danger remove-item-btn'
                                             data-bs-toggle='modal'
                                             data-bs-target='#deleteRecordModal'
                                             onClick={() => {
-                                              deleteButton(
-                                                comm._id,
-                                                'Commande de: ' +
-                                                  capitalizeWords(
-                                                    comm.fullName
-                                                  ),
-                                                deleteCommande
-                                              );
+                                              cancelCommande(comm);
                                             }}
                                           >
                                             <i className='ri-delete-bin-fill text-white'></i>
                                           </button>
                                         </div>
-                                      )}
-                                    </div>
+                                      </div>
+                                    )}
                                   </td>
                                 </tr>
                               ))}

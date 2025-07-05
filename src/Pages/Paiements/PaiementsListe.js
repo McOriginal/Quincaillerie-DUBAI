@@ -158,7 +158,7 @@ export default function PaiementsListe() {
                                 </th>
                                 <th data-sort='motif'>Réduction</th>
 
-                                <th data-sort='statut'>Statut</th>
+                                <th data-sort='methode'>Methode de Paiement</th>
                                 <th data-sort='action'>Action</th>
                               </tr>
                             </thead>
@@ -226,17 +226,8 @@ export default function PaiementsListe() {
                                     <td className='text-warning'>
                                       {formatPrice(paiement.reduction)} F
                                     </td>
-
-                                    <td>
-                                      <span
-                                        className={`badge badge-soft-${
-                                          paiement.statut === 'payé'
-                                            ? 'success'
-                                            : 'danger'
-                                        } text-uppercase`}
-                                      >
-                                        {paiement.statut}
-                                      </span>
+                                    <td className='text-warning'>
+                                      {capitalizeWords(paiement.methode)}
                                     </td>
 
                                     <td>

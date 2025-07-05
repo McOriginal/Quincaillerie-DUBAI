@@ -10,40 +10,39 @@ import {
   Col,
   Container,
 } from 'reactstrap';
-import Breadcrumbs from '../../components/Common/Breadcrumb';
+import Breadcrumbs from '../../../components/Common/Breadcrumb';
 
-import LoadingSpiner from '../components/LoadingSpiner';
+import LoadingSpiner from '../../components/LoadingSpiner';
 import {
   capitalizeWords,
   formatPhoneNumber,
   formatPrice,
-} from '../components/capitalizeFunction';
-import { useAllCommandes, useOneCommande } from '../../Api/queriesCommande';
+} from '../../components/capitalizeFunction';
+import { useOneCommande } from '../../../Api/queriesCommande';
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import html2pdf from 'html2pdf.js';
-import { companyAdresse, companyName, companyTel } from '../Logo/logo';
+import { companyAdresse, companyName, companyTel } from '../../Logo/logo';
 
-import outil_1 from '../../assets/images/outil (1).png';
-import outil_2 from '../../assets/images/outil (2).png';
-import outil_3 from '../../assets/images/outil (3).png';
-import outil_4 from '../../assets/images/outil (4).png';
-import outil_5 from '../../assets/images/outil (5).png';
-import outil_6 from '../../assets/images/outil (6).png';
-import outil_7 from '../../assets/images/outil (7).png';
-import outil_8 from '../../assets/images/outil (8).png';
-import outil_9 from '../../assets/images/outil (9).png';
-import outil_10 from '../../assets/images/outil (10).png';
-import outil_11 from '../../assets/images/outil (11).png';
-import outil_12 from '../../assets/images/outil (12).png';
+import outil_1 from '../../../assets/images/outil (1).png';
+import outil_2 from '../../../assets/images/outil (2).png';
+import outil_3 from '../../../assets/images/outil (3).png';
+import outil_4 from '../../../assets/images/outil (4).png';
+import outil_5 from '../../../assets/images/outil (5).png';
+import outil_6 from '../../../assets/images/outil (6).png';
+import outil_7 from '../../../assets/images/outil (7).png';
+import outil_8 from '../../../assets/images/outil (8).png';
+import outil_9 from '../../../assets/images/outil (9).png';
+import outil_10 from '../../../assets/images/outil (10).png';
+import outil_11 from '../../../assets/images/outil (11).png';
+import outil_12 from '../../../assets/images/outil (12).png';
+import PaiementsHistorique from '../PaiementsHistorique/PaiementsHistorique';
+import LivraisonHistorique from '../Livraison/ListeLivraisonHistorique';
 
 export default function Facture() {
   const { id } = useParams();
   const { data: selectedCommande, isLoading, error } = useOneCommande(id);
-  const { data: commandes } = useAllCommandes();
-  const factureIndex = commandes?.commandesListe?.findIndex(
-    (p) => p._id === id
-  );
+
   // ------------------------------------------
   // ------------------------------------------
   // Export En PDF
@@ -72,7 +71,7 @@ export default function Facture() {
   // -----------------------------------------
 
   const handlePrintFacture = () => {
-    const content = document.getElementById('facture');
+    const content = document.getElementById('printFacture');
     // Ouvre une nouvelle fenêtre pour l'impression
     const printWindow = window.open('', '', 'width=800,height=600');
 
@@ -86,7 +85,7 @@ export default function Facture() {
     printWindow.document.write(`
     <html>
       <head>
-        <title>Impression d'Ordonnance</title>
+        <title>Impression Facture</title>
         ${styles}
         <style>
           @media print {
@@ -141,7 +140,7 @@ export default function Facture() {
 
           {!error && !isLoading && (
             <Card
-              id={'facture'}
+              id={'printFacture'}
               className='d-flex justify-content-center border border-info'
               style={{
                 boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
@@ -222,16 +221,20 @@ export default function Facture() {
                     <CardImg src={outil_9} style={{ width: '50px' }} />
                   </div>
                 </CardHeader>
-                <div className='border-bottom border-info my-2 px-2 '>
+                <div className=' my-2 px-2 '>
                   <div className='d-flex justify-content-between align-item-center mt-2'>
                     <CardText>
-                      <strong>Facture N°: </strong>{' '}
-                      <span className='text-danger'>{factureIndex + 1} </span>
+                      <strong>Facture N°: </strong>
+                      <span className='text-danger'>
+                        {formatPrice(
+                          selectedCommande?.commandeData?.commandeId
+                        )}{' '}
+                      </span>
                     </CardText>
                     <CardText>
                       <strong> Date:</strong>{' '}
                       {new Date(
-                        selectedCommande.createdAt
+                        selectedCommande?.commandeData?.createdAt
                       ).toLocaleDateString()}
                     </CardText>
                   </div>
@@ -241,27 +244,26 @@ export default function Facture() {
                     <CardText>
                       <strong>Client: </strong>
                       {capitalizeWords(
-                        selectedCommande?.commande?.fullName
+                        selectedCommande?.commandeData?.fullName
                       )}{' '}
                     </CardText>
                     <CardText>
                       <strong>Tél: </strong>
                       {formatPhoneNumber(
-                        selectedCommande?.commande?.phoneNumber
+                        selectedCommande?.commandeData?.phoneNumber
                       )}
                     </CardText>
                   </div>
                   <CardText className='text-start'>
                     <strong>Livraison: </strong>
-                    {capitalizeWords(selectedCommande?.commande?.adresse)}
+                    {capitalizeWords(selectedCommande?.commandeData?.adresse)}
                   </CardText>
                 </div>
                 {/* Bordure Séparateur */}
 
                 <div className='my-2 p-2'>
-                  <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-info text-center'>
+                  <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-double border-info text-center'>
                     <thead>
-                      {' '}
                       <tr>
                         <th>Qté</th>
                         <th>Désignations</th>
@@ -271,8 +273,8 @@ export default function Facture() {
                     </thead>
 
                     <tbody>
-                      {selectedCommande?.commande?.items.map((article) => (
-                        <tr key={article._id}>
+                      {selectedCommande?.commandeData?.items?.map((article) => (
+                        <tr key={article?._id}>
                           <td>{article?.quantity} </td>
                           <td>{capitalizeWords(article?.produit?.name)} </td>
                           <td>{formatPrice(article?.produit?.price)} </td>
@@ -296,28 +298,40 @@ export default function Facture() {
                       <CardText className={'text-center'}>
                         Total:{' '}
                         <strong style={{ fontSize: '14px' }}>
-                          {' '}
                           {formatPrice(
-                            selectedCommande?.commande['totalAmount']
+                            selectedCommande?.paiementCommande
+                              ? selectedCommande?.paiementCommande?.totalAmount
+                              : selectedCommande?.commandeData?.totalAmount
                           )}{' '}
-                          F{' '}
-                        </strong>{' '}
+                          F
+                        </strong>
                       </CardText>
                       <div>
                         <CardText className='text-center '>
                           Payé:
                           <strong style={{ fontSize: '14px' }}>
                             {' '}
-                            {formatPrice(selectedCommande?.totalAmount)} F{' '}
-                          </strong>{' '}
+                            {selectedCommande?.paiementCommande
+                              ? formatPrice(
+                                  selectedCommande?.paiementCommande?.totalPaye
+                                )
+                              : 0}{' '}
+                            F
+                          </strong>
                         </CardText>
                         <CardText className='text-center '>
                           Réliqua:
                           <strong style={{ fontSize: '14px' }}>
                             {' '}
-                            {selectedCommande.totalAmount -
-                              selectedCommande?.commande['totalAmount']}{' '}
-                            F{' '}
+                            {formatPrice(
+                              selectedCommande?.paiementCommande
+                                ? selectedCommande?.paiementCommande
+                                    ?.totalAmount -
+                                    selectedCommande?.paiementCommande
+                                      ?.totalPaye
+                                : selectedCommande?.commandeData?.totalAmount
+                            )}{' '}
+                            F
                           </strong>
                         </CardText>
                       </div>
@@ -327,6 +341,22 @@ export default function Facture() {
               </CardBody>
             </Card>
           )}
+
+          {/* Historique de Paiement */}
+          <PaiementsHistorique
+            id={id}
+            reliqua={
+              selectedCommande?.paiementCommande
+                ? selectedCommande?.paiementCommande?.totalAmount -
+                  selectedCommande?.paiementCommande?.totalPaye
+                : selectedCommande?.commandeData?.totalAmount
+            }
+          />
+          {/* Historique de Paiement */}
+
+          {/* Historique de Lvraison */}
+          <LivraisonHistorique id={id} />
+          {/* Historique de Lvraison */}
         </Container>
       </div>
     </React.Fragment>

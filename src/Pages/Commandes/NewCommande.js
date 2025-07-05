@@ -127,6 +127,7 @@ export default function NewCommande() {
       fullName: '',
       phoneNumber: undefined,
       adresse: '',
+      status: '',
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -134,9 +135,8 @@ export default function NewCommande() {
         .required('Ce champ est obligatoire'),
 
       phoneNumber: Yup.number().required('Ce champ est obligatoire'),
-      adresse: Yup.string()
-        .matches(/^[a-z0-9À-ÿ\s]+$/i, 'Veillez Entrez une valeur correct !')
-        .required('Ce champ est obligatoire'),
+      adresse: Yup.string().required('Ce champ est obligatoire'),
+      status: Yup.string().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {
@@ -151,6 +151,7 @@ export default function NewCommande() {
         fullName: values.fullName,
         adresse: values.adresse,
         phoneNumber: values.phoneNumber,
+        status: values.status,
         // ------------------------
         // Les ARTICLES de panier
         items: cartItems.map((item) => ({
@@ -517,6 +518,39 @@ export default function NewCommande() {
                           validation.errors.adresse ? (
                             <FormFeedback type='invalid'>
                               {validation.errors.adresse}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                      <Col sm={12}>
+                        <FormGroup>
+                          <Label for='status'>Status de Livraison</Label>
+                          <Input
+                            name='status'
+                            id='status'
+                            type='select'
+                            className='form form-control'
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.status || ''}
+                            invalid={
+                              validation.touched.status &&
+                              validation.errors.status
+                                ? true
+                                : false
+                            }
+                          >
+                            <option value=''>Sélectionner le Status</option>
+                            <option value='livré'>Livré</option>
+                            <option value='partiellement livré'>
+                              Partiellement Livré
+                            </option>
+                            <option value='attente'>En Attente</option>
+                          </Input>
+                          {validation.touched.status &&
+                          validation.errors.status ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.status}
                             </FormFeedback>
                           ) : null}
                         </FormGroup>

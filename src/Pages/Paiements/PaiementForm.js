@@ -49,13 +49,12 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     enableReinitialize: true,
 
     initialValues: {
-      commande: paiementToEdit?.commande._id || '',
+      commande: paiementToEdit?.commande?._id || '',
       paiementDate: paiementToEdit?.paiementDate.substring(0, 10) || '',
       totalAmount: paiementToEdit?.totalAmount || undefined,
       reduction: paiementToEdit?.reduction || undefined,
       totalPaye: paiementToEdit?.totalPaye || undefined,
       methode: paiementToEdit?.methode || '',
-      statut: paiementToEdit?.statut || '',
     },
     validationSchema: Yup.object({
       commande: Yup.string().required('Ce champ est obligatoire'),
@@ -64,7 +63,6 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       reduction: Yup.number().typeError('Ce doit être un nombre valide'),
       totalPaye: Yup.number().required('Ce champ est obligatoire'),
       methode: Yup.string().required('Ce champ est obligatoire'),
-      statut: Yup.string().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {
@@ -77,7 +75,11 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
 
       if (paiementToEdit) {
         updatePaiement(
-          { id: paiementToEdit._id, data: paiementsDataLoaded },
+          {
+            id: paiementToEdit?._id,
+            data: paiementsDataLoaded,
+            totalAmount: paiementToEdit?.totalAmount,
+          },
           {
             onSuccess: () => {
               successMessageAlert('Données mise à jour avec succès');
@@ -98,22 +100,25 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
 
       // Sinon on créer un nouveau étudiant
       else {
-        createPaiement(values, {
-          onSuccess: () => {
-            successMessageAlert('Paiement ajoutée avec succès');
-            setIsLoading(false);
-            resetForm();
-            tog_form_modal();
-          },
-          onError: (err) => {
-            const errorMessage =
-              err?.response?.data?.message ||
-              err?.message ||
-              "Oh Oh ! une erreur est survenu lors de l'enregistrement";
-            errorMessageAlert(errorMessage);
-            setIsLoading(false);
-          },
-        });
+        createPaiement(
+          { ...values, totalAmount: validation.values.totalAmount },
+          {
+            onSuccess: () => {
+              successMessageAlert('Paiement ajoutée avec succès');
+              setIsLoading(false);
+              resetForm();
+              tog_form_modal();
+            },
+            onError: (err) => {
+              const errorMessage =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Oh Oh ! une erreur est survenu lors de l'enregistrement";
+              errorMessageAlert(errorMessage);
+              setIsLoading(false);
+            },
+          }
+        );
       }
       setTimeout(() => {
         if (isLoading) {
@@ -123,19 +128,22 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       }, 10000);
     },
   });
+
   // Calcule de Somme Total en fonction de commande Sélectionné
   useEffect(() => {
-    // La COMMANDE sélectionnée
+    // La COMMANDE sélectionnée via _ID dans la liste deroulante
     const selectedCommande = commandeData?.commandesListe?.find(
       (t) => t._id === validation.values.commande
     );
 
+    // Si il y'a une sélection alors
     if (selectedCommande) {
       // Calculer le montant total du commande
-      const commandeAmount = selectedCommande.totalAmount || 0;
+      const commandeAmount = selectedCommande?.totalAmount || 0;
       const reduction = Number(validation.values.reduction) || 0;
       const finalAmount = Math.max(commandeAmount - reduction, 0);
 
+      // Si il n'y pas de reduction alors on affiche la somme exacte de TotalAmount de COMMANDE
       if (validation.values.totalAmount !== finalAmount) {
         validation.setFieldValue('totalAmount', finalAmount);
       }
@@ -153,12 +161,16 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     >
       <Row>
         <Col md='12'>
-          {validation.values.totalAmount !== null && (
-            <p className='text-end text-warning'>
-              {validation.values.totalAmount === null
-                ? formatPrice(validation.values.totalAmount)
-                : 0}{' '}
-              F
+          {/* Affichage de la somme de TotalAmount de Commande */}
+          {validation.values.totalAmount !== undefined && (
+            <p className='text-end'>
+              Total Facture:{' '}
+              <span className='text-warning'>
+                {validation.values.totalAmount !== undefined
+                  ? formatPrice(validation.values.totalAmount)
+                  : 0}{' '}
+                F{' '}
+              </span>
             </p>
           )}
           {!error && isFetchingCommandes && <LoadingSpiner />}
@@ -205,35 +217,6 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       </Row>
 
       <Row>
-        <Col md='12'>
-          <FormGroup className='mb-3'>
-            <Label htmlFor='totalAmount'>Total Facture</Label>
-
-            <Input
-              name='totalAmount'
-              min={1}
-              style={{ color: 'orange' }}
-              type='number'
-              className='form-control'
-              id='totalAmount'
-              onBlur={validation.handleBlur}
-              defaultValue={validation.values.totalAmount || ''}
-              value={validation.values.totalAmount || ''}
-              invalid={
-                validation.touched.totalAmount && validation.errors.totalAmount
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.totalAmount && validation.errors.totalAmount ? (
-              <FormFeedback type='invalid'>
-                {validation.errors.totalAmount}
-              </FormFeedback>
-            ) : null}
-          </FormGroup>
-        </Col>
-      </Row>
-      <Row>
         <Col md='6'>
           <FormGroup className='mb-3'>
             <Label htmlFor='totalPaye'>Somme Payé</Label>
@@ -277,7 +260,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               id='reduction'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.reduction || 0}
+              value={validation.values.reduction || undefined}
               invalid={
                 validation.touched.reduction && validation.errors.reduction
                   ? true
@@ -293,7 +276,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
         </Col>
       </Row>
       <Row>
-        <Col md='12'>
+        <Col md='6'>
           <FormGroup className='mb-3'>
             <Label htmlFor='paiementDate'>Date de Paiement</Label>
 
@@ -321,8 +304,6 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
             ) : null}
           </FormGroup>
         </Col>
-      </Row>
-      <Row>
         <Col md='6'>
           <FormGroup className='mb-3'>
             <Label htmlFor='methode'>Méthode de Paiement</Label>
@@ -348,36 +329,6 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
             {validation.touched.methode && validation.errors.methode ? (
               <FormFeedback type='invalid'>
                 {validation.errors.methode}
-              </FormFeedback>
-            ) : null}
-          </FormGroup>
-        </Col>
-        <Col md='6'>
-          <FormGroup className='mb-3'>
-            <Label htmlFor='statut'>Statut</Label>
-            <Input
-              name='statut'
-              placeholder='Paiement dédié pour les opérations chirugical.....'
-              type='select'
-              className='form-control'
-              id='statut'
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.statut || ''}
-              invalid={
-                validation.touched.statut && validation.errors.statut
-                  ? true
-                  : false
-              }
-            >
-              <option value=''>Sélectionner le statut</option>
-              <option value='payé'>Payé</option>
-              <option value='partiel'>Partiellement payé</option>
-              <option value='non payé'>Non Payé</option>
-            </Input>
-            {validation.touched.statut && validation.errors.statut ? (
-              <FormFeedback type='invalid'>
-                {validation.errors.statut}
               </FormFeedback>
             ) : null}
           </FormGroup>
