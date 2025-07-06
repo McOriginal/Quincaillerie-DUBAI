@@ -27,11 +27,11 @@ import {
 } from '../components/AlerteModal';
 import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
+import { useAllProduit } from '../../Api/queriesProduits';
 import {
-  useAllProduit,
+  useCreateCommande,
   useDecrementMultipleStocks,
-} from '../../Api/queriesProduits';
-import { useCreateCommande } from '../../Api/queriesCommande';
+} from '../../Api/queriesCommande';
 
 export default function NewCommande() {
   // State de navigation
@@ -82,7 +82,7 @@ export default function NewCommande() {
     });
   };
 
-  // Fonction pour Diminuer la quantité dans le panier
+  // Fonction pour Diminuer la quantité :dans le panier
   // Si la quantité est 1 alors on le supprime
   const decreaseQuantity = (produitId) => {
     setCartsItems((prevCart) =>
@@ -127,7 +127,7 @@ export default function NewCommande() {
       fullName: '',
       phoneNumber: undefined,
       adresse: '',
-      status: '',
+      statut: '',
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -136,7 +136,7 @@ export default function NewCommande() {
 
       phoneNumber: Yup.number().required('Ce champ est obligatoire'),
       adresse: Yup.string().required('Ce champ est obligatoire'),
-      status: Yup.string().required('Ce champ est obligatoire'),
+      statut: Yup.string().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {
@@ -151,7 +151,7 @@ export default function NewCommande() {
         fullName: values.fullName,
         adresse: values.adresse,
         phoneNumber: values.phoneNumber,
-        status: values.status,
+        statut: values.statut,
         // ------------------------
         // Les ARTICLES de panier
         items: cartItems.map((item) => ({
@@ -170,7 +170,7 @@ export default function NewCommande() {
         const names = insufficientStockItems
           .map((item) => `${item.produit.name} (stock: ${item.produit.stock})`)
           .join(', ');
-        errorMessageAlert(`Stock insuffisant pour : ${names}`);
+        errorMessageAlert(`Stock insuffisant pour : ${capitalizeWords(names)}`);
         setIsSubmitting(false);
         return;
       }
@@ -524,33 +524,33 @@ export default function NewCommande() {
                       </Col>
                       <Col sm={12}>
                         <FormGroup>
-                          <Label for='status'>Status de Livraison</Label>
+                          <Label for='statut'>Statut de Livraison</Label>
                           <Input
-                            name='status'
-                            id='status'
+                            name='statut'
+                            id='statut'
                             type='select'
                             className='form form-control'
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.status || ''}
+                            value={validation.values.statut || ''}
                             invalid={
-                              validation.touched.status &&
-                              validation.errors.status
+                              validation.touched.statut &&
+                              validation.errors.statut
                                 ? true
                                 : false
                             }
                           >
-                            <option value=''>Sélectionner le Status</option>
+                            <option value=''>Sélectionner le Statut</option>
                             <option value='livré'>Livré</option>
                             <option value='partiellement livré'>
                               Partiellement Livré
                             </option>
                             <option value='attente'>En Attente</option>
                           </Input>
-                          {validation.touched.status &&
-                          validation.errors.status ? (
+                          {validation.touched.statut &&
+                          validation.errors.statut ? (
                             <FormFeedback type='invalid'>
-                              {validation.errors.status}
+                              {validation.errors.statut}
                             </FormFeedback>
                           ) : null}
                         </FormGroup>

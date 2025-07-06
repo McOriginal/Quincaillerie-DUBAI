@@ -59,13 +59,13 @@ const SidebarData = [
 
   // --------------------------------------
 
-  // Transactions
+  // Transactions / Comptabilité
   {
     label: 'Paiements',
     isMainMenu: true,
   },
   {
-    label: 'Transactions',
+    label: 'Comptabilité',
     icon: 'fas fa-euro-sign',
     subItem: [
       { sublabel: 'Paiement', link: '/paiements' },

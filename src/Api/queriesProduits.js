@@ -54,31 +54,6 @@ export const useOneProduitWhenApprovisionne = (id) =>
     staleTime: 1000 * 60 * 5, //chaque 5 minutes rafraichir les données
   });
 
-// Ajouter une COMMANDE et Decrementer la quantité au Stock de PRODUIT
-export const useDecrementMultipleStocks = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (items) =>
-      api.post('/produits/decrementMultipleStocks', { items }),
-    onSuccess: () => queryClient.invalidateQueries(['produits']),
-  });
-};
-
-// Annuler une Commande et Mettre à jour le Stock
-export const useCancelDecrementMultipleStocks = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ commandeId, items }) =>
-      api.post(`/produits/cancelDecrementMultipleStocks/${commandeId}`, {
-        items,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['produits']);
-      queryClient.invalidateQueries(['commandes']); // si tu veux la liste à jour
-    },
-  });
-};
-
 // Supprimer une produits
 export const useDeleteProduit = () => {
   const queryClient = useQueryClient();

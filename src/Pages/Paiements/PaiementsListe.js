@@ -231,8 +231,10 @@ export default function PaiementsListe() {
                                     </td>
 
                                     <td>
-                                      <div className='d-flex gap-2'>
-                                        {/* <div>
+                                      {isDeleting && <LoadingSpiner />}
+                                      {!isDeleting && (
+                                        <div className='d-flex gap-2'>
+                                          {/* <div>
                                           <button
                                             className='btn btn-sm btn-secondary show-item-btn'
                                             data-bs-toggle='modal'
@@ -244,22 +246,21 @@ export default function PaiementsListe() {
                                             <i className='bx bx-show align-center text-white'></i>
                                           </button>
                                         </div> */}
-                                        <div className='edit'>
-                                          <button
-                                            className='btn btn-sm btn-success edit-item-btn'
-                                            onClick={() => {
-                                              setFormModalTitle(
-                                                'Modifier les données'
-                                              );
-                                              setPaiementToUpdate(paiement);
-                                              tog_form_modal();
-                                            }}
-                                          >
-                                            <i className='ri-pencil-fill text-white'></i>
-                                          </button>
-                                        </div>
-                                        {isDeleting && <LoadingSpiner />}
-                                        {!isDeleting && (
+                                          <div className='edit'>
+                                            <button
+                                              className='btn btn-sm btn-success edit-item-btn'
+                                              onClick={() => {
+                                                setFormModalTitle(
+                                                  'Modifier les données'
+                                                );
+                                                setPaiementToUpdate(paiement);
+                                                tog_form_modal();
+                                              }}
+                                            >
+                                              <i className='ri-pencil-fill text-white'></i>
+                                            </button>
+                                          </div>
+
                                           <div className='remove'>
                                             <button
                                               className='btn btn-sm btn-danger remove-item-btn'
@@ -277,8 +278,8 @@ export default function PaiementsListe() {
                                               <i className='ri-delete-bin-fill text-white'></i>
                                             </button>
                                           </div>
-                                        )}
-                                      </div>
+                                        </div>
+                                      )}
                                     </td>
                                   </tr>
                                 ))}

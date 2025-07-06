@@ -5,16 +5,15 @@ import {
   capitalizeWords,
   formatPhoneNumber,
 } from '../components/capitalizeFunction';
-import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAllCommandes, useDeleteCommande } from '../../Api/queriesCommande';
-import { useCancelDecrementMultipleStocks } from '../../Api/queriesProduits';
+import { useNavigate } from 'react-router-dom';
 
 export default function CommandeListe() {
   // Afficher toutes les commandes
   const { data: commandes, isLoading, error } = useAllCommandes();
-  const { mutate: cancelCommandeAndStock } = useCancelDecrementMultipleStocks();
+  const { mutate: deleteCommandeAndRestorStock } = useDeleteCommande();
 
   // State de chargement pour la suppression
   const [isDeleting, setIsDeletting] = useState(false);
@@ -63,7 +62,7 @@ export default function CommandeListe() {
             // --------------------------------
             setIsDeletting(true);
             // Exécuter l'annulation
-            cancelCommandeAndStock(payload, {
+            deleteCommandeAndRestorStock(payload, {
               onSuccess: () => {
                 setIsDeletting(false);
                 swalWithBootstrapButtons.fire({
@@ -154,8 +153,8 @@ export default function CommandeListe() {
                               <th className='sort' data-sort='items'>
                                 Article
                               </th>
-                              <th className='sort' data-sort='status'>
-                                Status
+                              <th className='sort' data-sort='statut'>
+                                Statut
                               </th>
 
                               <th className='sort' data-sort='action'>
@@ -188,20 +187,13 @@ export default function CommandeListe() {
                                   <td>
                                     <span
                                       className={`badge badge-soft-${
-                                        comm?.status === 'livré' && 'success'
+                                        comm?.statut === 'livré'
+                                          ? 'success'
+                                          : 'warning'
                                       }
-                                            ${
-                                              comm?.status ===
-                                                'partiellement livré' &&
-                                              'danger'
-                                            }
-                                            ${
-                                              comm?.status === 'attente' &&
-                                              'warning'
-                                            }
                                          text-uppercase`}
                                     >
-                                      {comm?.status}
+                                      {comm?.statut}
                                     </span>
                                   </td>
 
@@ -221,7 +213,18 @@ export default function CommandeListe() {
                                             <i className=' bx bx-show-alt text-white'></i>
                                           </button>
                                         </div>
-
+                                        <div className='edit'>
+                                          <button
+                                            className='btn btn-sm btn-success edit-item-btn'
+                                            onClick={() => {
+                                              navigate(
+                                                `/updateCommande/${comm?._id}`
+                                              );
+                                            }}
+                                          >
+                                            <i className='ri-pencil-fill text-white'></i>
+                                          </button>
+                                        </div>
                                         <div className='remove'>
                                           <button
                                             className='btn btn-sm btn-danger remove-item-btn'
@@ -242,36 +245,6 @@ export default function CommandeListe() {
                           </tbody>
                         </table>
                       )}
-                      <div className='noresult' style={{ display: 'none' }}>
-                        <div className='text-center'>
-                          <lord-icon
-                            src='https://cdn.lordicon.com/msoeawqm.json'
-                            trigger='loop'
-                            colors='primary:#121331,secondary:#08a88a'
-                            style={{ width: '75px', height: '75px' }}
-                          ></lord-icon>
-                          <h5 className='mt-2'>Sorry! No Result Found</h5>
-                          <p className='text-muted mb-0'>
-                            We've searched more than 150+ Orders We did not find
-                            any orders for you search.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className='d-flex justify-content-end'>
-                      <div className='pagination-wrap hstack gap-2'>
-                        <Link
-                          className='page-item pagination-prev disabled'
-                          to='#'
-                        >
-                          Previous
-                        </Link>
-                        <ul className='pagination listjs-pagination mb-0'></ul>
-                        <Link className='page-item pagination-next' to='#'>
-                          Next
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 </CardBody>

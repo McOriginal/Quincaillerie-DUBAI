@@ -43,10 +43,14 @@ import FactureListe from '../Pages/Commandes/FactureListe.js';
 import Facture from '../Pages/Commandes/Details/Facture.js';
 import ProduitSansStock from '../Pages/Produits/ProduitSansStock.js';
 import PaiementsHistorique from '../Pages/Commandes/PaiementsHistorique/PaiementsHistorique.js';
+import UpdateCommande from '../Pages/Commandes/UpdateCommande.js';
 
 const sharedRoutes = [
-  // Traitement Detail
+  // Nouvelle Commande
   { path: '/newCommande', component: <NewCommande /> },
+
+  // Modifier une   COMMANDE
+  { path: '/updateCommande/:id', component: <UpdateCommande /> },
 
   // Changer le mot de passe
   { path: '/updatePassword', component: <UpdatePassword /> },
@@ -82,8 +86,6 @@ const authProtectedRoutes = [
 
   // Profile
   { path: '/userprofile', component: <UserProfile /> },
-
-  // Outils Médicals
 
   // Médicament Pharmaceutique
   { path: '/produits', component: <ProduitListe /> },

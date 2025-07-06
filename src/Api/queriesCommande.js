@@ -14,8 +14,8 @@ export const useCreateCommande = () => {
 export const useUpdateCommande = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }) =>
-      api.put(`/commandes/updateCommande/${id}`, data),
+    mutationFn: ({ commandeId, data }) =>
+      api.put(`/commandes/updateCommande/${commandeId}`, data),
     onSuccess: () => queryClient.invalidateQueries(['commandes']),
   });
 };
@@ -37,30 +37,27 @@ export const useOneCommande = (id) =>
     staleTime: 1000 * 60 * 5, //chaque 5 minutes rafraichir les données
   });
 
-// Obtenir une Commande
-export const useTraitementCommande = (traitementID) =>
-  useQuery({
-    queryKey: ['getTraitementCommande', traitementID],
-    queryFn: () =>
-      api
-        .get(`/commandes/getTraitementCommande/${traitementID}`)
-        .then((res) => res.data),
-    staleTime: 1000 * 60 * 5, //chaque 5 minutes rafraichir les données
+// Ajouter une COMMANDE et Decrementer la quantité au Stock de PRODUIT
+export const useDecrementMultipleStocks = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (items) =>
+      api.post('/commandes/decrementMultipleStocks', { items }),
+    onSuccess: () => queryClient.invalidateQueries(['commandes']),
   });
-
-// Obtenir une Commande
-export const useGetTraitementCommande = () =>
-  useQuery({
-    queryKey: ['getTraitementCommande'],
-    queryFn: () =>
-      api.get('/commandes/getTraitementCommande/').then((res) => res.data),
-  });
+};
 
 // Supprimer une Commande
 export const useDeleteCommande = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id) => api.delete(`/commandes/deleteCommande/${id}`),
-    onSuccess: () => queryClient.invalidateQueries(['commandes']),
+    mutationFn: ({ commandeId, items }) =>
+      api.post(`/commandes/deleteCommande/${commandeId}`, {
+        items,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['commandes']);
+      queryClient.invalidateQueries(['commandes']); // si tu veux la liste à jour
+    },
   });
 };
