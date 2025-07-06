@@ -17,22 +17,29 @@ import {
 } from '../../components/AlerteModal';
 import LoadingSpiner from '../../components/LoadingSpiner';
 import { useOneCommande } from '../../../Api/queriesCommande';
-import { useCreatePaiementHistorique } from '../../../Api/queriesPaiementHistorique';
+import {
+  useCreatePaiementHistorique,
+  useUpdatePaiementHistorique,
+} from '../../../Api/queriesPaiementHistorique';
 import { useParams } from 'react-router-dom';
 
-const PaiementsHistoriqueForm = ({ tog_form_modal }) => {
+const PaiementsHistoriqueForm = ({
+  selectedPaiementHistoriqueToUpdate,
+  tog_form_modal,
+}) => {
   // Récuperation de ID dans URL en utilisant UsParams
   const selectedCommande = useParams();
 
   // Paiement Query pour créer la Paiement
   const { mutate: createPaiementHistorique } = useCreatePaiementHistorique();
 
+  // Query Update Paiament Historique
+  const { mutate: updatePaiementHistorique } = useUpdatePaiementHistorique();
   // Query pour affiche toutes les selectedCommandeData
   const { data: selectedCommandeData } = useOneCommande(selectedCommande.id);
 
   // State pour gérer le chargement
   const [isLoading, setIsLoading] = useState(false);
-
   // Form validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -40,9 +47,11 @@ const PaiementsHistoriqueForm = ({ tog_form_modal }) => {
 
     initialValues: {
       commande: selectedCommande.id,
-      paiementDate: undefined,
-      amount: undefined,
-      methode: '',
+      paiementDate:
+        selectedPaiementHistoriqueToUpdate?.paiementDate?.substring(0, 10) ||
+        undefined,
+      amount: selectedPaiementHistoriqueToUpdate?.amount || undefined,
+      methode: selectedPaiementHistoriqueToUpdate?.methode || '',
     },
     validationSchema: Yup.object({
       paiementDate: Yup.date().required('Ce champ est obligatoire'),
@@ -52,26 +61,55 @@ const PaiementsHistoriqueForm = ({ tog_form_modal }) => {
 
     onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
-      // on ajoute le paiements dans l'historique
-      createPaiementHistorique(
-        { ...values, commande: selectedCommande.id },
-        {
-          onSuccess: () => {
-            successMessageAlert('Paiement ajoutée avec succès');
-            setIsLoading(false);
-            resetForm();
-            tog_form_modal();
+
+      const selectedPaiementHistoriqueToUpdateDataLoaded = {
+        ...values,
+      };
+      if (selectedPaiementHistoriqueToUpdate) {
+        updatePaiementHistorique(
+          {
+            id: selectedPaiementHistoriqueToUpdate?._id,
+            data: selectedPaiementHistoriqueToUpdateDataLoaded,
           },
-          onError: (err) => {
-            const errorMessage =
-              err?.response?.data?.message ||
-              err?.message ||
-              "Oh Oh ! une erreur est survenu lors de l'enregistrement";
-            errorMessageAlert(errorMessage);
-            setIsLoading(false);
-          },
-        }
-      );
+          {
+            onSuccess: () => {
+              successMessageAlert('Paiement mise à jour avec succès');
+              setIsLoading(false);
+              resetForm();
+              tog_form_modal();
+            },
+            onError: (err) => {
+              const errorMessage =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Oh Oh ! une erreur est survenu lors de l'enregistrement";
+              errorMessageAlert(errorMessage);
+              setIsLoading(false);
+            },
+          }
+        );
+      } else {
+        // on ajoute le paiements dans l'historique
+        createPaiementHistorique(
+          { ...values, commande: selectedCommande.id },
+          {
+            onSuccess: () => {
+              successMessageAlert('Paiement ajoutée avec succès');
+              setIsLoading(false);
+              resetForm();
+              tog_form_modal();
+            },
+            onError: (err) => {
+              const errorMessage =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Oh Oh ! une erreur est survenu lors de l'enregistrement";
+              errorMessageAlert(errorMessage);
+              setIsLoading(false);
+            },
+          }
+        );
+      }
       setTimeout(() => {
         if (isLoading) {
           errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');

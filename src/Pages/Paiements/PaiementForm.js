@@ -26,8 +26,10 @@ import {
   formatPrice,
 } from '../components/capitalizeFunction';
 import { useAllCommandes } from '../../Api/queriesCommande';
+import { useParams } from 'react-router-dom';
 
 const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
+  const commandeId = useParams();
   // Paiement Query pour créer la Paiement
   const { mutate: createPaiement } = useCreatePaiement();
   // Paiement Query pour Mettre à jour la Paiement
@@ -49,7 +51,9 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     enableReinitialize: true,
 
     initialValues: {
-      commande: paiementToEdit?.commande?._id || '',
+      commande: commandeId
+        ? commandeId.id
+        : paiementToEdit?.commande?._id || '',
       paiementDate: paiementToEdit?.paiementDate.substring(0, 10) || '',
       totalAmount: paiementToEdit?.totalAmount || undefined,
       reduction: paiementToEdit?.reduction || undefined,
@@ -179,7 +183,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               Erreur de chargement veillez acctualiser la page{' '}
             </p>
           )}
-          {!error && !isFetchingCommandes && (
+          {!error && !isFetchingCommandes && !commandeId.id && (
             <FormGroup className='mb-3'>
               <Label htmlFor='commande'>Commande</Label>
 

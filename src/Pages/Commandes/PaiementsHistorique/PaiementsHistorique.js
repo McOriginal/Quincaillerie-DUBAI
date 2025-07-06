@@ -17,9 +17,13 @@ import {
   useAllPaiementsHistorique,
   useDeletePaiementHistorique,
 } from '../../../Api/queriesPaiementHistorique';
+import PaiementForm from '../../Paiements/PaiementForm';
 
 export default function PaiementsHistorique({ id, reliqua }) {
   const [form_modal, setForm_modal] = useState(false);
+  const [paiementHistoriqueToUpdate, setPaiementHistoriqueToUpdate] =
+    useState(null);
+  const [formTitle, setFormTitle] = useState('');
   // Récupération des Historiques de Paiements
   const {
     data: paiementsHistoriqueData,
@@ -51,10 +55,19 @@ export default function PaiementsHistorique({ id, reliqua }) {
             form_modal={form_modal}
             setForm_modal={setForm_modal}
             tog_form_modal={tog_form_modal}
-            modal_title={'Nouveau Historique de Paiement'}
+            modal_title={formTitle}
             size='md'
             bodyContent={
-              <PaiementsHistoriqueForm tog_form_modal={tog_form_modal} />
+              paiementsHistoriqueData?.length === 0 ? (
+                <PaiementForm tog_form_modal={tog_form_modal} />
+              ) : (
+                <PaiementsHistoriqueForm
+                  tog_form_modal={tog_form_modal}
+                  selectedPaiementHistoriqueToUpdate={
+                    paiementHistoriqueToUpdate
+                  }
+                />
+              )
             }
           />
 
@@ -68,19 +81,25 @@ export default function PaiementsHistorique({ id, reliqua }) {
                 <CardBody>
                   <div id='paiementsList'>
                     <Row className='g-4 mb-3'>
+                      {/* {paiementsHistoriqueData?.length > 0 && ( */}
                       <Col className='col-sm-auto'>
                         <div className='d-flex gap-1'>
                           <Button
                             color='info'
                             className='add-btn'
                             id='create-btn'
-                            onClick={() => tog_form_modal()}
+                            onClick={() => {
+                              setPaiementHistoriqueToUpdate(null);
+                              setFormTitle('Nouveau Historique de Paiement');
+                              tog_form_modal();
+                            }}
                           >
                             <i className='fas fa-dollar-sign align-center me-1'></i>{' '}
                             Ajouter un Paiement
                           </Button>
                         </div>
                       </Col>
+                      {/* )} */}
                       <Col>
                         <div className='d-flex flex-column justify-content-center align-items-end '>
                           <h6>
@@ -172,18 +191,24 @@ export default function PaiementsHistorique({ id, reliqua }) {
 
                                     <td>
                                       <div className='d-flex gap-2 justify-content-center alitgn-items-center'>
-                                        {/* <div>
+                                        <div>
                                           <button
-                                            className='btn btn-sm btn-secondary show-item-btn'
+                                            className='btn btn-sm btn-warning show-item-btn'
                                             data-bs-toggle='modal'
-                                            data-bs-target='#showModal'
+                                            data-bs-target='#edit'
                                             onClick={() => {
-                                              handlePaiementClick(paiement._id);
+                                              setPaiementHistoriqueToUpdate(
+                                                paiement
+                                              );
+                                              setFormTitle(
+                                                'Modifier le Paiement'
+                                              );
+                                              tog_form_modal();
                                             }}
                                           >
-                                            <i className='bx bx-show align-center text-white'></i>
+                                            <i className='bx bx-pencil align-center text-white'></i>
                                           </button>
-                                        </div> */}
+                                        </div>
 
                                         {isDeleting && <LoadingSpiner />}
                                         {!isDeleting && (
