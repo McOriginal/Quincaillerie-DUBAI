@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   errorMessageAlert,
   successMessageAlert,
@@ -19,6 +19,7 @@ import LoadingSpiner from '../../components/LoadingSpiner';
 import { useOneCommande } from '../../../Api/queriesCommande';
 import { useParams } from 'react-router-dom';
 import {
+  useAllLivraisonHistorique,
   useCreateLivraisonHistorique,
   useUpdateLivraisonHistorique,
 } from '../../../Api/queriesLivraisonHistorique';
@@ -37,6 +38,9 @@ const LivraisonHistoriqueForm = ({
   // Mettre à jours une Livraison
   const { mutate: updateLivraison } = useUpdateLivraisonHistorique();
 
+  const { data: livraisonHistoriqueData } = useAllLivraisonHistorique(
+    selectedCommande.id
+  );
   // Query pour affiche toutes les selectedCommandeData
   const {
     data: selectedCommandeData,
@@ -127,6 +131,42 @@ const LivraisonHistoriqueForm = ({
     },
   });
 
+  // Trouver la quantité de PRODUIT sélectionné dans la liste
+  const [maxQuantity, setMaxQuantity] = useState(validation.values.quantity);
+  useEffect(() => {
+    // Selected Item
+    const selectedItem = selectedCommandeData?.commandeData?.items?.find(
+      (it) => it?.produit?.name === validation.values.produit
+    );
+
+    // Selected Item Produit qui se trouve dans Livraison Historique data pour calculer le total de Quantité Livrés
+    const historiqueProduitInCommande = livraisonHistoriqueData?.filter(
+      (data) => {
+        return data?.produit.includes(validation.values.produit);
+      }
+    );
+    // Calculer la somme total de Quantité de produit sélectionné
+    const totalQuantityDelivry = historiqueProduitInCommande?.reduce(
+      (acc, item) => (acc += item.quantity),
+      0
+    );
+
+    if (selectedItem) {
+      // Quantité de Produit sélectionné
+      const selectedItemQuantity = selectedItem?.quantity;
+      // Soustraire la Quantité Livré au Quantité restante
+      const quantityToDelivry =
+        selectedItemQuantity - totalQuantityDelivry || 0;
+      // Réinitialiser le champ Quantité par la Quantité restante
+      validation.setFieldValue('quantity', quantityToDelivry);
+      setMaxQuantity(quantityToDelivry);
+    }
+  }, [
+    selectedCommandeData,
+    validation.values.produit,
+    livraisonHistoriqueData,
+  ]);
+
   // Affichage des champs de Formulaire
   return (
     <Form
@@ -191,9 +231,10 @@ const LivraisonHistoriqueForm = ({
               className='form-control'
               id='quantity'
               min={0}
+              max={maxQuantity}
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.quantity || ''}
+              value={validation.values.quantity || 0}
               invalid={
                 validation.touched.quantity && validation.errors.quantity
                   ? true
