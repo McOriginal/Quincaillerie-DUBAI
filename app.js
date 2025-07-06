@@ -2,7 +2,7 @@ const express = require('express');
 // Import des routes
 const userRoute = require('./routes/UserRoute');
 const fournisseurRoute = require('./routes/FournisseurRoute');
-const produitRoute = require('./routes/ProduittRoute');
+const produitRoute = require('./routes/ProduitRoute');
 const commandeRoute = require('./routes/CommandeRoute');
 const paiementRoute = require('./routes/PaiementRoute');
 const paiementHistoriqueRoute = require('./routes/PaiementHistoriqueRoute');

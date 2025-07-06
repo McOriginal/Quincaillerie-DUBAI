@@ -26,18 +26,6 @@ router.get(
 // Mettre à jour une Produit
 router.put('/updateProduit/:id', produitController.updateProduit);
 
-// Decrementer le Stcok de PRODUIT
-router.post(
-  '/decrementMultipleStocks',
-  produitController.decrementMultipleStocks
-);
-
-// Annuler une COMMANDE et faire retablir le Stock de PRODUIT
-router.post(
-  '/cancelDecrementMultipleStocks/:commandeId',
-  produitController.cancelCommande
-);
-
 // supprimer un PRODUIT
 router.delete('/deleteProduit/:id', produitController.deleteProduitById);
 

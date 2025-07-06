@@ -1,6 +1,5 @@
 const Produit = require('../models/ProduitModel');
 const Commande = require('../models/CommandeModel');
-const Paiement = require('../models/PaiementModel');
 
 // Enregistrer un Produit
 exports.createProduit = async (req, res) => {
@@ -154,88 +153,5 @@ exports.deleteAllProduit = async (req, res) => {
       message: 'Erreur lors de la suppression de toute les Produit',
       error: e.message,
     });
-  }
-};
-
-// -----------------------------------------------
-
-// Decrementer la Quantité commandé sur le stock du produit
-exports.decrementMultipleStocks = async (req, res) => {
-  const session = await Produit.startSession();
-  session.startTransaction();
-
-  try {
-    const items = req.body.items; // [{ id, quantity }, ...]
-
-    for (const { produit, quantity } of items) {
-      const produits = await Produit.findById(produit).session(session);
-      if (!produits) {
-        throw new Error(`Produit ${produit} non trouvé`);
-      }
-
-      if (produits.stock < quantity) {
-        console.log(
-          `Stock insuffisant pour ${produits.name}. Disponible : ${produits.stock}`
-        );
-      }
-
-      produits.stock -= quantity;
-      await produits.save({ session });
-    }
-
-    await session.commitTransaction();
-    session.endSession();
-
-    return res.status(200).json({ message: 'Stocks mis à jour avec succès' });
-  } catch (err) {
-    console.log(err);
-    await session.abortTransaction();
-    session.endSession();
-    return res.status(400).json({ message: err.message });
-  }
-};
-
-// Annuler une COMMANDE et faire retablir le stock de PRODUIT
-exports.cancelCommande = async (req, res) => {
-  const session = await Produit.startSession();
-  session.startTransaction();
-
-  try {
-    const commandeId = req.params.commandeId;
-    const { items } = req.body; // [{ ProduitId, quantity }, ...]
-
-    for (const { produit, quantity } of items) {
-      const produits = await Produit.findById(produit).session(session);
-      if (!produits) {
-        throw new Error(`Produit ${produit} non trouvé`);
-      }
-      produits.stock += quantity;
-      await produits.save({ session });
-    }
-
-    // On supprime le PAIEMENT
-    const paiement = await Paiement.find({ commande: commandeId });
-    const deletePaiement = await Paiement.findByIdAndDelete(paiement);
-    if (!paiement) {
-      throw new Error('Paiement non trouvée');
-    }
-    const deletedCommande = await Commande.findByIdAndDelete(commandeId, {
-      session,
-    });
-    if (!deletedCommande) {
-      throw new Error('Commande non trouvée');
-    }
-
-    await session.commitTransaction();
-    session.endSession();
-
-    return res
-      .status(200)
-      .json({ message: 'Annulation réussie, stock rétabli.' });
-  } catch (err) {
-    console.log(err);
-    await session.abortTransaction();
-    session.endSession();
-    return res.status(400).json({ message: err.message });
   }
 };

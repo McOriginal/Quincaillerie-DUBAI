@@ -11,7 +11,15 @@ router.get('/getAllCommandes', commandeController.getAllCommandes);
 //  Obtenir une Commandes
 router.get('/getOneCommande/:id', commandeController.getOneCommande);
 
+// Decrementer le Stcok de PRODUIT
+router.post(
+  '/decrementMultipleStocks',
+  commandeController.decrementMultipleStocks
+);
+
+router.put('/updateCommande/:commandeId', commandeController.updateCommande);
+
 //  Supprimer une Commande
-router.delete('/deleteCommande/:id', commandeController.deleteCommande);
+router.post('/deleteCommande/:commandeId', commandeController.deleteCommande);
 
 module.exports = router;
