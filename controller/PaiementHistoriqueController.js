@@ -49,21 +49,71 @@ exports.createPaiementHistorique = async (req, res) => {
 };
 
 // Mettre à jour un paiement
-// exports.updatePaiementHistorique = async (req, res) => {
-//   try {
-//     const updated = await PaiementHistorique.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       {
-//         new: true,
-//         runValidators: true,
-//       }
-//     );
-//     res.status(200).json(updated);
-//   } catch (err) {
-//     res.status(400).json({ status: 'error', message: err.message });
-//   }
-// };
+exports.updatePaiementHistorique = async (req, res) => {
+  try {
+    const newAmount = req.body.amount;
+    const selectedCommandeId = req.body.commande;
+
+    // Etape 1: chercher si ID de Paiement sélectionné
+    const commandeIDInPaiements = await Paiement.findOne({
+      commande: selectedCommandeId,
+    });
+
+    // On vérifie si le paiement n'existe pas
+    if (!commandeIDInPaiements) {
+      return res
+        .status(404)
+        .json({ message: "Vous devez d'abord ajouter le premier paiement" });
+    }
+
+    // Si la somme payé est supérieur au somme total de Factire ou la somme restant alors
+    if (
+      newAmount > commandeIDInPaiements.totalAmount ||
+      newAmount >
+        commandeIDInPaiements.totalAmount - commandeIDInPaiements.totalPaye
+    ) {
+      return res
+        .status(404)
+        .json({ messgae: 'Votre Montant est supérieur au total restant' });
+    }
+
+    // On vérifie si la SOMME TOTAL n'est pas déjà payé
+    if (commandeIDInPaiements.totalAmount === commandeIDInPaiements.totalPaye) {
+      return res.status(404).json({ message: 'Le PAIEMENT est déjà complet' });
+    }
+
+    // Etape 2 : faire soustraite le (amount) initial sur le TotalPaye, pour ne pass adionner deux fois
+
+    const histPaiementId = req.params.id;
+    const selectedPaiementHistorique = await PaiementHistorique.findById(
+      histPaiementId
+    );
+
+    const oldAmount = selectedPaiementHistorique.amount;
+    // Retablir d'abord le TotalPaye
+    await Paiement.findByIdAndUpdate(commandeIDInPaiements, {
+      $inc: { totalPaye: -oldAmount },
+    });
+
+    // en suite adintioner la nouvealle valeur
+    await Paiement.findByIdAndUpdate(commandeIDInPaiements, {
+      $inc: { totalPaye: +newAmount },
+    });
+
+    const updated = await PaiementHistorique.findByIdAndUpdate(
+      req.params.id,
+      { amount: newAmount, ...req.body },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ status: 'error', message: err.message });
+  }
+};
 
 // Historique des paiements
 exports.getAllPaiementsHistorique = async (req, res) => {

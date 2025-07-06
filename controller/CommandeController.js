@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const Commande = require('../models/CommandeModel');
 const Paiement = require('../models/PaiementModel');
 const Produit = require('../models/ProduitModel');
-const mongoose = require('mongoose');
+const PaiementHistorique = require('../models/PaiementHistoriqueModel');
+const LivraisonHistorique = require('../models/LivraisonHistoriqueModel');
 
 // Créer une COMMANDE
 exports.createCommande = async (req, res) => {
@@ -114,6 +116,7 @@ exports.deleteCommande = async (req, res) => {
     const commandeId = req.params.commandeId;
     const { items } = req.body;
 
+    // Etape 1: Retablir le Stock
     for (const { produit, quantity } of items) {
       const produits = await Produit.findById(produit).session(session);
       if (!produits) {
@@ -123,11 +126,33 @@ exports.deleteCommande = async (req, res) => {
       await produits.save({ session });
     }
 
-    // On supprime le PAIEMENT
+    // Etape 2:  supprime le PAIEMENT et son HISTORIQUE lié
     const paiement = await Paiement.find({ commande: commandeId });
-    if (!paiement) {
-      throw new Error('Paiement non trouvée');
+
+    // Si il ya au mois un PAIEMENT
+    if (paiement) {
+      const paieHistorique = await PaiementHistorique.find({
+        commande: commandeId,
+      });
+      // parcourir dans chaque PaiementHistorique pour supprimer
+      for (const paiHis of paieHistorique) {
+        await PaiementHistorique.findByIdAndDelete(paiHis);
+      }
+      // en suite supprimer le Paiement
+      await Paiement.findByIdAndDelete(paiement);
     }
+
+    // Etape 3: supprimer LivraisonHistorique si ça existe
+    const livHistorique = await LivraisonHistorique.find({
+      commande: commandeId,
+    });
+    if (livHistorique) {
+      for (const hist of livHistorique) {
+        await LivraisonHistorique.findByIdAndDelete(hist);
+      }
+    }
+
+    // Etape 4: Supprimer la COMMANDE
     const deletedCommande = await Commande.findByIdAndDelete(commandeId, {
       session,
     });

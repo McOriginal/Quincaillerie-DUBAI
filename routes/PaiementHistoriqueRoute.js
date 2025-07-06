@@ -21,10 +21,10 @@ router.get(
 );
 
 // Mettre à jour
-// router.put(
-//   '/updatePaiementHistorique/:id',
-//   paiementHistoriqueController.updatePaiementHistorique
-// );
+router.put(
+  '/updatePaiementHistorique/:id',
+  paiementHistoriqueController.updatePaiementHistorique
+);
 
 // Supprimer
 router.delete(
