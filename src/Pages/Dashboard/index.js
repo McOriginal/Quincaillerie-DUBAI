@@ -6,13 +6,9 @@ import { Row, Container, Col } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 import TotalFounisseurs from './TotalFournisseurs';
-import TotalDoctors from './TotalDoctors';
-import TotalPatients from './TotalPatients';
-import TotalChambre from './TotalChambres';
-import TotalBed from './TotalBed';
-import TotalTraitement from './TotalTraitement';
-import BarChartDataRaportsTraitement from '../Raports/DataRaportsTraitement';
-import SelectedMounthTotalTraitement from './SelectedMounthTotalTraitement';
+import TotalProduit from './TotalProduit';
+import TotalCommande from './TotalCommande';
+import TotalArticleSansStock from './TotalArticleSansStock';
 
 const Dashboard = () => {
   document.title = 'Santé MARHABA';
@@ -30,33 +26,23 @@ const Dashboard = () => {
           >
             <Row>
               <Col sm={6} lg={4}>
-                {/* Total Doctors */}
-                <TotalDoctors />
+                {/* Total Article */}
+                <TotalProduit />
               </Col>
               <Col sm={6} lg={4}>
-                {/* Total Patients */}
-                <TotalPatients />
+                {/* Total TotalArticleSansStock */}
+                <TotalArticleSansStock />
               </Col>
               <Col sm={6} lg={4}>
                 {/* Total Fournisseurs */}
 
                 <TotalFounisseurs />
               </Col>
-              <Col sm={6} lg={4}>
-                {/* Total Lits */}
-
-                <TotalBed />
-              </Col>
-              <Col sm={6} lg={4}>
-                {/* Total Chambres */}
-
-                <TotalChambre />
-              </Col>
 
               <Col sm={6} lg={4}>
                 {/* Total Traitements */}
 
-                <TotalTraitement />
+                <TotalCommande />
               </Col>
             </Row>
           </motion.div>

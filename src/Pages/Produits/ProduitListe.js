@@ -40,9 +40,10 @@ export default function ProduitListe() {
     const search = searchTerm.toLowerCase();
 
     return (
-      prod.name?.toLowerCase().includes(search) ||
-      prod.stock?.toString().includes(search) ||
-      prod.price?.toString().includes(search)
+      prod?.name?.toLowerCase().includes(search) ||
+      prod?.category?.toLowerCase().includes(search) ||
+      prod?.stock?.toString().includes(search) ||
+      prod?.price?.toString().includes(search)
     );
   });
 
@@ -142,7 +143,7 @@ export default function ProduitListe() {
               !isLoading &&
               filterSearchProduits?.length > 0 &&
               filterSearchProduits?.map((prod) => (
-                <Col sm={6} lg={4} key={prod._id}>
+                <Col sm={6} lg={4} key={prod?._id}>
                   <Card
                     style={{
                       boxShadow: '0px 0px 10px rgba(121,3,105,0.5)',
@@ -183,7 +184,7 @@ export default function ProduitListe() {
                           <DropdownItem
                             className='edit-item-btn'
                             onClick={() => {
-                              navigateToProduitApprovisonnement(prod._id);
+                              navigateToProduitApprovisonnement(prod?._id);
                             }}
                           >
                             <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
@@ -193,7 +194,11 @@ export default function ProduitListe() {
                           <DropdownItem
                             className='remove-item-btn'
                             onClick={() => {
-                              deleteButton(prod._id, prod.name, deleteProduit);
+                              deleteButton(
+                                prod?._id,
+                                prod?.name,
+                                deleteProduit
+                              );
                             }}
                           >
                             {' '}
@@ -211,21 +216,24 @@ export default function ProduitListe() {
                         width: '60%',
                         objectFit: 'contain',
                       }}
-                      src={prod.imageUrl ? prod.imageUrl : defaultImg}
-                      alt={prod.name}
+                      src={prod?.imageUrl ? prod?.imageUrl : defaultImg}
+                      alt={prod?.name}
                     />
 
                     <CardBody>
                       <CardText className='fs-6 text-center'>
-                        {capitalizeWords(prod.name)}
+                        {capitalizeWords(prod?.name)}
+                      </CardText>
+                      <CardText className='font-size-12 text-center'>
+                        {capitalizeWords(prod?.category)}
                       </CardText>
 
                       <CardTitle className='text-center'>
-                        {formatPrice(prod.price)} F
+                        {formatPrice(prod?.price)} F
                       </CardTitle>
                       <CardTitle className='text-center'>
                         Stock:
-                        {prod.stock >= 10 ? (
+                        {prod?.stock >= 10 ? (
                           <span style={{ color: 'gray' }}>
                             {' '}
                             {formatPrice(prod?.stock)}

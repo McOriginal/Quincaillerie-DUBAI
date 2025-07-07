@@ -33,9 +33,14 @@ import { useOneCommande, useUpdateCommande } from '../../Api/queriesCommande';
 export default function UpdateCommande() {
   // State de navigation
   const navigate = useNavigate();
-
+  // Query de Commande Sélectionnée
+  const { id } = useParams();
   // Query pour afficher les Médicament
   const { data: produitsData, isLoading, error } = useAllProduit();
+
+  // Query pour Modifier une COMMANDE dans la base de données
+  const { mutate: updateCommande } = useUpdateCommande();
+
   // Recherche State
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -50,11 +55,6 @@ export default function UpdateCommande() {
     );
   });
 
-  // Query pour Modifier une COMMANDE dans la base de données
-  const { mutate: updateCommande } = useUpdateCommande();
-
-  // Query de Commande Sélectionnée
-  const { id } = useParams();
   const {
     data: selectedCommande,
     isLoading: isFetchingCommande,
