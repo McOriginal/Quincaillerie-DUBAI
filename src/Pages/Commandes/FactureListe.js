@@ -24,8 +24,7 @@ import {
   companyAdresse,
   companyName,
   companyTel,
-  companyLogo,
-} from '../Logo/logo';
+} from '../CompanyInfo/CompanyInfo';
 import { useAllCommandes } from '../../Api/queriesCommande';
 
 import outil_1 from '../../assets/images/outil (1).png';

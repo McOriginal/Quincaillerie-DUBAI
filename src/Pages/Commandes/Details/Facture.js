@@ -22,22 +22,26 @@ import { useOneCommande } from '../../../Api/queriesCommande';
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import html2pdf from 'html2pdf.js';
-import { companyAdresse, companyName, companyTel } from '../../Logo/logo';
 
-import outil_1 from '../../../assets/images/outil (1).png';
-import outil_2 from '../../../assets/images/outil (2).png';
-import outil_3 from '../../../assets/images/outil (3).png';
-import outil_4 from '../../../assets/images/outil (4).png';
-import outil_5 from '../../../assets/images/outil (5).png';
-import outil_6 from '../../../assets/images/outil (6).png';
-import outil_7 from '../../../assets/images/outil (7).png';
-import outil_8 from '../../../assets/images/outil (8).png';
-import outil_9 from '../../../assets/images/outil (9).png';
-import outil_10 from '../../../assets/images/outil (10).png';
-import outil_11 from '../../../assets/images/outil (11).png';
-import outil_12 from '../../../assets/images/outil (12).png';
 import PaiementsHistorique from '../PaiementsHistorique/PaiementsHistorique';
 import LivraisonHistorique from '../Livraison/ListeLivraisonHistorique';
+import {
+  companyAdresse,
+  companyName,
+  companyTel,
+  outil_1,
+  outil_10,
+  outil_11,
+  outil_12,
+  outil_2,
+  outil_3,
+  outil_4,
+  outil_5,
+  outil_6,
+  outil_7,
+  outil_8,
+  outil_9,
+} from '../../CompanyInfo/CompanyInfo';
 
 export default function Facture() {
   const { id } = useParams();

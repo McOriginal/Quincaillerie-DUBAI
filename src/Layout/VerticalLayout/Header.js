@@ -16,7 +16,7 @@ import {
   companyLittleName,
   companyName,
   companyLogo,
-} from '../../Pages/Logo/logo';
+} from '../../Pages/CompanyInfo/CompanyInfo';
 
 const Header = (props) => {
   function toggleFullscreen() {

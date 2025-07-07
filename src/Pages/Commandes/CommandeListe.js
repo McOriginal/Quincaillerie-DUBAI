@@ -1,4 +1,4 @@
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
+import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
@@ -28,7 +28,7 @@ export default function CommandeListe() {
 
   // ---------------------------
   // Fonction pour exeuter l'annulation de la décrementation des stocks
-  function cancelCommande(comm) {
+  function deleteCommande(comm) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success ms-2',
@@ -52,8 +52,8 @@ export default function CommandeListe() {
         if (result.isConfirmed) {
           try {
             const payload = {
-              commandeId: comm._id,
-              items: comm.items.map((item) => ({
+              commandeId: comm?._id,
+              items: comm?.items.map((item) => ({
                 produit: item.produit,
                 quantity: item.quantity,
               })),
@@ -104,6 +104,21 @@ export default function CommandeListe() {
   }
   // ------------------------------------------------------------
 
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Fonction de Recherche dans la barre de recherche
+  const filterCommandes = commandes?.commandesListe?.filter((comm) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      comm?.fullName.toLowerCase().includes(search) ||
+      comm?.phoneNumber.toString().includes(search) ||
+      comm?.adresse.toLowerCase().includes(search) ||
+      comm?.items?.length.toString().includes(search) ||
+      comm?.statut.toLowerCase().includes(search) ||
+      new Date(comm?.createdAt).toLocaleDateString('fr-FR').includes(search)
+    );
+  });
+
   return (
     <React.Fragment>
       <div className='page-content'>
@@ -116,7 +131,25 @@ export default function CommandeListe() {
               <Card>
                 <CardBody>
                   <div id='commandeList'>
-                    <Row className='g-4 mb-3'></Row>
+                    <div className='d-flex justify-content-sm-end gap-2'>
+                      {searchTerm !== '' && (
+                        <Button
+                          color='danger'
+                          onClick={() => setSearchTerm('')}
+                        >
+                          <i className='fas fa-window-close'></i>
+                        </Button>
+                      )}
+                      <div className='search-box me-4'>
+                        <input
+                          type='text'
+                          className='form-control search border border-dark rounded'
+                          placeholder='Rechercher...'
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                    </div>
 
                     {error && (
                       <div className='text-danger text-center'>
@@ -126,12 +159,12 @@ export default function CommandeListe() {
                     {isLoading && <LoadingSpiner />}
 
                     <div className='table-responsive table-card mt-3 mb-1'>
-                      {commandes?.length === 0 && (
+                      {filterCommandes?.length === 0 && (
                         <div className='text-center text-mutate'>
                           Aucune commande pour le moment !
                         </div>
                       )}
-                      {!error && !isLoading && (
+                      {!error && !isLoading && filterCommandes?.length > 0 && (
                         <table
                           className='table align-middle table-nowrap table-hover'
                           id='commandeTable'
@@ -163,12 +196,12 @@ export default function CommandeListe() {
                             </tr>
                           </thead>
                           <tbody className='list form-check-all text-center'>
-                            {commandes?.commandesListe?.length > 0 &&
-                              commandes?.commandesListe?.map((comm) => (
-                                <tr key={comm._id}>
+                            {filterCommandes?.length > 0 &&
+                              filterCommandes?.map((comm) => (
+                                <tr key={comm?._id}>
                                   <th scope='row'>
                                     {new Date(
-                                      comm.createdAt
+                                      comm?.createdAt
                                     ).toLocaleDateString('fr-Fr', {
                                       weekday: 'short',
                                       year: 'numeric',
@@ -176,12 +209,14 @@ export default function CommandeListe() {
                                       day: '2-digit',
                                     })}
                                   </th>
-                                  <td>{capitalizeWords(comm.fullName)}</td>
-                                  <td>{formatPhoneNumber(comm.phoneNumber)}</td>
-                                  <td>{capitalizeWords(comm.adresse)}</td>
+                                  <td>{capitalizeWords(comm?.fullName)}</td>
+                                  <td>
+                                    {formatPhoneNumber(comm?.phoneNumber)}
+                                  </td>
+                                  <td>{capitalizeWords(comm?.adresse)}</td>
 
                                   <td>
-                                    {comm.items.length} acticles
+                                    {comm?.items.length} acticles
                                     {'  '}
                                   </td>
                                   <td>
@@ -231,7 +266,7 @@ export default function CommandeListe() {
                                             data-bs-toggle='modal'
                                             data-bs-target='#deleteRecordModal'
                                             onClick={() => {
-                                              cancelCommande(comm);
+                                              deleteCommande(comm);
                                             }}
                                           >
                                             <i className='ri-delete-bin-fill text-white'></i>

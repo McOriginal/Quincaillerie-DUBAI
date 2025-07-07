@@ -24,7 +24,7 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { companyLogo } from '../Logo/logo';
+import { companyLogo } from '../CompanyInfo/CompanyInfo';
 
 const Register = () => {
   document.title = 'Inscription | Santé MARHABA ';

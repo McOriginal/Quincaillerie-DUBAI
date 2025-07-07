@@ -20,7 +20,7 @@ import { useFormik } from 'formik';
 // action
 
 // import images
-import { companyLogo } from '../Logo/logo';
+import { companyLogo } from '../CompanyInfo/CompanyInfo';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   errorMessageAlert,

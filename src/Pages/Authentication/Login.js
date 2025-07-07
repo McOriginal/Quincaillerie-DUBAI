@@ -23,7 +23,7 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { companyLogo } from '../Logo/logo';
+import { companyLogo } from '../CompanyInfo/CompanyInfo';
 
 const Login = () => {
   document.title = 'Connexion | Santé MARHABA ';

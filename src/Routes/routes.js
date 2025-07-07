@@ -74,6 +74,7 @@ const authProtectedRoutes = [
 
   // Historique Paiement
   { path: '/paiements_historique/:id', component: <PaiementsHistorique /> },
+  // { path: '/paiements_historique/facturePaiement/:id', component: <FacturePaiement /> },
 
   //  Factures Liste
   { path: '/factures', component: <FactureListe /> },

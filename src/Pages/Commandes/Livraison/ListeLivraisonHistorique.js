@@ -106,7 +106,7 @@ export default function LivraisonHistorique({ id }) {
                               tog_form_modal();
                             }}
                           >
-                            <i className='fas fa-dollar-sign align-center me-1'></i>{' '}
+                            <i className='fas fa-plus align-center me-1'></i>{' '}
                             Ajouter une Livraison
                           </Button>
                         </div>

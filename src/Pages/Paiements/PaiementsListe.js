@@ -30,13 +30,13 @@ export default function PaiementsListe() {
       `${paiement?.commande?.fulltName}`.toLowerCase().includes(search) ||
       paiement?.commande?.adresse.toLowerCase().includes(search) ||
       (paiement?.commande?.phoneNumber || '').toString().includes(search) ||
-      paiement.totalAmount.toString().includes(search) ||
-      (paiement.totalPaye || '').toString().includes(search) ||
-      (paiement.reduction || 0).toString().includes(search) ||
-      paiement.statut.toLowerCase().includes(search) ||
+      paiement?.totalAmount.toString().includes(search) ||
+      (paiement?.totalPaye || '').toString().includes(search) ||
+      (paiement?.reduction || 0).toString().includes(search) ||
+      paiement?.statut.toLowerCase().includes(search) ||
       (
-        paiement.paiementDate &&
-        new Date(paiement.paiementDate).toLocaleDateString()
+        paiement?.paiementDate &&
+        new Date(paiement?.paiementDate).toLocaleDateString()
       ).includes(search)
     );
   });
@@ -122,7 +122,7 @@ export default function PaiementsListe() {
                     <div className='table-responsive table-card mt-3 mb-1'>
                       {filterSearchPaiement?.length === 0 && (
                         <div className='text-center text-mutate'>
-                          Aucun paiement trouvée !
+                          Aucun paiement trouver !
                         </div>
                       )}
                       {!error &&
@@ -166,10 +166,10 @@ export default function PaiementsListe() {
                             <tbody className='list form-check-all text-center'>
                               {filterSearchPaiement?.length > 0 &&
                                 filterSearchPaiement?.map((paiement) => (
-                                  <tr key={paiement._id}>
+                                  <tr key={paiement?._id}>
                                     <th scope='row'>
                                       {new Date(
-                                        paiement.paiementDate
+                                        paiement?.paiementDate
                                       ).toLocaleDateString()}
                                     </th>
                                     <td
@@ -193,22 +193,22 @@ export default function PaiementsListe() {
                                     </td>
 
                                     <td>
-                                      {formatPrice(paiement.totalAmount)}
+                                      {formatPrice(paiement?.totalAmount)}
                                       {' F '}
                                     </td>
                                     <td>
-                                      {formatPrice(paiement.totalPaye)}
+                                      {formatPrice(paiement?.totalPaye)}
                                       {' F '}
                                     </td>
                                     <td>
-                                      {paiement.totalAmount -
-                                        paiement.totalPaye >
+                                      {paiement?.totalAmount -
+                                        paiement?.totalPaye >
                                       0 ? (
                                         <span className='text-danger'>
                                           {' '}
                                           {formatPrice(
-                                            paiement.totalAmount -
-                                              paiement.totalPaye
+                                            paiement?.totalAmount -
+                                              paiement?.totalPaye
                                           )}
                                           {' F '}
                                         </span>
@@ -216,18 +216,18 @@ export default function PaiementsListe() {
                                         <span>
                                           {' '}
                                           {formatPrice(
-                                            paiement.totalAmount -
-                                              paiement.totalPaye
+                                            paiement?.totalAmount -
+                                              paiement?.totalPaye
                                           )}
                                           {' F '}
                                         </span>
                                       )}
                                     </td>
                                     <td className='text-warning'>
-                                      {formatPrice(paiement.reduction)} F
+                                      {formatPrice(paiement?.reduction)} F
                                     </td>
                                     <td className='text-warning'>
-                                      {capitalizeWords(paiement.methode)}
+                                      {capitalizeWords(paiement?.methode)}
                                     </td>
 
                                     <td>
@@ -240,7 +240,7 @@ export default function PaiementsListe() {
                                             data-bs-toggle='modal'
                                             data-bs-target='#showModal'
                                             onClick={() => {
-                                              handlePaiementClick(paiement._id);
+                                              handlePaiementClick(paiement?._id);
                                             }}
                                           >
                                             <i className='bx bx-show align-center text-white'></i>
@@ -268,8 +268,8 @@ export default function PaiementsListe() {
                                               data-bs-target='#deleteRecordModal'
                                               onClick={() => {
                                                 deleteButton(
-                                                  paiement._id,
-                                                  `Paiement de ${paiement.totalAmount} F
+                                                  paiement?._id,
+                                                  `Paiement de ${paiement?.totalAmount} F
                                                    `,
                                                   deletePaiement
                                                 );
