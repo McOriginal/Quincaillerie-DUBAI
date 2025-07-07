@@ -82,11 +82,11 @@ exports.updateProduit = async (req, res) => {
 //  Afficher les Produit avec une stock minimum de (1)
 exports.getAllProduits = async (req, res) => {
   try {
-    const Produits = await Produit.find({ stock: { $gt: 1 } })
+    const produits = await Produit.find({ stock: { $gt: 1 } })
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 });
 
-    return res.status(200).json(Produits);
+    return res.status(200).json(produits);
   } catch (err) {
     return res.status(400).json({ status: 'error', message: err.message });
   }
@@ -96,11 +96,11 @@ exports.getAllProduits = async (req, res) => {
 exports.getAllProduitWithStockFinish = async (req, res) => {
   try {
     // Tous les produits dont le stock mximum est 3
-    const Produits = await Produit.find({ stock: { $lt: 3 } })
+    const produits = await Produit.find({ stock: { $lt: 10 } })
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 });
 
-    return res.status(200).json(Produits);
+    return res.status(200).json(produits);
   } catch (err) {
     return res.status(400).json({ status: 'error', message: err.message });
   }
