@@ -82,7 +82,7 @@ exports.updateProduit = async (req, res) => {
 //  Afficher les Produit avec une stock minimum de (1)
 exports.getAllProduits = async (req, res) => {
   try {
-    const produits = await Produit.find({ stock: { $gt: 1 } })
+    const produits = await Produit.find({ stock: { $gt: 0 } })
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 });
 

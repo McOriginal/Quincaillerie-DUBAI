@@ -1,4 +1,5 @@
 const LivraisonHistorique = require('../models/LivraisonHistoriqueModel');
+const Commande = require('../models/CommandeModel');
 
 // Ajouter de Livraison
 exports.createLivraisonHistorique = async (req, res) => {
@@ -34,6 +35,27 @@ exports.getAllLivraisonHistorique = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .populate('commande');
+
+    // Vérfion pour chaque produit livré si la quantité livré correspond au quantité commandée alors on met à jours le status de commande par "Livré"
+    const commande = await Commande.findById(req.params.id).populate(
+      'items.produit'
+    );
+    // if (!commande) {
+    //   return res.status(404).json({ message: 'Commande non trouvée' });
+    // }
+    const totalCommandeQuantity = commande.items.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0);
+    const totalLivraisonQuantity = livraison.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0);
+
+    // Si la quantité totale livrée correspond à la quantité totale commandée, on met à jour le statut de la commande
+    // et on Sauvegarde le Statut de la commande par "livré"
+    if (totalCommandeQuantity === totalLivraisonQuantity) {
+      commande.statut = 'livré';
+      commande.save();
+    }
     return res.status(200).json(livraison);
   } catch (e) {
     console.log(e);

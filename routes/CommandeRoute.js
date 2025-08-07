@@ -12,10 +12,10 @@ router.get('/getAllCommandes', commandeController.getAllCommandes);
 router.get('/getOneCommande/:id', commandeController.getOneCommande);
 
 // Decrementer le Stcok de PRODUIT
-router.post(
-  '/decrementMultipleStocks',
-  commandeController.decrementMultipleStocks
-);
+// router.post(
+//   '/decrementMultipleStocks',
+//   commandeController.decrementMultipleStocks
+// );
 
 router.put('/updateCommande/:commandeId', commandeController.updateCommande);
 

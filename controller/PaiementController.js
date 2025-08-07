@@ -107,7 +107,7 @@ exports.deletePaiement = async (req, res) => {
     const deletedPaiement = await Paiement.findById(req.params.id);
 
     // On Trouve la liste des HISTORIQUE de PAIEMENT dont ID de COMMANDE correspond à celle qu'on veux supprimer
-    const deletedHistoriquePaiement = await PaiementHistorique.find({
+    await PaiementHistorique.deleteMany({
       commande: deletedPaiement.commande,
     });
 
@@ -116,8 +116,6 @@ exports.deletePaiement = async (req, res) => {
     //   deletedHistoriquePaiement
     // );
     // console.log('------ Historique supprimés---------\n ', hisdelete);
-
-    await PaiementHistorique.deleteMany({ deletedHistoriquePaiement });
 
     // après on supprime le PAIEMENT
     await Paiement.findByIdAndDelete(req.params.id);

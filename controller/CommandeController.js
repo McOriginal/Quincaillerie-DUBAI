@@ -7,12 +7,45 @@ const LivraisonHistorique = require('../models/LivraisonHistoriqueModel');
 
 // Créer une COMMANDE
 exports.createCommande = async (req, res) => {
+  const session = await Produit.startSession();
+  session.startTransaction();
   try {
     const { fullName, phoneNumber, adresse, items, ...restOfData } = req.body;
     const lowerName = fullName.toLowerCase();
     const lowerAdresse = adresse.toLowerCase();
     const formattedPhoneNumber = Number(phoneNumber);
 
+    // Etape 1 :  Vérifier si les items existent et si le stock est suffisant
+    for (const { produit, quantity } of items) {
+      // Parcourir chaque produit dans les items
+      const prod = await Produit.findById(produit).session(session);
+      if (!prod) {
+        throw new Error(`Produit ${produit} non trouvé`);
+      }
+
+      // Vérifier si le stock est suffisant
+      // Si le stock est insuffisant, retourner une erreur
+      if (prod.stock < quantity) {
+        console.log(
+          `Stock insuffisant pour ${prod.name}. Disponible : ${prod.stock}`
+        );
+        return res
+          .status(404)
+          .json({
+            message: `Stock insuffisant pour: ${prod.name} Stock: ${prod.stock}`,
+          });
+      }
+
+      // Si le stock est suffisant, décrémenter le stock
+      // et sauvegarder le produit
+      prod.stock -= quantity;
+      await prod.save({ session });
+    }
+
+    // -----------------------------------------------------------
+
+    // Etape 2 : Créer la COMMANDE
+    // Créer une nouvelle commande avec les données fournies
     const newCommande = await Commande.create({
       items,
       fullName: lowerName,
@@ -21,7 +54,11 @@ exports.createCommande = async (req, res) => {
       ...restOfData,
     });
 
-    res.status(201).json(newCommande);
+    // On arrêtre la session
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(201).json(newCommande);
   } catch (error) {
     console.log("Erreur de validation l'Commande :", error);
     res.status(500).json({ message: 'Erreur serveur' });

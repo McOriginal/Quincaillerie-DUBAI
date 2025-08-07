@@ -42,7 +42,7 @@ const commandeSchema = new mongoose.Schema(
     },
     statut: {
       type: String,
-      enum: ['livré', 'partiellement livré', 'attente'],
+      enum: ['livré', 'en cours', 'en attente'],
       default: 'cash',
       required: true,
     },
