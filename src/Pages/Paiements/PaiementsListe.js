@@ -12,6 +12,7 @@ import {
 import { deleteButton } from '../components/AlerteModal';
 import { useAllPaiements, useDeletePaiement } from '../../Api/queriesPaiement';
 import PaiementForm from './PaiementForm';
+import ReçuPaiement from './ReçuPaiement';
 
 export default function PaiementsListe() {
   const [form_modal, setForm_modal] = useState(false);
@@ -19,6 +20,8 @@ export default function PaiementsListe() {
   const { mutate: deletePaiement, isDeleting } = useDeletePaiement();
   const [paiementToUpdate, setPaiementToUpdate] = useState(null);
   const [formModalTitle, setFormModalTitle] = useState('Nouveau Paiement');
+  const [selectedPaiement, setSelectedPaiement] = useState(null);
+  const [show_modal, setShow_modal] = useState(false);
 
   // State de Recherche
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,6 +48,11 @@ export default function PaiementsListe() {
   function tog_form_modal() {
     setForm_modal(!form_modal);
   }
+
+  // Ouverture de Modal Reçu Paiement
+  function tog_show_modal() {
+    setShow_modal(!show_modal);
+  }
   return (
     <React.Fragment>
       <div className='page-content'>
@@ -66,6 +74,12 @@ export default function PaiementsListe() {
             }
           />
 
+          {/* -------------------- */}
+          <ReçuPaiement
+            show_modal={show_modal}
+            tog_show_modal={tog_show_modal}
+            selectedPaiementID={selectedPaiement}
+          />
           {/* -------------------- */}
           <Row>
             <Col lg={12}>
@@ -234,18 +248,21 @@ export default function PaiementsListe() {
                                       {isDeleting && <LoadingSpiner />}
                                       {!isDeleting && (
                                         <div className='d-flex gap-2'>
-                                          {/* <div>
-                                          <button
-                                            className='btn btn-sm btn-secondary show-item-btn'
-                                            data-bs-toggle='modal'
-                                            data-bs-target='#showModal'
-                                            onClick={() => {
-                                              handlePaiementClick(paiement?._id);
-                                            }}
-                                          >
-                                            <i className='bx bx-show align-center text-white'></i>
-                                          </button>
-                                        </div> */}
+                                          <div>
+                                            <button
+                                              className='btn btn-sm btn-secondary show-item-btn'
+                                              data-bs-toggle='modal'
+                                              data-bs-target='#showModal'
+                                              onClick={() => {
+                                                setSelectedPaiement(
+                                                  paiement?._id
+                                                );
+                                                tog_show_modal();
+                                              }}
+                                            >
+                                              <i className='bx bx-show align-center text-white'></i>
+                                            </button>
+                                          </div>
                                           <div className='edit'>
                                             <button
                                               className='btn btn-sm btn-success edit-item-btn'
@@ -269,7 +286,9 @@ export default function PaiementsListe() {
                                               onClick={() => {
                                                 deleteButton(
                                                   paiement?._id,
-                                                  `Paiement de ${paiement?.totalAmount} F
+                                                  `Paiement de ${formatPrice(
+                                                    paiement?.totalAmount
+                                                  )} F
                                                    `,
                                                   deletePaiement
                                                 );

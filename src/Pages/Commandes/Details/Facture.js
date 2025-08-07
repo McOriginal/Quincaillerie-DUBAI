@@ -359,7 +359,10 @@ export default function Facture() {
           {/* Historique de Paiement */}
 
           {/* Historique de Lvraison */}
-          <LivraisonHistorique id={id} />
+          <LivraisonHistorique
+            id={id}
+            commandeItems={selectedCommande?.commandeData}
+          />
           {/* Historique de Lvraison */}
         </Container>
       </div>

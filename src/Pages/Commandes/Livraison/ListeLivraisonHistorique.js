@@ -21,7 +21,7 @@ import {
 } from '../../../Api/queriesLivraisonHistorique';
 import LivraisonHistoriqueForm from './LivraisonHistoriqueForm';
 
-export default function LivraisonHistorique({ id }) {
+export default function LivraisonHistorique({ id, commandeItems }) {
   const [form_modal, setForm_modal] = useState(false);
   // Récupération des Historiques de Livraison Historique
   const {
@@ -58,13 +58,28 @@ export default function LivraisonHistorique({ id }) {
     }
   );
 
-  // La Quantité des produits Filter dans la barre de recherche
-  const filterQuantity = filterSearchLivraisonHistorique?.reduce(
-    (acc, item) => (acc += item?.quantity),
-    0
-  );
-  // ----------------------------------------
+  // ------------------------------------------------
+  // Calcule de Quantité Commandés et Livrée pour chaque Produit
+  const productDelivredResult = commandeItems?.items?.map((commItem) => {
+    const livraisonFilter = livraisonHistoriqueData?.filter(
+      (livItem) => livItem?.produit === commItem?.produit.name
+    );
 
+    const totalQuantityDelivry = livraisonFilter.reduce(
+      (current, value) => (current += value.quantity),
+      0
+    );
+
+    return {
+      produit: commItem?.produit?.name,
+      quantityCommandee: commItem?.quantity,
+      quantityLivree: totalQuantityDelivry,
+      quantityRestante: commItem?.quantity - totalQuantityDelivry,
+    };
+  });
+  // ---------------------------------------
+  // ---------------------------------------
+  // ---------------------------------------
   return (
     <React.Fragment>
       <div className='page-content'>
@@ -89,7 +104,7 @@ export default function LivraisonHistorique({ id }) {
             <Col lg={12}>
               <Card>
                 <CardTitle className='text-center mb-4 mt-2 font-size-20 '>
-                  Produits Livrés
+                  Historique de Livraison
                 </CardTitle>
                 <CardBody>
                   <div id='Livraison HistoriqueList'>
@@ -111,16 +126,7 @@ export default function LivraisonHistorique({ id }) {
                           </Button>
                         </div>
                       </Col>
-                      <Col className='col-sm-auto'>
-                        {searchTerm !== '' && (
-                          <h6>
-                            Quantié Livré:{' '}
-                            <span className='text-warning'>
-                              {formatPrice(filterQuantity)}
-                            </span>{' '}
-                          </h6>
-                        )}
-                      </Col>
+
                       <Col className='col-sm-auto'>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (
@@ -143,6 +149,30 @@ export default function LivraisonHistorique({ id }) {
                         </div>
                       </Col>
                     </Row>
+                    <div className='col-sm-auto'>
+                      {productDelivredResult?.map((item) => (
+                        <div key={item?.produit} className='text-center my-2'>
+                          <p className='font-size-13'>
+                            <strong className='text-muted'>
+                              {capitalizeWords(item?.produit)}:{' '}
+                            </strong>
+                            <span className='text-warning'>
+                              {' '}
+                              {formatPrice(item?.quantityLivree)}
+                            </span>{' '}
+                            Livré sur{' '}
+                            <span className='text-info'>
+                              {' '}
+                              {formatPrice(item?.quantityCommandee)}
+                            </span>{' '}
+                            Commandé
+                            <span className='text-danger mx-3'>
+                              Restant: {formatPrice(item?.quantityRestante)}
+                            </span>{' '}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                     {error && (
                       <div className='text-danger text-center'>
                         Erreur de chargement des données

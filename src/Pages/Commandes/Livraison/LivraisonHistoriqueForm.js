@@ -50,7 +50,6 @@ const LivraisonHistoriqueForm = ({
 
   // State pour gérer le chargement
   const [isLoading, setIsLoading] = useState(false);
-
   // ------------------------------------------------------------------------
   // Form validation
   const validation = useFormik({
@@ -61,7 +60,7 @@ const LivraisonHistoriqueForm = ({
       commande:
         selectedLivraisonToUpdate?.commande?._id || selectedCommande?.id,
       produit: selectedLivraisonToUpdate?.produit || '',
-      quantity: selectedLivraisonToUpdate?.quantity || undefined,
+      quantity: selectedLivraisonToUpdate?.quantity || 0,
       livraisonDate:
         selectedLivraisonToUpdate?.livraisonDate?.substring(0, 10) || undefined,
     },
@@ -154,12 +153,15 @@ const LivraisonHistoriqueForm = ({
     if (selectedItem) {
       // Quantité de Produit sélectionné
       const selectedItemQuantity = selectedItem?.quantity;
-      // Soustraire la Quantité Livré au Quantité restante
-      const quantityToDelivry =
-        selectedItemQuantity - totalQuantityDelivry || 0;
+      // Si le bouton modifier est cliqué alors on affiche la Quantité Livré SINON on Soustraire la Quantité Livré au Quantité restante
+      const quantityToDelivry = selectedLivraisonToUpdate
+        ? selectedLivraisonToUpdate?.quantity
+        : selectedItemQuantity - totalQuantityDelivry;
       // Réinitialiser le champ Quantité par la Quantité restante
       validation.setFieldValue('quantity', quantityToDelivry);
-      setMaxQuantity(quantityToDelivry);
+      setMaxQuantity(
+        selectedLivraisonToUpdate ? selectedItemQuantity : quantityToDelivry
+      );
     }
   }, [
     selectedCommandeData,
@@ -167,6 +169,7 @@ const LivraisonHistoriqueForm = ({
     livraisonHistoriqueData,
   ]);
 
+  // console.log('Validation Quantité: ', validation.values.quantity);
   // Affichage des champs de Formulaire
   return (
     <Form
@@ -206,11 +209,21 @@ const LivraisonHistoriqueForm = ({
                 }
               >
                 <option value=''>Sélectionner un Produit</option>
-                {selectedCommandeData?.commandeData?.items?.map((item) => (
-                  <option key={item?.produit?._id} value={item?.produit?.name}>
-                    {capitalizeWords(item?.produit?.name)}{' '}
+
+                {selectedLivraisonToUpdate ? (
+                  <option value={selectedLivraisonToUpdate?.produit}>
+                    {capitalizeWords(selectedLivraisonToUpdate?.produit)}
                   </option>
-                ))}
+                ) : (
+                  selectedCommandeData?.commandeData?.items?.map((item) => (
+                    <option
+                      key={item?.produit?._id}
+                      value={item?.produit?.name}
+                    >
+                      {capitalizeWords(item?.produit?.name)}{' '}
+                    </option>
+                  ))
+                )}
               </Input>
               {validation.touched.produit && validation.errors.produit ? (
                 <FormFeedback type='invalid'>
@@ -224,13 +237,19 @@ const LivraisonHistoriqueForm = ({
       <Row>
         <Col sm={12}>
           <FormGroup className='mb-3'>
-            <Label htmlFor='quantity'>Quantité</Label>
+            <Label htmlFor='quantity'>
+              {' '}
+              {selectedLivraisonToUpdate
+                ? 'Quantité Livrée'
+                : 'Quantité Restante'}{' '}
+            </Label>
+
             <Input
               name='quantity'
               type='number'
               className='form-control'
               id='quantity'
-              min={0}
+              min={1}
               max={maxQuantity}
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}

@@ -28,10 +28,7 @@ import {
 import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
 import { useAllProduit } from '../../Api/queriesProduits';
-import {
-  useCreateCommande,
-  useDecrementMultipleStocks,
-} from '../../Api/queriesCommande';
+import { useCreateCommande } from '../../Api/queriesCommande';
 
 export default function NewCommande() {
   // State de navigation
@@ -39,7 +36,6 @@ export default function NewCommande() {
 
   // Query pour afficher les Médicament
   const { data: produitsData, isLoading, error } = useAllProduit();
-  const { mutate: decrementStock } = useDecrementMultipleStocks();
   // Recherche State
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -175,35 +171,22 @@ export default function NewCommande() {
         return;
       }
 
-      decrementStock(payload.items, {
+      createCommande(payload, {
         onSuccess: () => {
-          // On passe au CREATION de COMMANDE dans la table
-          createCommande(payload, {
-            onSuccess: () => {
-              // Après on vide le panier
-              clearCart();
-              successMessageAlert(
-                capitalizeWords('Commande Enregistrée avec succès !')
-              );
-              setIsSubmitting(false);
-              resetForm();
-              navigate('/paiements');
-            },
-            onError: (err) => {
-              const message =
-                err?.response?.data?.message ||
-                err.message ||
-                "Erreur lors de l'Enregistrement !";
-              errorMessageAlert(message);
-              setIsSubmitting(false);
-            },
-          });
+          // Après on vide le panier
+          clearCart();
+          successMessageAlert(
+            capitalizeWords('Commande Enregistrée avec succès !')
+          );
+          setIsSubmitting(false);
+          resetForm();
+          navigate('/paiements');
         },
         onError: (err) => {
           const message =
             err?.response?.data?.message ||
             err.message ||
-            'Erreur veuillez reprendre !';
+            "Erreur lors de l'Enregistrement !";
           errorMessageAlert(message);
           setIsSubmitting(false);
         },
@@ -285,6 +268,13 @@ export default function NewCommande() {
                             <CardBody>
                               <CardText className='text-center'>
                                 {capitalizeWords(produit.name)}
+                              </CardText>
+                              <CardText className='font-size-15 text-center'>
+                                <strong>Catégorie: </strong>{' '}
+                                <span className='text-info '>
+                                  {' '}
+                                  {capitalizeWords(produit?.category)}{' '}
+                                </span>
                               </CardText>
 
                               <CardText className='text-center fw-bold'>
@@ -542,10 +532,10 @@ export default function NewCommande() {
                           >
                             <option value=''>Sélectionner le Statut</option>
                             <option value='livré'>Livré</option>
-                            <option value='partiellement livré'>
+                            <option value='en cours'>
                               Partiellement Livré
                             </option>
-                            <option value='attente'>En Attente</option>
+                            <option value='en attente'>En Attente</option>
                           </Input>
                           {validation.touched.statut &&
                           validation.errors.statut ? (

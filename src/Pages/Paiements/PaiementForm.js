@@ -51,9 +51,10 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
     enableReinitialize: true,
 
     initialValues: {
-      commande: commandeId
-        ? commandeId.id
-        : paiementToEdit?.commande?._id || '',
+      commande:
+        commandeId !== undefined && commandeId.id
+          ? commandeId.id
+          : paiementToEdit?.commande?._id || '',
       paiementDate: paiementToEdit?.paiementDate.substring(0, 10) || '',
       totalAmount: paiementToEdit?.totalAmount || undefined,
       reduction: paiementToEdit?.reduction || undefined,
@@ -132,6 +133,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       }, 10000);
     },
   });
+  console.log('Paiement to Edit: ', paiementToEdit);
 
   // Calcule de Somme Total en fonction de commande Sélectionné
   useEffect(() => {

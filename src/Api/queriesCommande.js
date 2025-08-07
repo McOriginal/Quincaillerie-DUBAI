@@ -38,14 +38,14 @@ export const useOneCommande = (id) =>
   });
 
 // Ajouter une COMMANDE et Decrementer la quantité au Stock de PRODUIT
-export const useDecrementMultipleStocks = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (items) =>
-      api.post('/commandes/decrementMultipleStocks', { items }),
-    onSuccess: () => queryClient.invalidateQueries(['commandes']),
-  });
-};
+// export const useDecrementMultipleStocks = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: (items) =>
+//       api.post('/commandes/decrementMultipleStocks', { items }),
+//     onSuccess: () => queryClient.invalidateQueries(['commandes']),
+//   });
+// };
 
 // Supprimer une Commande
 export const useDeleteCommande = () => {

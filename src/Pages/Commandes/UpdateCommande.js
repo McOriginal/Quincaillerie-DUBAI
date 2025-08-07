@@ -183,20 +183,6 @@ export default function UpdateCommande() {
         totalAmount,
       };
 
-      // Vérification du stock pour chaque produit
-      const insufficientStockItems = cartItems.filter(
-        (item) => item.quantity > item.produit.stock
-      );
-
-      if (insufficientStockItems.length > 0) {
-        const names = insufficientStockItems
-          .map((item) => `${item.produit.name} (stock: ${item.produit.stock})`)
-          .join(', ');
-        errorMessageAlert(`Stock insuffisant pour : ${capitalizeWords(names)}`);
-        setIsSubmitting(false);
-        return;
-      }
-
       // On passe au Modification de COMMANDE dans la table
       updateCommande(
         { commandeId: selectedCommande?.commandeData?._id, data: payload },
@@ -566,10 +552,10 @@ export default function UpdateCommande() {
                             >
                               <option value=''>Sélectionner le Statut</option>
                               <option value='livré'>Livré</option>
-                              <option value='partiellement livré'>
+                              <option value='en cours'>
                                 Partiellement Livré
                               </option>
-                              <option value='attente'>En Attente</option>
+                              <option value='en attente'>En Attente</option>
                             </Input>
                             {validation.touched.statut &&
                             validation.errors.statut ? (

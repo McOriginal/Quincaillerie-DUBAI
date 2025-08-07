@@ -155,11 +155,12 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               }
             >
               <option value=''>Sélectionner une catégorie</option>
-              <option value='plomberie'>Plomberie</option>
-              <option value='electronique'>Electronique</option>
+              <option value='construction'>Construction</option>
+              <option value='électronique'>Électronique</option>
+              <option value='decoration'>Décoration</option>
               <option value='menuisier'>Menuisier</option>
               <option value='métalique'>Métalique</option>
-              <option value='intérieur'>Intérieur et Décoration</option>
+              <option value='plomberie'>Plomberie</option>
               <option value='divers'>Divers</option>
             </Input>
             {validation.touched.category && validation.errors.category ? (

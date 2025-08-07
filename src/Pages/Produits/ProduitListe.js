@@ -224,8 +224,12 @@ export default function ProduitListe() {
                       <CardText className='fs-6 text-center'>
                         {capitalizeWords(prod?.name)}
                       </CardText>
-                      <CardText className='font-size-12 text-center'>
-                        {capitalizeWords(prod?.category)}
+                      <CardText className='font-size-15 text-center'>
+                        <strong>Catégorie: </strong>{' '}
+                        <span className='text-info '>
+                          {' '}
+                          {capitalizeWords(prod?.category)}{' '}
+                        </span>
                       </CardText>
 
                       <CardTitle className='text-center'>
