@@ -17,7 +17,7 @@ export default function TotalFounisseurs() {
       {!fournisseurError && !fournisseurLoading && (
         <Card
           style={{
-            height: '150px',
+            height: '180px',
             boxShadow: '1px 0px 10px rgba(1, 186, 186, 0.57)',
           }}
         >
@@ -28,8 +28,8 @@ export default function TotalFounisseurs() {
           />
           <CardBody>
             <CardTitle className='text-center'>
-              Fournisseurs:{' '}
               <span className='text-info fs-5'>{fournisseurData.length}</span>
+              <p>Fournisseurs</p>
             </CardTitle>
           </CardBody>
         </Card>

@@ -61,14 +61,15 @@ const Header = (props) => {
       <header id='page-topbar'>
         <div className='navbar-header'>
           <div className='d-flex'>
-            <div className='navbar-brand-box text-center'>
+            <div className='navbar-brand-box text-center pt-5'>
               <span>
                 <img
                   src={companyLogo}
                   style={{
-                    width: '80px',
+                    width: '60px',
+                    marginBottom: '10px',
                   }}
-                  alt=''
+                  alt='logo'
                 />
                 <h5 className='text-white'>{companyLittleName} </h5>
               </span>

@@ -119,14 +119,14 @@ const Layout = (props) => {
   // ---------------------------------------------------
   // ---------------------------------------------------
   // Vérification de role d'utilisateur pour afficher le SIDEBAR en fonction de cela
-  const [contentSidebar, setContentSidebar] = useState();
+  const [sidebarContent, setSidebarContent] = useState();
   const role = connectedUserRole;
 
   useEffect(() => {
     if (!role) return;
 
     if (role === 'admin') {
-      setContentSidebar(
+      setSidebarContent(
         <Sidebar
           theme={leftSideBarTheme}
           type={leftSideBarType}
@@ -134,7 +134,7 @@ const Layout = (props) => {
         />
       );
     } else if (role === 'medecin') {
-      setContentSidebar(
+      setSidebarContent(
         <SidebarMedecins
           theme={leftSideBarTheme}
           type={leftSideBarType}
@@ -155,7 +155,7 @@ const Layout = (props) => {
         {/* ----------------------------------------------------- */}
         {/* ---------- Dinamyque SIDBAR Content------------------------------------ */}
 
-        {/* {contentSidebar} */}
+        {/* {sidebarContent} */}
         <Sidebar
           theme={leftSideBarTheme}
           type={leftSideBarType}

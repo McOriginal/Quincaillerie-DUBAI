@@ -4,7 +4,7 @@ const SidebarData = [
     isMainMenu: true,
   },
   {
-    label: 'Dashboard',
+    label: 'Tableau De Bord',
     icon: 'mdi mdi-home-variant-outline',
     isHasArrow: true,
     url: '/dashboard',
@@ -20,7 +20,7 @@ const SidebarData = [
     url: '/produits',
   },
   {
-    label: 'Stock Terminé',
+    label: 'Produit En Stock Faible',
     icon: 'mdi mdi-sitemap',
     isHasArrow: true,
     url: '/produit_no_stock',
@@ -61,15 +61,15 @@ const SidebarData = [
 
   // Transactions / Comptabilité
   {
-    label: 'Paiements',
+    label: 'Entrées & Sorties',
     isMainMenu: true,
   },
   {
     label: 'Comptabilité',
     icon: 'fas fa-euro-sign',
     subItem: [
-      { sublabel: 'Paiement', link: '/paiements' },
-      { sublabel: 'Dépense', link: '/depenses' },
+      { sublabel: 'Entrées (Paiement)', link: '/paiements' },
+      { sublabel: 'Sorties (Dépense)', link: '/depenses' },
     ],
   },
 
@@ -95,8 +95,10 @@ const SidebarData = [
   {
     label: 'Rapports et Suivie',
     icon: 'fas fa-chart-bar',
-    subItem: [{ sublabel: 'Raports', link: '/rapports' }],
+    isHasArrow: true,
+    url: '/rapports',
   },
+
   // --------------------------------------
 ];
 export default SidebarData;

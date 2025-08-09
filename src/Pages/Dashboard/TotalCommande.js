@@ -18,7 +18,7 @@ export default function TotalCommande() {
       {!commandeError && !loadingCommande && (
         <Card
           style={{
-            height: '150px',
+            height: '180px',
             boxShadow: '1px 0px 10px rgba(1, 186, 186, 0.57)',
           }}
         >
@@ -29,10 +29,10 @@ export default function TotalCommande() {
           />
           <CardBody>
             <CardTitle className='text-center'>
-              Commandes:{' '}
               <span className='text-info fs-5'>
                 {commandeData?.commandesListe?.length}
               </span>
+              <p>Commandes</p>
             </CardTitle>
           </CardBody>
         </Card>

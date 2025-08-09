@@ -1,12 +1,12 @@
 import { Card, CardBody, CardTitle, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import React from 'react';
-import RaportsBarChart from './DataRaportsPatientTraitementOrdonnace';
+import RaportsBarChart from './DataRaportsCommandesPaiements';
 import BarChartEntreSortie from './DataRaportsEntreSortie';
-import SelectedMounthTotalTraitement from './SelectedMounthTotalTraitement';
 import RapportByDay from './RapportByDay';
 import RapportBySemaine from './RapportBySemaine';
-import BarChartPatientsTraitement from './DataRaportsPatientsTraitement';
+import SelectedMounthTotalResult from './SelectedMounthTotalResult';
+import { companyName } from '../CompanyInfo/CompanyInfo';
 
 const Rapports = () => {
   document.title = 'Raports | Centre de Santé - MARHABA ';
@@ -29,7 +29,7 @@ const Rapports = () => {
 
           <Row>
             <Col md={12}>
-              <SelectedMounthTotalTraitement />
+              <SelectedMounthTotalResult />
             </Col>
 
             <Col sm={12}>
@@ -37,8 +37,8 @@ const Rapports = () => {
                 <CardBody>
                   <CardTitle>Entrée et Sortie</CardTitle>
                   <p className='card-title-desc'>
-                    Le raports de Centre de Santé MARHABA vous permet de
-                    visualiser les données statistiques concernant les
+                    Le raports de {companyName} vous permet de visualiser les
+                    données statistiques concernant les
                     <span className='text-info'>
                       {' '}
                       Entrées, & Dépenses.
@@ -56,30 +56,16 @@ const Rapports = () => {
                 <CardBody>
                   <CardTitle>Rapports et Suivis</CardTitle>
                   <p className='card-title-desc'>
-                    Le raports de Centre de Santé MARHABA vous permet de
-                    visualiser les données statistiques concernant les
+                    Le raports de {companyName} vous permet de visualiser les
+                    données statistiques concernant les
                     <span className='text-info'>
                       {' '}
-                      traitements, les patients et les ordonnances.
+                      Commandes, Paiements.
                     </span>{' '}
                     Vous pouvez également suivre l'évolution des revenus
                     mensuels.
                   </p>
                   <RaportsBarChart />
-                </CardBody>
-              </Card>
-            </Col>
-
-            {/* -------------------- */}
-            <Col sm={12}>
-              <Card>
-                <CardBody>
-                  <CardTitle>Rapports et Suivis</CardTitle>
-                  <p>
-                    Rapport sur le nombre de{' '}
-                    <strong>Patient et Traitement</strong>{' '}
-                  </p>
-                  <BarChartPatientsTraitement />
                 </CardBody>
               </Card>
             </Col>

@@ -18,19 +18,19 @@ export default function TotalProduit() {
       {!produitError && !produitLoading && (
         <Card
           style={{
-            height: '150px',
+            height: '180px',
             boxShadow: '1px 0px 10px rgba(1, 186, 186, 0.57)',
           }}
         >
           <CardImg
             src={produitImage}
-            alt='Patients'
+            alt='product'
             style={{ height: '90px', objectFit: 'contain' }}
           />
           <CardBody>
             <CardTitle className='text-center'>
-              Articles:{' '}
               <span className='text-info fs-5'>{produitData.length}</span>
+              <p>Produits</p>
             </CardTitle>
           </CardBody>
         </Card>

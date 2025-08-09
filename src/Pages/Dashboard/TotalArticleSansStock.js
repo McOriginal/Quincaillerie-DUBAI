@@ -2,23 +2,28 @@ import { Card, CardBody, CardImg, CardTitle } from 'reactstrap';
 import LoadingSpiner from '../components/LoadingSpiner';
 
 import articleImg from './../../assets/images/package.png';
-import { useAllProduitWithStockInferieure } from '../../Api/queriesProduits';
+import {
+  useAllProduit,
+  useAllProduitWithStockInferieure,
+} from '../../Api/queriesProduits';
 
 export default function TotalArticleSansStock() {
   // Article Data
   const {
-    data: articleData,
-    isLoading: articlesLoading,
-    error: articlesError,
-  } = useAllProduitWithStockInferieure();
+    data: productData,
+    isLoading: productLoading,
+    error: productError,
+  } = useAllProduit();
+
+  const finishStock = productData?.filter((item) => item.stock <= 10);
 
   return (
     <div>
-      {articlesLoading && <LoadingSpiner />}
-      {!articlesError && !articlesLoading && (
+      {productLoading && <LoadingSpiner />}
+      {!productError && !productLoading && (
         <Card
           style={{
-            height: '150px',
+            height: '180px',
             boxShadow: '1px 0px 10px rgba(1, 186, 186, 0.57)',
           }}
         >
@@ -29,8 +34,8 @@ export default function TotalArticleSansStock() {
           />
           <CardBody>
             <CardTitle className='text-center'>
-              Stock Faible:{' '}
-              <span className='text-danger fs-5'>{articleData.length}</span>
+              <span className='text-danger fs-5'>{finishStock?.length}</span>
+              <p>Produits En Stock Faible</p>
             </CardTitle>
           </CardBody>
         </Card>

@@ -156,12 +156,12 @@ export default function LivraisonHistorique({ id, commandeItems }) {
                             <strong className='text-muted'>
                               {capitalizeWords(item?.produit)}:{' '}
                             </strong>
-                            <span className='text-warning'>
+                            <span className='text-success'>
                               {' '}
                               {formatPrice(item?.quantityLivree)}
                             </span>{' '}
                             Livré sur{' '}
-                            <span className='text-info'>
+                            <span className='text-warning'>
                               {' '}
                               {formatPrice(item?.quantityCommandee)}
                             </span>{' '}
