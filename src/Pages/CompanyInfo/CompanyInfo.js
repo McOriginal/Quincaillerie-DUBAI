@@ -16,6 +16,8 @@ const companyName = 'Quincaillerie DUBAI';
 
 const companyLittleName = 'Quincaillerie DUBAI';
 
+const companyOwnerName = 'Chez MOHAMED WOROFANA';
+
 const companyAdresse =
   "Kabala sur la route d'université en face de station PETRO BAMA";
 
@@ -25,6 +27,7 @@ export {
   companyLogo,
   companyName,
   companyLittleName,
+  companyOwnerName,
   companyAdresse,
   companyTel,
   outil_1,

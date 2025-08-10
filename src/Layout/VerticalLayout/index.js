@@ -133,7 +133,7 @@ const Layout = (props) => {
           isMobile={isMobile}
         />
       );
-    } else if (role === 'medecin') {
+    } else if (role === 'user') {
       setSidebarContent(
         <SidebarMedecins
           theme={leftSideBarTheme}

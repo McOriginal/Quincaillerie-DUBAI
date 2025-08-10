@@ -10,7 +10,7 @@ import withRouter from '../../components/Common/withRouter';
 //Import Breadcrumb
 import Breadcrumb from '../../components/Common/Breadcrumb';
 
-import avatar from '../../assets/images/doc_man_avatar.jpg';
+import avatar from '../../assets/images/user_profile_image.png';
 import {
   connectedUserEmail,
   connectedUserId,
@@ -18,10 +18,11 @@ import {
 } from './userInfos';
 import { AuthContext } from '../../Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { companyName } from '../CompanyInfo/CompanyInfo';
 // actions
 
 const UserProfile = () => {
-  document.title = 'Profile | MARHABA Santé';
+  document.title = `Profile | ${companyName} `;
 
   const navigate = useNavigate();
 
@@ -57,18 +58,25 @@ const UserProfile = () => {
                     </div>
                     <div className='text-center'>
                       <div className='text-muted'>
-                        <h5>Dr. {connectedUserName}</h5>
+                        <h5>Utilisateur: {connectedUserName}</h5>
                         <p className='mb-1'>{connectedUserEmail}</p>
                       </div>
                     </div>
 
                     <div className='mt-4 d-flex flex-column gap-4'>
                       <Button
+                        color='info'
+                        onClick={() => navigate('/register')}
+                      >
+                        Créer un Compte
+                      </Button>
+                      <Button
                         color='warning'
                         onClick={() => navigate('/updatePassword')}
                       >
                         Changer mon mot de passe
                       </Button>
+
                       <Button color='danger' onClick={() => logout()}>
                         Déconnecter
                       </Button>

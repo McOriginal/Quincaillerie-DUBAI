@@ -77,7 +77,7 @@ const Header = (props) => {
 
             <button
               type='button'
-              className='btn btn-sm px-3 font-size-24 header-item waves-effect'
+              className='btn btn-sm px-3 font-size-24 header-item waves-effect  mt-4'
               id='vertical-menu-btn'
               onClick={() => {
                 tToggle();

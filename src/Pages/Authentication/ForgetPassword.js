@@ -22,7 +22,11 @@ import { useFormik } from 'formik';
 // action
 
 // import images
-import { companyLogo } from '../CompanyInfo/CompanyInfo';
+import {
+  companyLogo,
+  companyName,
+  companyOwnerName,
+} from '../CompanyInfo/CompanyInfo';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   errorMessageAlert,
@@ -31,7 +35,7 @@ import {
 import { useSendVerifyCodePasswordPassword } from '../../Api/queriesAuth';
 
 const ForgetPasswordPage = () => {
-  document.title = 'Mot de passe oublié | MARHABA Santé';
+  document.title = `Mot de passe oublié | ${companyName}`;
 
   // Qeury Reset Password
   const { mutate: sendVerifyCodePassword } =
@@ -40,6 +44,12 @@ const ForgetPasswordPage = () => {
 
   // State de navigation
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  // handle show password toggle
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   // Formmik
   const validation = useFormik({
@@ -146,7 +156,8 @@ const ForgetPasswordPage = () => {
                   </div>
                   <div className='mt-5 text-center'>
                     <p className='text-secondary'>
-                      © {new Date().getFullYear()} Santé MARHABA |{' '}
+                      © {new Date().getFullYear()} {companyName}{' '}
+                      {companyOwnerName} |{' '}
                       <i className='mdi mdi-heart text-danger'></i> Créé Par{' '}
                       <Link to={'https://www.cissemohamed.com'} target='blank'>
                         Cisse Mohamed

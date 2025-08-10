@@ -23,10 +23,14 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { companyLogo } from '../CompanyInfo/CompanyInfo';
+import {
+  companyLogo,
+  companyName,
+  companyOwnerName,
+} from '../CompanyInfo/CompanyInfo';
 
 const Login = () => {
-  document.title = 'Connexion | Santé MARHABA ';
+  document.title = `Connexion | Santé MARHABA ${companyName} `;
 
   // Query de Login
   const { mutate: loginUser } = useLogin();
@@ -35,6 +39,13 @@ const Login = () => {
 
   // State de Navigation
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  // handle show password toggle
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -76,11 +87,9 @@ const Login = () => {
                   navigate('/dashboard');
                   break;
                 case 'medecin':
-                  navigate('/dashboard-medecin');
+                  navigate('/dashboard-user');
                   break;
-                case 'secretaire':
-                  navigate('/dashboard-secretaire');
-                  break;
+
                 default:
                   errorMessageAlert('Rôle non reconnu.');
               }
@@ -125,14 +134,15 @@ const Login = () => {
                           height='54'
                           className='auth-logo logo-dark mx-auto'
                         />
+                        <h5 className=' text-info mt-2 text-center'>
+                          {companyName}
+                        </h5>
+                        <h6 className='text-info'>{companyOwnerName}</h6>
+                        <p className='my-3 text-center'>
+                          Entrez vos coordonnées pour vous connecter à votre
+                          compte.
+                        </p>
                       </div>
-                      <h4 className='font-size-18 text-info mt-2 text-center'>
-                        Cabinet de soins MARHABA Santé
-                      </h4>
-                      <p className='my-3 text-center'>
-                        Entrez vos coordonnées pour vous connecter à votre
-                        compte.
-                      </p>
                       <Form
                         className='form-horizontal'
                         onSubmit={(e) => {
@@ -167,43 +177,60 @@ const Login = () => {
                                 </FormFeedback>
                               ) : null}
                             </div>
-                            <div className='mb-4'>
+                            <div className='mb-3'>
                               <Label className='form-label'>Mot de passe</Label>
-                              <Input
-                                name='password'
-                                value={validation.values.password || ''}
-                                type='password'
-                                placeholder='Enter Password'
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                invalid={
-                                  validation.touched.password &&
-                                  validation.errors.password
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validation.touched.password &&
-                              validation.errors.password ? (
-                                <FormFeedback type='invalid'>
-                                  <div> {validation.errors.password} </div>
-                                </FormFeedback>
-                              ) : null}
+                              <div className='d-flex gap-2 justify-content-center flex-nowrap  pb-3'>
+                                <div className=' w-100'>
+                                  <Input
+                                    name='password'
+                                    value={validation.values.password || ''}
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder='Enter Password'
+                                    className='form-controle border border-secondary'
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    invalid={
+                                      validation.touched.password &&
+                                      validation.errors.password
+                                        ? true
+                                        : false
+                                    }
+                                  />
+                                  {validation.touched.password &&
+                                  validation.errors.password ? (
+                                    <FormFeedback type='invalid'>
+                                      <div> {validation.errors.password} </div>
+                                    </FormFeedback>
+                                  ) : null}
+                                </div>
+
+                                {/* Password visible */}
+                                <div className='show-details '>
+                                  <button
+                                    className='btn btn-sm btn-secondary show-item-btn'
+                                    type='button'
+                                    onClick={handleShowPassword}
+                                  >
+                                    {showPassword ? (
+                                      <i className='ri-eye-off-fill'></i>
+                                    ) : (
+                                      <i className='ri-eye-fill'></i>
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
                             </div>
 
-                            <Row>
-                              <Col className='col-7'>
-                                <div className='text-md-end mt-3 mt-md-0'>
-                                  <Link
-                                    to='/forgotPassword'
-                                    className='text-warning'
-                                  >
-                                    <i className='mdi mdi-lock'></i> Mot de
-                                    passe oubliée !
-                                  </Link>
-                                </div>
-                              </Col>
-                            </Row>
+                            <div className='text-md-center my-1 '>
+                              <Link
+                                to='/forgotPassword'
+                                className='text-warning'
+                              >
+                                <i className='mdi mdi-lock'></i> Mot de passe
+                                oubliée !
+                              </Link>
+                            </div>
+
                             <div className='d-grid mt-4'>
                               {isLoading ? (
                                 <LoadingSpiner />
@@ -224,7 +251,8 @@ const Login = () => {
                 </Card>
                 <div className='mt-5 text-center'>
                   <p className='text-white-50'>
-                    © {new Date().getFullYear()} Santé MARHABA |{' '}
+                    © {new Date().getFullYear()} {companyName}{' '}
+                    {companyOwnerName} |{' '}
                     <i className='mdi mdi-heart text-danger'></i> Créé Par{' '}
                     <Link to={'https://www.cissemohamed.com'} target='blank'>
                       Cisse Mohamed

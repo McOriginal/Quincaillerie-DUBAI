@@ -24,10 +24,14 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { companyLogo } from '../CompanyInfo/CompanyInfo';
+import {
+  companyLogo,
+  companyName,
+  companyOwnerName,
+} from '../CompanyInfo/CompanyInfo';
 
 const Register = () => {
-  document.title = 'Inscription | Santé MARHABA ';
+  document.title = `Inscription | ${companyName} `;
 
   //   RegisterQuery
   const { mutate: registerUser } = useRegister();
@@ -36,6 +40,12 @@ const Register = () => {
 
   //   Navigation State
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  // handle show password toggle
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   //   Validation Formik
   const validation = useFormik({
@@ -95,20 +105,23 @@ const Register = () => {
             <Col lg={6} md={8} xl={4}>
               <Card className='mt-5'>
                 <CardBody className='p-4'>
-                  <div className='text-center'>
+                  <div className='text-center mb-4'>
+                    <p className='font-size-16 text-muted text-center mb-4'>
+                      Créer un compte
+                    </p>
                     <img
                       src={companyLogo}
                       alt=''
                       height='54'
                       className='auth-logo logo-dark mx-auto'
                     />
+                    <h5 className=' text-info mt-2 text-center'>
+                      {companyName}
+                    </h5>
+                    <h6 className='text-info mt-2 text-center'>
+                      {companyOwnerName}
+                    </h6>
                   </div>
-                  <h4 className='font-size-18 text-info mt-2 text-center'>
-                    Cabinet de soins MARHABA Santé
-                  </h4>
-                  <p className='font-size-16 text-muted text-center mt-2'>
-                    Créer un compte
-                  </p>
 
                   <Form
                     className='form-horizontal'
@@ -161,8 +174,7 @@ const Register = () => {
                           >
                             <option value=''>Sélectionner un rôle</option>
                             <option value='admin'>Administrateur</option>
-                            <option value='medecin'>Médecin</option>
-                            <option value='secretaire'>Sécretaire</option>
+                            <option value='user'>Utilisateur</option>
                           </Input>
                           {validation.touched.role && validation.errors.role ? (
                             <FormFeedback type='invalid'>
@@ -198,26 +210,46 @@ const Register = () => {
 
                         <div className='mb-4'>
                           <Label className='form-label'>Mot de passe</Label>
-                          <Input
-                            name='password'
-                            type='password'
-                            placeholder='Enter Password'
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.password || ''}
-                            invalid={
-                              validation.touched.password &&
-                              validation.errors.password
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.password &&
-                          validation.errors.password ? (
-                            <FormFeedback type='invalid'>
-                              <div>{validation.errors.password}</div>
-                            </FormFeedback>
-                          ) : null}
+                          <div className='d-flex gap-2 justify-content-center flex-nowrap  pb-3'>
+                            <div className=' w-100'>
+                              <Input
+                                name='password'
+                                value={validation.values.password || ''}
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder='Enter Password'
+                                className='form-controle border border-secondary'
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                invalid={
+                                  validation.touched.password &&
+                                  validation.errors.password
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.password &&
+                              validation.errors.password ? (
+                                <FormFeedback type='invalid'>
+                                  <div> {validation.errors.password} </div>
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+
+                            {/* Password visible */}
+                            <div className='show-details '>
+                              <button
+                                className='btn btn-sm btn-secondary show-item-btn'
+                                type='button'
+                                onClick={handleShowPassword}
+                              >
+                                {showPassword ? (
+                                  <i className='ri-eye-off-fill'></i>
+                                ) : (
+                                  <i className='ri-eye-fill'></i>
+                                )}
+                              </button>
+                            </div>
+                          </div>
                         </div>
 
                         <div className='d-grid mt-4'>
@@ -239,8 +271,8 @@ const Register = () => {
               </Card>
               <div className='mt-5 text-center'>
                 <p className='text-white-50'>
-                  © {new Date().getFullYear()} Santé MARHABA |{' '}
-                  <i className='mdi mdi-heart text-danger'></i> Créé Par{' '}
+                  © {new Date().getFullYear()} {companyName} {companyOwnerName}{' '}
+                  | <i className='mdi mdi-heart text-danger'></i> Créé Par{' '}
                   <Link to={'https://www.cissemohamed.com'} target='blank'>
                     Cisse Mohamed
                   </Link>
