@@ -119,7 +119,7 @@ exports.sendVerifyCodePassword = async (req, res) => {
 
     // Générer un code aléatoire
     const code = Math.floor(1000 + Math.random() * 9000);
-    const expires = new Date(Date.now() + 2 * 60 * 1000); // 10 minutes
+    const expires = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
     // Configuration transporteur
     const transporter = nodemailer.createTransport({
@@ -131,10 +131,10 @@ exports.sendVerifyCodePassword = async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: `"Santé MARHABA" <${process.env.EMAIL_USER}>`,
+      from: `"Quicaillerie DUBAI CHEZ MOHAMED WOROFANA" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Code de réinitialisation',
-      text: `Votre code de réinitialisation est : ${code}. Il expire dans 10 seconde.`,
+      text: `Votre code de réinitialisation est : ${code}. ce code expire dans deux minutes.`,
     });
 
     res

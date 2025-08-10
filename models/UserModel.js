@@ -22,26 +22,13 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'medecin', 'secretaire'],
+      enum: ['admin', 'user'],
     },
   },
   {
     timestamps: true,
   }
 );
-
-//  Hash le mot de passe avant enregistrement si modifié
-// UserSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) return next();
-
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// });
-
-// // Méthode pour comparer le mot de passe
-// UserSchema.methods.comparePassword = async function (candidatePassword) {
-//   return await bcrypt.compare(candidatePassword, this.password);
-// };
 
 const User = mongoose.model('User', UserSchema);
 
