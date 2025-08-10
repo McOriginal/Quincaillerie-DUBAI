@@ -224,49 +224,299 @@ export default function UpdateCommande() {
         <Container fluid>
           <Breadcrumbs title='Commandes' breadcrumbItem='Nouvelle Commande' />
 
+          
+          {/* ---------------------------------------------------------------------- */}
+          {/* ---------------------------------------------------------------------- */}
+          {/* Panier */}
           <Row>
-            {/* Liste des produits */}
-            <Col md={7}>
+            {/* ------------------------------------------------------------- */}
+            {/* Les information sur Client */}
+            {/* ------------------------------------------------------------- */}
+            <Col md={6}>
               <Card>
+                <CardTitle className='text-center m-2'>
+                  Informations Client
+                </CardTitle>
                 <CardBody>
-                  {isLoading && <LoadingSpiner />}
-                  {error && (
-                    <div className='text-danger text-center'>
-                      Une erreur est survenue ! Veuillez actualiser la page.
-                    </div>
-                  )}
-                  <Row>
-                    {/* Barre de Recherche */}
-                    <Col sm={12} className='my-4'>
-                      <div className='d-flex justify-content-start gap-2 p-2'>
-                        {searchTerm !== '' && (
-                          <Button
-                            color='danger'
-                            onClick={() => setSearchTerm('')}
-                          >
-                            <i className='fas fa-window-close'></i>
-                          </Button>
-                        )}
-                        <div className='search-box me-4'>
-                          <input
+                  <Form
+                    className='needs-validation'
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      return false;
+                    }}
+                  >
+                    <Row>
+                      <Col sm={6}>
+                        <FormGroup>
+                          <Label for='fullName'>Nom et Prénom</Label>
+                          <Input
+                            name='fullName'
+                            id='fullName'
                             type='text'
-                            className='form-control search border border-dark rounded'
-                            placeholder='Rechercher...'
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className='form form-control'
+                            placeholder='Nom et Prénom de Client'
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.fullName || ''}
+                            invalid={
+                              validation.touched.fullName &&
+                              validation.errors.fullName
+                                ? true
+                                : false
+                            }
                           />
+                          {validation.touched.fullName &&
+                          validation.errors.fullName ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.fullName}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                      <Col sm={6}>
+                        <FormGroup>
+                          <Label for='phoneNumber'>Téléphone</Label>
+                          <Input
+                            name='phoneNumber'
+                            id='phoneNumber'
+                            type='number'
+                            min={0}
+                            className='form form-control'
+                            placeholder='N°Téléphone de Client'
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.phoneNumber || ''}
+                            invalid={
+                              validation.touched.phoneNumber &&
+                              validation.errors.phoneNumber
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.touched.phoneNumber &&
+                          validation.errors.phoneNumber ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.phoneNumber}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm={6}>
+                        <FormGroup>
+                          <Label for='fullName'>Adresse de Livraison</Label>
+                          <Input
+                            name='adresse'
+                            id='adresse'
+                            type='text'
+                            className='form form-control'
+                            placeholder="Entrez l'adresse de livraison"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.adresse || ''}
+                            invalid={
+                              validation.touched.adresse &&
+                              validation.errors.adresse
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.touched.adresse &&
+                          validation.errors.adresse ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.adresse}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                      <Col sm={6}>
+                        <FormGroup>
+                          <Label for='statut'>Statut de Livraison</Label>
+                          <Input
+                            name='statut'
+                            id='statut'
+                            type='select'
+                            className='form form-control'
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.statut || ''}
+                            invalid={
+                              validation.touched.statut &&
+                              validation.errors.statut
+                                ? true
+                                : false
+                            }
+                          >
+                            <option value=''>Sélectionner le Statut</option>
+                            <option value='livré'>Livré</option>
+                            <option value='en cours'>
+                              Partiellement Livré
+                            </option>
+                            <option value='en attente'>En Attente</option>
+                          </Input>
+                          {validation.touched.statut &&
+                          validation.errors.statut ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.statut}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md={6}>
+              {/* Bouton */}
+              {isSubmitting && <LoadingSpiner />}
+
+              {cartItems.length > 0 && !isSubmitting && (
+                <div className='d-flex gap-4 my-3'>
+                  <Button
+                    color='warning'
+                    className='fw-bold font-size-11'
+                    onClick={clearCart}
+                  >
+                    <i className='fas fa-window-close'></i>
+                  </Button>
+
+                  <div className='d-grid' style={{ width: '100%' }}>
+                    <Button
+                      color='primary'
+                      className='fw-bold'
+                      onClick={() => validation.handleSubmit()}
+                    >
+                      Enregistrer la Commande
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {/* Bouton */}
+
+              <Card>
+                <CardBody style={{ height: '280px', overflowY: 'scroll' }}>
+                  <CardTitle className='mb-4'>
+                    <div className='d-flex justify-content-between align-items-center'>
+                      <h4>Panier</h4>
+                      <h5 className='text-warning'>
+                        Total : {formatPrice(totalAmount)} F
+                      </h5>
+                    </div>
+                  </CardTitle>
+
+                  {cartItems.length === 0 && (
+                    <p className='text-center'>
+                      Veuillez cliquez sur un produit pour l'ajouter dans le
+                      panier
+                    </p>
+                  )}
+                  {cartItems.map((item) => (
+                    <div
+                      key={item.produit._id}
+                      className='d-flex justify-content-between align-items-center mb-2 border-bottom border-black p-2 shadow shadow-md'
+                    >
+                      <div>
+                        <strong>{capitalizeWords(item.produit.name)}</strong>
+                        <div>
+                          {item.quantity} × {formatPrice(item.produit.price)} F
+                          = {formatPrice(item.produit.price * item.quantity)} F
                         </div>
                       </div>
-                    </Col>
 
-                    {/* --------------------------------------------------------------- */}
-                    {/* --------------------------------------------------------------- */}
-                    {/* --------------------------------------------------------------- */}
-                    {/* Maping Produit Liste */}
+                      <div className='d-flex align-items-center gap-2'>
+                        <Button
+                          color='danger'
+                          size='sm'
+                          onClick={() => decreaseQuantity(item.produit._id)}
+                        >
+                          -
+                        </Button>
+
+                        <input
+                          type='number'
+                          min={1}
+                          value={item.quantity}
+                          onClick={(e) => e.stopPropagation()} // Évite le clic sur la carte
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value, 10);
+                            if (!isNaN(value) && value > 0) {
+                              setCartsItems((prevCart) =>
+                                prevCart.map((i) =>
+                                  i.produit._id === item.produit._id
+                                    ? { ...i, quantity: value }
+                                    : i
+                                )
+                              );
+                            }
+                          }}
+                          style={{
+                            width: '60px',
+                            textAlign: 'center',
+                            border: '1px solid orange',
+                            borderRadius: '5px',
+                          }}
+                        />
+
+                        <Button
+                          color='success'
+                          size='sm'
+                          onClick={() => increaseQuantity(item.produit._id)}
+                        >
+                          +
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          {/* ------------------------------------------------------------- */}
+          {/* Liste des produits */}
+          <div>
+            <Card>
+              <CardBody>
+                {isLoading && <LoadingSpiner />}
+                {error && (
+                  <div className='text-danger text-center'>
+                    Une erreur est survenue ! Veuillez actualiser la page.
+                  </div>
+                )}
+                <Row>
+                  {/* Barre de Recherche */}
+                  <Col sm={12} className='my-4'>
+                    <div className='d-flex justify-content-start gap-2 p-2'>
+                      {searchTerm !== '' && (
+                        <Button
+                          color='danger'
+                          onClick={() => setSearchTerm('')}
+                        >
+                          <i className='fas fa-window-close'></i>
+                        </Button>
+                      )}
+                      <div className='search-box me-4'>
+                        <input
+                          type='text'
+                          className='form-control search border border-dark rounded'
+                          placeholder='Rechercher...'
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </Col>
+
+                  {/* --------------------------------------------------------------- */}
+                  {/* --------------------------------------------------------------- */}
+                  {/* --------------------------------------------------------------- */}
+                  {/* Maping Produit Liste */}
+                  <div className='d-flex flex-wrap gap-3 justify-content-center'>
                     {!error &&
                       filterSearchProduits?.length > 0 &&
                       filterSearchProduits?.map((produit) => (
-                        <Col md={4} key={produit._id}>
+                        <div key={produit._id}>
                           <Card
                             className='shadow shadow-lg'
                             onClick={() => addToCart(produit)}
@@ -285,6 +535,13 @@ export default function UpdateCommande() {
                             <CardBody>
                               <CardText className='text-center'>
                                 {capitalizeWords(produit.name)}
+                              </CardText>
+                              <CardText className='font-size-15 text-center'>
+                                <strong>Catégorie: </strong>{' '}
+                                <span className='text-info '>
+                                  {' '}
+                                  {capitalizeWords(produit?.category)}{' '}
+                                </span>
                               </CardText>
 
                               <CardText className='text-center fw-bold'>
@@ -306,273 +563,13 @@ export default function UpdateCommande() {
                               </CardTitle>
                             </CardBody>
                           </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-
-            {/* ---------------------------------------------------------------------- */}
-            {/* ---------------------------------------------------------------------- */}
-            {/* Panier */}
-            {isFetchingCommande && <LoadingSpiner />}
-            {isErrorToFetch && (
-              <p className='text-center text-danger'>
-                Erreur de trouver la Commande
-              </p>
-            )}
-            {!isErrorToFetch && !isFetchingCommande && (
-              <Col sm={5}>
-                <Col sm={12}>
-                  {/* Bouton */}
-                  {isSubmitting && <LoadingSpiner />}
-
-                  {cartItems.length > 0 && !isSubmitting && (
-                    <div className='d-flex gap-4 my-3'>
-                      <Button
-                        color='warning'
-                        className='fw-bold font-size-11'
-                        onClick={clearCart}
-                      >
-                        <i className='fas fa-window-close'></i>
-                      </Button>
-
-                      <div className='d-grid' style={{ width: '100%' }}>
-                        <Button
-                          color='primary'
-                          className='fw-bold'
-                          onClick={() => validation.handleSubmit()}
-                        >
-                          Enregistrer la Commande
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                  {/* Bouton */}
-                </Col>
-
-                <Col sm={12}>
-                  <Card>
-                    <CardBody style={{ height: '280px', overflowY: 'scroll' }}>
-                      <CardTitle className='mb-4'>
-                        <div className='d-flex justify-content-between align-items-center'>
-                          <h4>Panier</h4>
-                          <h5 className='text-warning'>
-                            Total : {formatPrice(totalAmount)} F
-                          </h5>
-                        </div>
-                      </CardTitle>
-
-                      {cartItems.length === 0 && (
-                        <p className='text-center'>
-                          Veuillez cliquez sur un produit pour l'ajouter dans le
-                          panier
-                        </p>
-                      )}
-                      {cartItems.map((item) => (
-                        <div
-                          key={item.produit._id}
-                          className='d-flex justify-content-between align-items-center mb-2 border-bottom border-black p-2 shadow shadow-md'
-                        >
-                          <div>
-                            <strong>
-                              {capitalizeWords(item.produit.name)}
-                            </strong>
-                            <div>
-                              {item.quantity} ×{' '}
-                              {formatPrice(item.produit.price)} F ={' '}
-                              {formatPrice(item.produit.price * item.quantity)}{' '}
-                              F
-                            </div>
-                          </div>
-
-                          <div className='d-flex align-items-center gap-2'>
-                            <Button
-                              color='danger'
-                              size='sm'
-                              onClick={() => decreaseQuantity(item.produit._id)}
-                            >
-                              -
-                            </Button>
-
-                            <input
-                              type='number'
-                              min={1}
-                              value={item.quantity}
-                              onClick={(e) => e.stopPropagation()} // Évite le clic sur la carte
-                              onChange={(e) => {
-                                const value = parseInt(e.target.value, 10);
-                                if (!isNaN(value) && value > 0) {
-                                  setCartsItems((prevCart) =>
-                                    prevCart.map((i) =>
-                                      i.produit._id === item.produit._id
-                                        ? { ...i, quantity: value }
-                                        : i
-                                    )
-                                  );
-                                }
-                              }}
-                              style={{
-                                width: '60px',
-                                textAlign: 'center',
-                                border: '1px solid orange',
-                                borderRadius: '5px',
-                              }}
-                            />
-
-                            <Button
-                              color='success'
-                              size='sm'
-                              onClick={() => increaseQuantity(item.produit._id)}
-                            >
-                              +
-                            </Button>
-                          </div>
                         </div>
                       ))}
-                    </CardBody>
-                  </Card>
-                </Col>
-                {/* ------------------------------------------------------------- */}
-                {/* Les information sur Client */}
-                {/* ------------------------------------------------------------- */}
-                <Col sm={12}>
-                  <Card>
-                    <CardTitle className='text-center m-2'>
-                      Informations Client
-                    </CardTitle>
-                    <CardBody>
-                      <Form
-                        className='needs-validation'
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          return false;
-                        }}
-                      >
-                        <Col sm={12}>
-                          <FormGroup>
-                            <Label for='fullName'>Nom et Prénom</Label>
-                            <Input
-                              name='fullName'
-                              id='fullName'
-                              type='text'
-                              className='form form-control'
-                              placeholder='Nom et Prénom de Client'
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.fullName || ''}
-                              invalid={
-                                validation.touched.fullName &&
-                                validation.errors.fullName
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validation.touched.fullName &&
-                            validation.errors.fullName ? (
-                              <FormFeedback type='invalid'>
-                                {validation.errors.fullName}
-                              </FormFeedback>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col sm={12}>
-                          <FormGroup>
-                            <Label for='phoneNumber'>Téléphone</Label>
-                            <Input
-                              name='phoneNumber'
-                              id='phoneNumber'
-                              type='number'
-                              min={0}
-                              className='form form-control'
-                              placeholder='N°Téléphone de Client'
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.phoneNumber || ''}
-                              invalid={
-                                validation.touched.phoneNumber &&
-                                validation.errors.phoneNumber
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validation.touched.phoneNumber &&
-                            validation.errors.phoneNumber ? (
-                              <FormFeedback type='invalid'>
-                                {validation.errors.phoneNumber}
-                              </FormFeedback>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col sm={12}>
-                          <FormGroup>
-                            <Label for='fullName'>Adresse de Livraison</Label>
-                            <Input
-                              name='adresse'
-                              id='adresse'
-                              type='text'
-                              className='form form-control'
-                              placeholder="Entrez l'adresse de livraison"
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.adresse || ''}
-                              invalid={
-                                validation.touched.adresse &&
-                                validation.errors.adresse
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validation.touched.adresse &&
-                            validation.errors.adresse ? (
-                              <FormFeedback type='invalid'>
-                                {validation.errors.adresse}
-                              </FormFeedback>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col sm={12}>
-                          <FormGroup>
-                            <Label for='statut'>Statut de Livraison</Label>
-                            <Input
-                              name='statut'
-                              id='statut'
-                              type='select'
-                              className='form form-control'
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.statut || ''}
-                              invalid={
-                                validation.touched.statut &&
-                                validation.errors.statut
-                                  ? true
-                                  : false
-                              }
-                            >
-                              <option value=''>Sélectionner le Statut</option>
-                              <option value='livré'>Livré</option>
-                              <option value='en cours'>
-                                Partiellement Livré
-                              </option>
-                              <option value='en attente'>En Attente</option>
-                            </Input>
-                            {validation.touched.statut &&
-                            validation.errors.statut ? (
-                              <FormFeedback type='invalid'>
-                                {validation.errors.statut}
-                              </FormFeedback>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Col>
-            )}
-            {/* ------------------------------------------------------------- */}
-          </Row>
+                  </div>
+                </Row>
+              </CardBody>
+            </Card>
+          </div>
         </Container>
       </div>
     </React.Fragment>

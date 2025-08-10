@@ -1,23 +1,17 @@
-import React, { useEffect } from "react";
-import { Collapse, Row, Col, Container } from "reactstrap";
-import classname from "classnames";
+import React, { useEffect } from 'react';
+import { Collapse, Row, Col, Container } from 'reactstrap';
+import classname from 'classnames';
 
-import { withTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
-// Import Data
-import navdata from "./Navdata";
+import { withTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import withRouter from '../../components/Common/withRouter';
 
 const Navbar = (props) => {
-  const navData = navdata().props.children;
-
-
   useEffect(() => {
     var matchingMenuItem = null;
-    var ul = document.getElementById("navigation");
-    var items = ul.getElementsByTagName("a");
+    var ul = document.getElementById('navigation');
+    var items = ul.getElementsByTagName('a');
     removeActivation(items);
     for (var i = 0; i < items.length; ++i) {
       if (window.location.pathname === items[i].pathname) {
@@ -30,40 +24,40 @@ const Navbar = (props) => {
     }
   });
 
-  const removeActivation = items => {
+  const removeActivation = (items) => {
     for (var i = 0; i < items.length; ++i) {
       var item = items[i];
       const parent = items[i].parentElement;
-      if (item && item.classList.contains("active")) {
-        item.classList.remove("active");
+      if (item && item.classList.contains('active')) {
+        item.classList.remove('active');
       }
       if (parent) {
-        if (parent.classList.contains("active")) {
-          parent.classList.remove("active");
+        if (parent.classList.contains('active')) {
+          parent.classList.remove('active');
         }
       }
     }
   };
 
   function activateParentDropdown(item) {
-    item.classList.add("active");
+    item.classList.add('active');
     const parent = item.parentElement;
     if (parent) {
-      parent.classList.add("active"); // li
+      parent.classList.add('active'); // li
       const parent2 = parent.parentElement;
-      parent2.classList.add("active"); // li
+      parent2.classList.add('active'); // li
       const parent3 = parent2.parentElement;
       if (parent3) {
-        parent3.classList.add("active"); // li
+        parent3.classList.add('active'); // li
         const parent4 = parent3.parentElement;
         if (parent4) {
-          parent4.classList.add("active"); // li
+          parent4.classList.add('active'); // li
           const parent5 = parent4.parentElement;
           if (parent5) {
-            parent5.classList.add("active"); // li
+            parent5.classList.add('active'); // li
             const parent6 = parent5.parentElement;
             if (parent6) {
-              parent6.classList.add("active"); // li
+              parent6.classList.add('active'); // li
             }
           }
         }
@@ -71,28 +65,28 @@ const Navbar = (props) => {
     }
     return false;
   }
-  
+
   return (
     <React.Fragment>
-      <div className="topnav">
+      <div className='topnav'>
         <Container fluid>
           <nav
-            className="navbar navbar-light navbar-expand-lg topnav-menu"
-            id="navigation"
+            className='navbar navbar-light navbar-expand-lg topnav-menu'
+            id='navigation'
           >
             <Collapse
               isOpen={props.leftMenu}
-              className="navbar-collapse"
-              id="topnav-menu-content"
+              className='navbar-collapse'
+              id='topnav-menu-content'
             >
-              <ul className="navbar-nav">
-                {(navData || []).map((item, key) => (
+              <ul className='navbar-nav'>
+                {/* {(navData || []).map((item, key) => (
                   <React.Fragment key={key}>
                     {item.isdropDown ? (
-                      <li key={key} className="nav-item dropdown">
+                      <li key={key} className='nav-item dropdown'>
                         <Link
-                          to="/#"
-                          className="nav-link dropdown-toggle arrow-none"
+                          to='/#'
+                          className='nav-link dropdown-toggle arrow-none'
                           onClick={item.click}
                         >
                           <i className={item.icon}></i>
@@ -100,22 +94,28 @@ const Navbar = (props) => {
                         </Link>
                       </li>
                     ) : (
-                      <li key={key} className={item.currentState ? "nav-item dropdown active" : "nav-item dropdown"}>
+                      <li
+                        key={key}
+                        className={
+                          item.currentState
+                            ? 'nav-item dropdown active'
+                            : 'nav-item dropdown'
+                        }
+                      >
                         <Link
-                          to="/#"
-                          className="nav-link dropdown-toggle arrow-none"
+                          to='/#'
+                          className='nav-link dropdown-toggle arrow-none'
                           onClick={item.click}
                         >
-
                           <i className={item.icon}></i>
-                          {props.t(item.label)}{" "}
-                          <div className="arrow-down"></div>
+                          {props.t(item.label)}{' '}
+                          <div className='arrow-down'></div>
                         </Link>
 
                         {item.id === 2 ? (
                           <div
                             className={classname(
-                              "dropdown-menu mega-dropdown-menu dropdown-menu-left dropdown-mega-menu-xl",
+                              'dropdown-menu mega-dropdown-menu dropdown-menu-left dropdown-mega-menu-xl',
                               { show: item.currentState }
                             )}
                           >
@@ -124,7 +124,7 @@ const Navbar = (props) => {
                                 <Col lg={4} key={key}>
                                   <Link
                                     to={subItem.link}
-                                    className="dropdown-item"
+                                    className='dropdown-item'
                                   >
                                     {props.t(subItem.title)}
                                   </Link>
@@ -134,26 +134,30 @@ const Navbar = (props) => {
                           </div>
                         ) : (
                           <div
-                            className={classname("dropdown-menu", {
+                            className={classname('dropdown-menu', {
                               show: item.currentState,
                             })}
                           >
                             {item.subItems.map((subItems, key) => (
-                              <div key={key} className="dropdown">
+                              <div key={key} className='dropdown'>
                                 <Link
-                                  to={subItems.subItem ? "/#" : subItems.url}
-                                  className={subItems.subState ? "dropdown-item dropdown-toggle arrow-none active" : "dropdown-item dropdown-toggle arrow-none"}
+                                  to={subItems.subItem ? '/#' : subItems.url}
+                                  className={
+                                    subItems.subState
+                                      ? 'dropdown-item dropdown-toggle arrow-none active'
+                                      : 'dropdown-item dropdown-toggle arrow-none'
+                                  }
                                   onClick={subItems.staclick}
                                 >
                                   {props.t(subItems.label2)}
                                   {subItems.subItem && (
-                                    <div className="arrow-down"></div>
+                                    <div className='arrow-down'></div>
                                   )}
                                 </Link>
 
                                 {subItems.subItem && (
                                   <div
-                                    className={classname("dropdown-menu", {
+                                    className={classname('dropdown-menu', {
                                       show: subItems.subState,
                                     })}
                                   >
@@ -161,12 +165,12 @@ const Navbar = (props) => {
                                       <Link
                                         key={key}
                                         to={Item.link}
-                                        className="dropdown-item"
+                                        className='dropdown-item'
                                       >
-                                        {" "}
-                                        {props.t(Item.title)}{" "}
+                                        {' '}
+                                        {props.t(Item.title)}{' '}
                                       </Link>
-                                    ))}{" "}
+                                    ))}{' '}
                                   </div>
                                 )}
                               </div>
@@ -176,7 +180,7 @@ const Navbar = (props) => {
                       </li>
                     )}
                   </React.Fragment>
-                ))}
+                ))} */}
               </ul>
             </Collapse>
           </nav>

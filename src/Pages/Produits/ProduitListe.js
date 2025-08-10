@@ -24,6 +24,7 @@ import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
 import ProduitForm from './ProduitForm';
 import { useAllProduit, useDeleteProduit } from '../../Api/queriesProduits';
+import { connectedUserRole } from '../Authentication/userInfos';
 
 export default function ProduitListe() {
   const [form_modal, setForm_modal] = useState(false);
@@ -86,22 +87,24 @@ export default function ProduitListe() {
                 <CardBody>
                   <div id='produitsList'>
                     <Row className='g-4 mb-3'>
-                      <Col className='col-sm-auto'>
-                        <div className='d-flex gap-1'>
-                          <Button
-                            color='info'
-                            className='add-btn'
-                            id='create-btn'
-                            onClick={() => {
-                              setProduitToUpdate(null);
-                              tog_form_modal();
-                            }}
-                          >
-                            <i className='mdi mdi-sitemap align-center me-1'></i>{' '}
-                            Ajouter un Produit
-                          </Button>
-                        </div>
-                      </Col>
+                      {connectedUserRole === 'admin' && (
+                        <Col className='col-sm-auto'>
+                          <div className='d-flex gap-1'>
+                            <Button
+                              color='info'
+                              className='add-btn'
+                              id='create-btn'
+                              onClick={() => {
+                                setProduitToUpdate(null);
+                                tog_form_modal();
+                              }}
+                            >
+                              <i className='mdi mdi-sitemap align-center me-1'></i>{' '}
+                              Ajouter un Produit
+                            </Button>
+                          </div>
+                        </Col>
+                      )}
                       <Col>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (
@@ -155,59 +158,61 @@ export default function ProduitListe() {
                       position: 'relative',
                     }}
                   >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '5%',
-                        right: '5%',
-                      }}
-                    >
-                      <UncontrolledDropdown className='dropdown d-inline-block'>
-                        <DropdownToggle
-                          className='btn btn-soft-secondary btn-sm'
-                          tag='button'
-                        >
-                          <i className='bx bx-caret-down-square fs-2 text-info'></i>
-                        </DropdownToggle>
-                        <DropdownMenu className='dropdown-menu-end'>
-                          <DropdownItem
-                            className='edit-item-btn'
-                            onClick={() => {
-                              setFormModalTitle('Modifier les données');
-                              setProduitToUpdate(prod);
-                              tog_form_modal();
-                            }}
+                    {connectedUserRole === 'admin' && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '5%',
+                          right: '5%',
+                        }}
+                      >
+                        <UncontrolledDropdown className='dropdown d-inline-block'>
+                          <DropdownToggle
+                            className='btn btn-soft-secondary btn-sm'
+                            tag='button'
                           >
-                            <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
-                            Modifier
-                          </DropdownItem>
-                          <DropdownItem
-                            className='edit-item-btn'
-                            onClick={() => {
-                              navigateToProduitApprovisonnement(prod?._id);
-                            }}
-                          >
-                            <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
-                            Approvisonner
-                          </DropdownItem>
+                            <i className='bx bx-caret-down-square fs-2 text-info'></i>
+                          </DropdownToggle>
+                          <DropdownMenu className='dropdown-menu-end'>
+                            <DropdownItem
+                              className='edit-item-btn'
+                              onClick={() => {
+                                setFormModalTitle('Modifier les données');
+                                setProduitToUpdate(prod);
+                                tog_form_modal();
+                              }}
+                            >
+                              <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
+                              Modifier
+                            </DropdownItem>
+                            <DropdownItem
+                              className='edit-item-btn'
+                              onClick={() => {
+                                navigateToProduitApprovisonnement(prod?._id);
+                              }}
+                            >
+                              <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
+                              Approvisonner
+                            </DropdownItem>
 
-                          <DropdownItem
-                            className='remove-item-btn'
-                            onClick={() => {
-                              deleteButton(
-                                prod?._id,
-                                prod?.name,
-                                deleteProduit
-                              );
-                            }}
-                          >
-                            {' '}
-                            <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>{' '}
-                            Delete{' '}
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </div>
+                            <DropdownItem
+                              className='remove-item-btn'
+                              onClick={() => {
+                                deleteButton(
+                                  prod?._id,
+                                  prod?.name,
+                                  deleteProduit
+                                );
+                              }}
+                            >
+                              {' '}
+                              <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>{' '}
+                              Delete{' '}
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </UncontrolledDropdown>
+                      </div>
+                    )}
                     <img
                       className='img-fluid'
                       style={{

@@ -85,9 +85,9 @@ const Index = () => {
           <Route
             path={route.path}
             element={
-              // <PrivateRoute allowedRoles={['admin', 'medecin']}>
-              <Layout>{route.component}</Layout>
-              // </PrivateRoute>
+              <PrivateRoute allowedRoles={['admin', 'user']}>
+                <Layout>{route.component}</Layout>
+              </PrivateRoute>
             }
             key={idx}
             exact={true}
@@ -101,9 +101,9 @@ const Index = () => {
           <Route
             path={route.path}
             element={
-              // <PrivateRoute allowedRoles={['admin']}>
-              <Layout>{route.component}</Layout>
-              // </PrivateRoute>
+              <PrivateRoute allowedRoles={['admin']}>
+                <Layout>{route.component}</Layout>
+              </PrivateRoute>
             }
             key={idx}
             exact={true}

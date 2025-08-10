@@ -6,8 +6,7 @@ const ConnectedUserRoute = ({ children }) => {
   const role = authUser ? JSON.parse(authUser)?.user?.role : null;
 
   if (role === 'admin') return <Navigate to='/dashboard' />;
-  if (role === 'medecin') return <Navigate to='/dashboard-medecin' />;
-  if (role === 'secretaire') return <Navigate to='/dashboard-secretaire' />;
+  if (role === 'user') return <Navigate to='/dashboard-user' />;
 
   // Sinon (non connecté), accéder à la page publique (ex: login)
   return children;

@@ -27,6 +27,7 @@ import Facture from '../Pages/Commandes/Details/Facture.js';
 import ProduitSansStock from '../Pages/Produits/ProduitSansStock.js';
 import PaiementsHistorique from '../Pages/Commandes/PaiementsHistorique/PaiementsHistorique.js';
 import UpdateCommande from '../Pages/Commandes/UpdateCommande.js';
+import NewCommande from '../Pages/Commandes/NewCommande.js';
 
 const sharedRoutes = [
   // Produit de la Boutique
@@ -34,6 +35,9 @@ const sharedRoutes = [
 
   // Modifier une   COMMANDE
   { path: '/updateCommande/:id', component: <UpdateCommande /> },
+
+  // Nouvelle Commande
+  { path: '/newCommande', component: <NewCommande /> },
 
   // Paiements Liste
   { path: '/paiements', component: <PaiementsListe /> },

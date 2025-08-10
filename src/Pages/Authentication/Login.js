@@ -86,7 +86,7 @@ const Login = () => {
                 case 'admin':
                   navigate('/dashboard');
                   break;
-                case 'medecin':
+                case 'user':
                   navigate('/dashboard-user');
                   break;
 
@@ -236,7 +236,7 @@ const Login = () => {
                                 <LoadingSpiner />
                               ) : (
                                 <button
-                                  className='btn btn-info waves-effect waves-light'
+                                  className='btn btn-primary waves-effect waves-light'
                                   type='submit'
                                 >
                                   Se Connecter

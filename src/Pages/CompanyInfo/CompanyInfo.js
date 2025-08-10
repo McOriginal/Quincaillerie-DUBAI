@@ -21,7 +21,7 @@ const companyOwnerName = 'Chez MOHAMED WOROFANA';
 const companyAdresse =
   "Kabala sur la route d'université en face de station PETRO BAMA";
 
-const companyTel = '78-87-91-34 / 63-00-67-89';
+const companyTel = '84-40-40-84 / 76-17-97-87 / 79-10-10-90';
 
 export {
   companyLogo,

@@ -13,8 +13,8 @@ import Breadcrumb from '../../components/Common/Breadcrumb';
 import avatar from '../../assets/images/user_profile_image.png';
 import {
   connectedUserEmail,
-  connectedUserId,
   connectedUserName,
+  connectedUserRole,
 } from './userInfos';
 import { AuthContext } from '../../Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -58,18 +58,20 @@ const UserProfile = () => {
                     </div>
                     <div className='text-center'>
                       <div className='text-muted'>
-                        <h5>Utilisateur: {connectedUserName}</h5>
+                        <h5> {connectedUserName}</h5>
                         <p className='mb-1'>{connectedUserEmail}</p>
                       </div>
                     </div>
 
                     <div className='mt-4 d-flex flex-column gap-4'>
-                      <Button
-                        color='info'
-                        onClick={() => navigate('/register')}
-                      >
-                        Créer un Compte
-                      </Button>
+                      {connectedUserRole === 'admin' && (
+                        <Button
+                          color='info'
+                          onClick={() => navigate('/register')}
+                        >
+                          Créer un Compte
+                        </Button>
+                      )}
                       <Button
                         color='warning'
                         onClick={() => navigate('/updatePassword')}

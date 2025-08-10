@@ -8,8 +8,8 @@ import withRouter from '../../components/Common/withRouter';
 import { Link } from 'react-router-dom';
 //i18n
 import { withTranslation } from 'react-i18next';
-import MedecinsSidebarData from './MedecinsSidebarData';
-const SidebarMedecins = (props) => {
+import UsersSidebarData from './UsersSidebarData';
+const SidebarUsers = (props) => {
   const ref = useRef();
   const activateParentDropdown = useCallback((item) => {
     item.classList.add('active');
@@ -123,7 +123,7 @@ const SidebarMedecins = (props) => {
         <SimpleBar className='h-100' ref={ref}>
           <div id='sidebar-menu'>
             <ul className='metismenu list-unstyled' id='side-menu-item'>
-              {(MedecinsSidebarData || []).map((item, key) => (
+              {(UsersSidebarData || []).map((item, key) => (
                 <React.Fragment key={key}>
                   {item.isMainMenu ? (
                     <li className='menu-title'>{props.t(item.label)}</li>
@@ -189,8 +189,8 @@ const SidebarMedecins = (props) => {
     </React.Fragment>
   );
 };
-SidebarMedecins.propTypes = {
+SidebarUsers.propTypes = {
   location: PropTypes.object,
   t: PropTypes.any,
 };
-export default withRouter(withTranslation()(SidebarMedecins));
+export default withRouter(withTranslation()(SidebarUsers));

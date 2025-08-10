@@ -257,7 +257,7 @@ const Register = () => {
                             <LoadingSpiner />
                           ) : (
                             <button
-                              className='btn btn-info waves-effect waves-light'
+                              className='btn btn-primary waves-effect waves-light'
                               type='submit'
                             >
                               Créer le Compte

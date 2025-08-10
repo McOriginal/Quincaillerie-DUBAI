@@ -13,6 +13,7 @@ import { deleteButton } from '../components/AlerteModal';
 import { useAllPaiements, useDeletePaiement } from '../../Api/queriesPaiement';
 import PaiementForm from './PaiementForm';
 import ReçuPaiement from './ReçuPaiement';
+import { connectedUserRole } from '../Authentication/userInfos';
 
 export default function PaiementsListe() {
   const [form_modal, setForm_modal] = useState(false);
@@ -278,25 +279,27 @@ export default function PaiementsListe() {
                                             </button>
                                           </div>
 
-                                          <div className='remove'>
-                                            <button
-                                              className='btn btn-sm btn-danger remove-item-btn'
-                                              data-bs-toggle='modal'
-                                              data-bs-target='#deleteRecordModal'
-                                              onClick={() => {
-                                                deleteButton(
-                                                  paiement?._id,
-                                                  `Paiement de ${formatPrice(
-                                                    paiement?.totalAmount
-                                                  )} F
-                                                   `,
-                                                  deletePaiement
-                                                );
-                                              }}
-                                            >
-                                              <i className='ri-delete-bin-fill text-white'></i>
-                                            </button>
-                                          </div>
+                                          {connectedUserRole === 'admin' && (
+                                            <div className='remove'>
+                                              <button
+                                                className='btn btn-sm btn-danger remove-item-btn'
+                                                data-bs-toggle='modal'
+                                                data-bs-target='#deleteRecordModal'
+                                                onClick={() => {
+                                                  deleteButton(
+                                                    paiement?._id,
+                                                    `Paiement de ${formatPrice(
+                                                      paiement?.totalAmount
+                                                    )} F
+                                                    `,
+                                                    deletePaiement
+                                                  );
+                                                }}
+                                              >
+                                                <i className='ri-delete-bin-fill text-white'></i>
+                                              </button>
+                                            </div>
+                                          )}
                                         </div>
                                       )}
                                     </td>

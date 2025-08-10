@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAllCommandes, useDeleteCommande } from '../../Api/queriesCommande';
 import { useNavigate } from 'react-router-dom';
+import { connectedUserRole } from '../Authentication/userInfos';
 
 export default function CommandeListe() {
   // Afficher toutes les commandes
@@ -260,18 +261,20 @@ export default function CommandeListe() {
                                             <i className='ri-pencil-fill text-white'></i>
                                           </button>
                                         </div>
-                                        <div className='remove'>
-                                          <button
-                                            className='btn btn-sm btn-danger remove-item-btn'
-                                            data-bs-toggle='modal'
-                                            data-bs-target='#deleteRecordModal'
-                                            onClick={() => {
-                                              deleteCommande(comm);
-                                            }}
-                                          >
-                                            <i className='ri-delete-bin-fill text-white'></i>
-                                          </button>
-                                        </div>
+                                        {connectedUserRole === 'admin' && (
+                                          <div className='remove'>
+                                            <button
+                                              className='btn btn-sm btn-danger remove-item-btn'
+                                              data-bs-toggle='modal'
+                                              data-bs-target='#deleteRecordModal'
+                                              onClick={() => {
+                                                deleteCommande(comm);
+                                              }}
+                                            >
+                                              <i className='ri-delete-bin-fill text-white'></i>
+                                            </button>
+                                          </div>
+                                        )}
                                       </div>
                                     )}
                                   </td>
