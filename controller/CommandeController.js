@@ -29,11 +29,9 @@ exports.createCommande = async (req, res) => {
         console.log(
           `Stock insuffisant pour ${prod.name}. Disponible : ${prod.stock}`
         );
-        return res
-          .status(404)
-          .json({
-            message: `Stock insuffisant pour: ${prod.name} Stock: ${prod.stock}`,
-          });
+        return res.status(404).json({
+          message: `Stock insuffisant pour: ${prod.name} Stock: ${prod.stock}`,
+        });
       }
 
       // Si le stock est suffisant, décrémenter le stock
@@ -74,10 +72,12 @@ exports.getAllCommandes = async (req, res) => {
       .populate('items.produit');
 
     // Afficher les COMMANDES en fonction des PAIEMENTS effectués
-    const factures = await Paiement.find().populate({
-      path: 'commande',
-      populate: { path: 'items.produit' },
-    });
+    const factures = await Paiement.find()
+      .populate({
+        path: 'commande',
+        populate: { path: 'items.produit' },
+      })
+      .sort({ createdAt: -1 });
     return res.status(201).json({ commandesListe, factures });
   } catch (e) {
     return res.status(404).json(e);
@@ -255,7 +255,7 @@ exports.updateCommande = async (req, res) => {
     }
 
     // Étape 4 : Mettre à jour la commande
-    existingCommande.fullName = fullName;
+    existingCommande.fullName = fullName || 'non défini';
     existingCommande.phoneNumber = phoneNumber;
     existingCommande.adresse = adresse;
     existingCommande.statut = statut;
@@ -263,6 +263,18 @@ exports.updateCommande = async (req, res) => {
     existingCommande.totalAmount = totalAmount;
 
     await existingCommande.save({ session });
+
+    const paiement = await Paiement.findOne({ commande: commandeId }),
+      paiementId = paiement ? paiement._id : null;
+    if (paiementId) {
+      const paiementRecord = await Paiement.findById(paiementId).session(
+        session
+      );
+      if (paiementRecord) {
+        paiementRecord.totalAmount = totalAmount;
+        await paiementRecord.save({ session });
+      }
+    }
 
     await session.commitTransaction();
     session.endSession();

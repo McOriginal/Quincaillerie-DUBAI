@@ -9,6 +9,7 @@ const paiementHistoriqueRoute = require('./routes/PaiementHistoriqueRoute');
 const approvisonementsRoute = require('./routes/ApprovisonementRoute');
 const depenseRoute = require('./routes/DepenseRoute');
 const livraisonHistoriqueRoute = require('./routes/LivraisonHistoriqueRoute');
+const deivisRoute = require('./routes/DevisRoute');
 
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -39,6 +40,9 @@ app.use('/api/fournisseurs', fournisseurRoute);
 
 // Utilisation des routes Commande
 app.use('/api/commandes', commandeRoute);
+
+// Utilisation des routes Devis
+app.use('/api/devis', deivisRoute);
 
 // Utilisation des routes Paiement
 app.use('/api/paiements', paiementRoute);

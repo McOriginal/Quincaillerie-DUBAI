@@ -1,26 +1,7 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-const commandeSchema = new mongoose.Schema(
+const deivsSchema = new mongoose.Schema(
   {
-    commandeId: {
-      type: Number,
-    },
-    fullName: {
-      type: String,
-      // required: true,
-    },
-    phoneNumber: {
-      type: Number,
-      // required: true,
-      // unique: true,
-    },
-    adresse: {
-      type: String,
-      // required: true,
-      max: 30,
-    },
-
     items: [
       {
         produit: {
@@ -45,19 +26,10 @@ const commandeSchema = new mongoose.Schema(
       required: [true, "Le total de l'ordonnance est requis"],
       min: [0, 'Le total doit être positif'],
     },
-    statut: {
-      type: String,
-      enum: ['livré', 'en cours', 'en attente'],
-      default: 'cash',
-      required: true,
-    },
   },
 
   { timestamps: true }
 );
 
-// AUTO INCREMENTATION de ID
-commandeSchema.plugin(AutoIncrement, { inc_field: 'commandeId' });
-
-const Commande = mongoose.model('Commande', commandeSchema);
-module.exports = Commande;
+const Devis = mongoose.model('Devis', deivsSchema);
+module.exports = Devis;
