@@ -199,7 +199,7 @@ export default function PaiementsListe() {
                                     <td>
                                       {formatPhoneNumber(
                                         paiement?.commande?.phoneNumber
-                                      )}
+                                      ) || '----'}
                                     </td>
                                     <td>
                                       {capitalizeWords(
@@ -283,8 +283,6 @@ export default function PaiementsListe() {
                                             <div className='remove'>
                                               <button
                                                 className='btn btn-sm btn-danger remove-item-btn'
-                                                data-bs-toggle='modal'
-                                                data-bs-target='#deleteRecordModal'
                                                 onClick={() => {
                                                   deleteButton(
                                                     paiement?._id,

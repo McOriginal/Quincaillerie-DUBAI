@@ -19,7 +19,7 @@ const companyLittleName = 'Quincaillerie DUBAI';
 const companyOwnerName = 'Chez MOHAMED WOROFANA';
 
 const companyAdresse =
-  "Kabala sur la route d'université en face de station PETRO BAMA";
+  "Kabala sur la route d'université en face de la station PETRO BAMA";
 
 const companyTel = '84-40-40-84 / 76-17-97-87 / 79-10-10-90';
 

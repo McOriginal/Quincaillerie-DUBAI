@@ -133,6 +133,15 @@ export default function CommandeListe() {
                 <CardBody>
                   <div id='commandeList'>
                     <div className='d-flex justify-content-sm-end gap-2'>
+                      <Col>
+                        <p className='text-center font-size-15 mt-2'>
+                          Commande Total:{' '}
+                          <span className='text-warning'>
+                            {' '}
+                            {commandes?.commandesListe?.length}{' '}
+                          </span>
+                        </p>
+                      </Col>
                       {searchTerm !== '' && (
                         <Button
                           color='danger'
@@ -212,7 +221,8 @@ export default function CommandeListe() {
                                   </th>
                                   <td>{capitalizeWords(comm?.fullName)}</td>
                                   <td>
-                                    {formatPhoneNumber(comm?.phoneNumber)}
+                                    {formatPhoneNumber(comm?.phoneNumber) ||
+                                      '------'}
                                   </td>
                                   <td>{capitalizeWords(comm?.adresse)}</td>
 

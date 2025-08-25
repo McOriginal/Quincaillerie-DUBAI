@@ -28,6 +28,9 @@ import ProduitSansStock from '../Pages/Produits/ProduitSansStock.js';
 import PaiementsHistorique from '../Pages/Commandes/PaiementsHistorique/PaiementsHistorique.js';
 import UpdateCommande from '../Pages/Commandes/UpdateCommande.js';
 import NewCommande from '../Pages/Commandes/NewCommande.js';
+import DevisListe from '../Pages/Devis/DevisListe.js';
+import NewDevis from '../Pages/Devis/NewDevis.js';
+import UpdateDevis from '../Pages/Devis/UpdateDevis.js';
 
 const sharedRoutes = [
   // Produit de la Boutique
@@ -59,13 +62,16 @@ const authProtectedRoutes = [
   // Commandes
   { path: '/commandes', component: <CommandeListe /> },
 
+  // Nouveau Devis
+  { path: '/newDevis', component: <NewDevis /> },
+  { path: '/updateDevis/:id', component: <UpdateDevis /> },
+  // Devis Liste
+  { path: '/devisListe', component: <DevisListe /> },
+
   // Fournisseurs
   { path: '/fournisseurs', component: <FournisseurListe /> },
 
   // Transaction et Factures
-
-  // Paiements Liste
-  // { path: '/paiements', component: <PaiementsListe /> },
 
   // Historique Paiement
   { path: '/paiements_historique/:id', component: <PaiementsHistorique /> },

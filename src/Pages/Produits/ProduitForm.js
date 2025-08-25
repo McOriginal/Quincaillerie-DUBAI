@@ -33,7 +33,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
 
     initialValues: {
       name: produitToEdit?.name || '',
-      category: produitToEdit?.category || '',
+      // category: produitToEdit?.category || '',
       price: produitToEdit?.price || undefined,
       stock: produitToEdit?.stock || undefined,
       imageUrl: produitToEdit?.imageUrl || '',
@@ -136,7 +136,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
           </FormGroup>
         </Col>
       </Row>
-      <Row>
+      {/* <Row>
         <Col md='12'>
           <FormGroup className='mb-3'>
             <Label htmlFor='category'>Catégorie</Label>
@@ -147,7 +147,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               id='category'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.name || ''}
+              value={validation.values.category || ''}
               invalid={
                 validation.touched.category && validation.errors.category
                   ? true
@@ -170,7 +170,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
             ) : null}
           </FormGroup>
         </Col>
-      </Row>
+      </Row> */}
 
       <Row>
         <Col md='6'>

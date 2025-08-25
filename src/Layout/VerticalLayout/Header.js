@@ -16,6 +16,7 @@ import {
   companyLittleName,
   companyName,
   companyLogo,
+  companyOwnerName,
 } from '../../Pages/CompanyInfo/CompanyInfo';
 
 const Header = (props) => {
@@ -71,7 +72,7 @@ const Header = (props) => {
                   }}
                   alt='logo'
                 />
-                <h5 className='text-white'>{companyLittleName} </h5>
+                <h5 className='text-white'>{companyLittleName}</h5>
               </span>
             </div>
 
@@ -92,7 +93,8 @@ const Header = (props) => {
                 color: ' #27548A',
               }}
             >
-              {companyName}
+              {companyName} |
+              <span className=' ms-2 text-warning'> {companyOwnerName}</span>
             </p>
           </div>
 

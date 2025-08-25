@@ -50,6 +50,7 @@ const SidebarData = [
     isHasArrow: true,
     url: '/newCommande',
   },
+
   {
     label: 'Factures',
     icon: 'fas fa-receipt',
@@ -70,6 +71,20 @@ const SidebarData = [
     subItem: [
       { sublabel: 'Entrées (Paiement)', link: '/paiements' },
       { sublabel: 'Sorties (Dépense)', link: '/depenses' },
+    ],
+  },
+
+  // Devis
+  {
+    label: 'Devis',
+    isMainMenu: true,
+  },
+  {
+    label: 'Devis',
+    icon: 'fas fa-question',
+    subItem: [
+      { sublabel: 'Nouveau Devis', link: '/newDevis' },
+      { sublabel: 'Historique de Devis', link: '/devisListe' },
     ],
   },
 

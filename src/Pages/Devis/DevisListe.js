@@ -15,17 +15,12 @@ import {
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 import LoadingSpiner from '../components/LoadingSpiner';
-import {
-  capitalizeWords,
-  formatPhoneNumber,
-  formatPrice,
-} from '../components/capitalizeFunction';
+import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 import {
   companyAdresse,
   companyName,
   companyTel,
 } from '../CompanyInfo/CompanyInfo';
-import { useAllCommandes } from '../../Api/queriesCommande';
 
 import outil_1 from '../../assets/images/outil (1).png';
 import outil_2 from '../../assets/images/outil (2).png';
@@ -41,6 +36,9 @@ import outil_11 from '../../assets/images/outil (11).png';
 import outil_12 from '../../assets/images/outil (12).png';
 import { html2pdf } from 'html2pdf.js';
 import { useReactToPrint } from 'react-to-print';
+import { useAllDevis, useDeleteDevis } from '../../Api/queriesDevis';
+import { useNavigate } from 'react-router-dom';
+import { deleteButton } from '../components/AlerteModal';
 
 // Export En PDF
 // ------------------------------------------
@@ -64,16 +62,20 @@ const exportPDFFacture = () => {
 // ----------------------------------------
 // ----------------------------------------
 // ----------------------------------------
-export default function FactureListe() {
-  const { data: commandes, isLoading, error } = useAllCommandes();
+export default function DevisListe() {
+  // Afficher tous les Devis
+  const { data: devisData, isLoading, error } = useAllDevis();
+  const { mutate: deleteDevis } = useDeleteDevis();
   const contentRef = useRef();
   const reactToPrintFn = useReactToPrint({ contentRef });
+
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Commande' breadcrumbItem='Liste de Factures' />
+          <Breadcrumbs title='Devis' breadcrumbItem='Liste de Devis' />
 
           {error && (
             <div className='text-danger text-center'>
@@ -81,13 +83,26 @@ export default function FactureListe() {
             </div>
           )}
           {isLoading && <LoadingSpiner />}
+          {!error && devisData.length === 0 && (
+            <div className='mt-4 d-flex justify-content-center align-items-center flex-column'>
+              <p className='text-center font-size-18 text-danger'>
+                Aucun Devis enregistré !
+              </p>
 
-          {!error &&
-            !isLoading &&
-            commandes?.factures?.length > 0 &&
-            commandes?.factures?.map((comm, index) => (
+              <Button
+                color='info'
+                className='add-btn mt-2'
+                onClick={() => navigate('/newDevis')}
+              >
+                <i className='fas fa-plus align-center me-1'></i> Ajouter un
+                Devis
+              </Button>
+            </div>
+          )}
+          {devisData?.length > 0 &&
+            devisData?.map((dev, index) => (
               <Row
-                key={comm._id}
+                key={dev._id}
                 className='d-flex flex-column justify-content-center'
               >
                 {/* // Bouton */}
@@ -106,6 +121,27 @@ export default function FactureListe() {
                     <Button color='danger' onClick={exportPDFFacture}>
                       <i className='fas fa-paper-plane  me-1 '></i>
                       Télécharger en PDF
+                    </Button>
+                  </div>
+                </Col>
+                {/* // ------------------------------------------- */}
+                <Col className='col-sm-auto mt-4'>
+                  <div className='d-flex gap-4  justify-content-center align-items-center'>
+                    <Button
+                      color='warning'
+                      onClick={() => navigate(`/updateDevis/${dev?._id}`)}
+                    >
+                      <i className='fas fa-edit align-center me-1'></i> Modifier
+                    </Button>
+
+                    <Button
+                      color='danger'
+                      onClick={() => {
+                        deleteButton(dev?._id, 'Ce Devis', deleteDevis);
+                      }}
+                    >
+                      <i className='fas fa-trash  me-1 '></i>
+                      Supprimer
                     </Button>
                   </div>
                 </Col>
@@ -193,36 +229,15 @@ export default function FactureListe() {
                         <CardImg src={outil_9} style={{ width: '50px' }} />
                       </div>
                     </CardHeader>
-                    <div className='border-bottom border-info my-2 px-2 '>
-                      <div className='d-flex justify-content-between align-item-center mt-2'>
-                        <CardText>
-                          <strong>Facture N°: </strong>{' '}
-                          <span className='text-danger'>{index + 1} </span>
-                        </CardText>
-                        <CardText>
-                          <strong> Date:</strong>{' '}
-                          {new Date(comm.createdAt).toLocaleDateString()}
-                        </CardText>
-                      </div>
-
-                      {/* Infos Client */}
-                      <div className='d-flex justify-content-between align-item-center  '>
-                        <CardText>
-                          <strong>Client: </strong>
-                          {capitalizeWords(comm?.commande?.fullName)}{' '}
-                        </CardText>
-                        <CardText>
-                          <strong>Tél: </strong>
-                          {formatPhoneNumber(comm?.commande?.phoneNumber) ||
-                            '-----'}
-                        </CardText>
-                      </div>
-                      <CardText className='text-start'>
-                        <strong>Livraison: </strong>
-                        {capitalizeWords(comm?.commande?.adresse)}
+                    <div className='d-flex justify-content-between align-item-center mt-2'>
+                      <CardText className='font-size-18'>
+                        <strong>Motif: Devis des articles </strong>{' '}
+                      </CardText>
+                      <CardText>
+                        <strong> Date:</strong>{' '}
+                        {new Date(dev.createdAt).toLocaleDateString()}
                       </CardText>
                     </div>
-                    {/* Bordure Séparateur */}
 
                     <div className='my-2 p-2'>
                       <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-info text-center'>
@@ -236,7 +251,7 @@ export default function FactureListe() {
                         </thead>
 
                         <tbody>
-                          {comm?.commande?.items.map((article) => (
+                          {dev?.items.map((article) => (
                             <tr key={article._id}>
                               <td>{article?.quantity} </td>
                               <td>
@@ -265,28 +280,9 @@ export default function FactureListe() {
                             Total:{' '}
                             <strong style={{ fontSize: '14px' }}>
                               {' '}
-                              {formatPrice(comm?.totalAmount)} F{' '}
+                              {formatPrice(dev?.totalAmount)} F{' '}
                             </strong>{' '}
                           </CardText>
-                          <div>
-                            <CardText className='text-center '>
-                              Payé:
-                              <strong style={{ fontSize: '14px' }}>
-                                {' '}
-                                {formatPrice(comm?.totalPaye)} F{' '}
-                              </strong>{' '}
-                            </CardText>
-                            <CardText className='text-center '>
-                              Réliqua:
-                              <strong style={{ fontSize: '14px' }}>
-                                {' '}
-                                {formatPrice(
-                                  comm?.totalAmount - comm?.totalPaye
-                                )}{' '}
-                                F{' '}
-                              </strong>
-                            </CardText>
-                          </div>
                         </div>
                       </div>
                     </CardFooter>

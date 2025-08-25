@@ -91,6 +91,15 @@ export default function FournisseurListe() {
                           </Button>
                         </div>
                       </Col>
+                      <Col>
+                        <p className='text-center font-size-15 mt-2'>
+                          Fournisseurs Total:{' '}
+                          <span className='text-warning'>
+                            {' '}
+                            {fournisseurData?.length}{' '}
+                          </span>
+                        </p>
+                      </Col>
                       <Col className='col-sm'>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (

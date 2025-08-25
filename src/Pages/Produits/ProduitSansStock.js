@@ -67,6 +67,15 @@ export default function ProduitSansStock() {
                   <div id='produitsList'>
                     <Row className='g-4 mb-3'>
                       <Col>
+                        <p className='text-center font-size-15 mt-2'>
+                          Produit Total:{' '}
+                          <span className='text-warning'>
+                            {' '}
+                            {produits?.length}{' '}
+                          </span>
+                        </p>
+                      </Col>
+                      <Col>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (
                             <Button
@@ -164,9 +173,9 @@ export default function ProduitSansStock() {
                       <CardText className='fs-6 text-center'>
                         {capitalizeWords(prod?.name)}
                       </CardText>
-                      <CardText className='font-size-12 text-center'>
+                      {/* <CardText className='font-size-12 text-center'>
                         {capitalizeWords(prod?.category)}
-                      </CardText>
+                      </CardText> */}
 
                       <CardTitle className='text-center'>
                         {formatPrice(prod?.price)} F

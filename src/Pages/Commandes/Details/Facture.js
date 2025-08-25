@@ -42,10 +42,18 @@ import {
   outil_8,
   outil_9,
 } from '../../CompanyInfo/CompanyInfo';
+import { useReactToPrint } from 'react-to-print';
+import { useRef } from 'react';
 
 export default function Facture() {
   const { id } = useParams();
   const { data: selectedCommande, isLoading, error } = useOneCommande(id);
+  const contentRef = useRef();
+  const reactToPrintFn = useReactToPrint({ contentRef });
+  // const reactToPrintFn = useReactToPrint({
+  //   content: () => contentRef.current,
+  //   documentTitle: 'Facture',
+  // });
 
   // ------------------------------------------
   // ------------------------------------------
@@ -68,49 +76,6 @@ export default function Facture() {
       .catch((err) => console.error('Error generating PDF:', err));
   };
 
-  // -----------------------------------------
-  // -----------------------------------------
-  // Impression
-  // -----------------------------------------
-  // -----------------------------------------
-
-  const handlePrintFacture = () => {
-    const content = document.getElementById('printFacture');
-    // Ouvre une nouvelle fenêtre pour l'impression
-    const printWindow = window.open('', '', 'width=800,height=600');
-
-    // Récupère tous les <style> et <link rel="stylesheet">
-    const styles = Array.from(
-      document.querySelectorAll('style, link[rel="stylesheet"]')
-    )
-      .map((node) => node.outerHTML)
-      .join('');
-
-    printWindow.document.write(`
-    <html>
-      <head>
-        <title>Impression Facture</title>
-        ${styles}
-        <style>
-          @media print {
-            body {
-              margin: 20px;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        ${content.innerHTML}
-      </body>
-    </html>
-  `);
-
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  };
-
   return (
     <React.Fragment>
       <div className='page-content'>
@@ -123,14 +88,14 @@ export default function Facture() {
                 color='info'
                 className='add-btn'
                 id='create-btn'
-                onClick={handlePrintFacture}
+                onClick={reactToPrintFn}
               >
                 <i className='fas fa-print align-center me-1'></i> Imprimer
               </Button>
 
               <Button color='danger' onClick={exportPDFFacture}>
                 <i className='fas fa-paper-plane  me-1 '></i>
-                Télécharger le PDF
+                Télécharger en PDF
               </Button>
             </div>
           </Col>
@@ -142,210 +107,217 @@ export default function Facture() {
           )}
           {isLoading && <LoadingSpiner />}
 
-          {!error && !isLoading && (
-            <Card
-              id={'printFacture'}
-              className='d-flex justify-content-center border border-info'
-              style={{
-                boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
-                borderRadius: '15px',
-                width: '583px',
-                margin: '20px auto',
-                position: 'relative',
-              }}
-            >
-              <CardBody>
-                <CardHeader
-                  style={{
-                    border: '2px solid rgba(100, 169, 238, 0.5)',
-                    borderRadius: '5px',
-                  }}
-                >
-                  <div
+          <div ref={contentRef} className='mt-4'>
+            {!error && !isLoading && (
+              <Card
+                className='d-flex justify-content-center border border-info'
+                style={{
+                  boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
+                  borderRadius: '15px',
+                  width: '583px',
+                  margin: '20px auto',
+                  position: 'relative',
+                }}
+              >
+                <CardBody>
+                  <CardHeader
                     style={{
-                      position: 'absolute',
-                      top: '30px',
-                      left: '30px',
+                      border: '2px solid rgba(100, 169, 238, 0.5)',
+                      borderRadius: '5px',
                     }}
-                    className='d-flex flex-column justify-content-center align-item-center'
                   >
-                    <CardImg
-                      src={outil_2}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-                    <CardImg
-                      src={outil_1}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-
-                    <CardImg
-                      src={outil_3}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-                  </div>
-                  <CardTitle className='text-center '>
-                    <h3 className='text-info fw-bold'>{companyName} </h3>
-                    <p
-                      style={{ margin: '15px', fontSize: '10px' }}
-                      className='text-info fw-bold'
-                    >
-                      {companyAdresse}
-                    </p>
-                    <p
-                      style={{ margin: '15px', fontSize: '10px' }}
-                      className='text-info fw-bold'
-                    >
-                      {companyTel}
-                    </p>
-                    <div className='d-flex  justify-content-center align-item-center'>
-                      <CardImg src={outil_5} style={{ width: '50px' }} />
-                      <CardImg src={outil_8} style={{ width: '50px' }} />
-                      <CardImg src={outil_10} style={{ width: '50px' }} />
-                      <CardImg src={outil_6} style={{ width: '50px' }} />
-                      <CardImg src={outil_11} style={{ width: '50px' }} />
-                      <CardImg src={outil_12} style={{ width: '50px' }} />
-                    </div>
-                  </CardTitle>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '30px',
-                      right: '30px',
-                    }}
-                    className='d-flex flex-column justify-content-center align-item-center'
-                  >
-                    <CardImg src={outil_4} style={{ width: '50px' }} />
-                    <CardImg src={outil_7} style={{ width: '50px' }} />
-                    <CardImg src={outil_9} style={{ width: '50px' }} />
-                  </div>
-                </CardHeader>
-                <div className=' my-2 px-2 '>
-                  <div className='d-flex justify-content-between align-item-center mt-2'>
-                    <CardText>
-                      <strong>Facture N°: </strong>
-                      <span className='text-danger'>
-                        {formatPrice(
-                          selectedCommande?.commandeData?.commandeId
-                        )}{' '}
-                      </span>
-                    </CardText>
-                    <CardText>
-                      <strong> Date:</strong>{' '}
-                      {new Date(
-                        selectedCommande?.commandeData?.createdAt
-                      ).toLocaleDateString()}
-                    </CardText>
-                  </div>
-
-                  {/* Infos Client */}
-                  <div className='d-flex justify-content-between align-item-center  '>
-                    <CardText>
-                      <strong>Client: </strong>
-                      {capitalizeWords(
-                        selectedCommande?.commandeData?.fullName
-                      )}{' '}
-                    </CardText>
-                    <CardText>
-                      <strong>Tél: </strong>
-                      {formatPhoneNumber(
-                        selectedCommande?.commandeData?.phoneNumber
-                      )}
-                    </CardText>
-                  </div>
-                  <CardText className='text-start'>
-                    <strong>Livraison: </strong>
-                    {capitalizeWords(selectedCommande?.commandeData?.adresse)}
-                  </CardText>
-                </div>
-                {/* Bordure Séparateur */}
-
-                <div className='my-2 p-2'>
-                  <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-double border-info text-center'>
-                    <thead>
-                      <tr>
-                        <th>Qté</th>
-                        <th>Désignations</th>
-                        <th>P.U</th>
-                        <th>Montant</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {selectedCommande?.commandeData?.items?.map((article) => (
-                        <tr key={article?._id}>
-                          <td>{article?.quantity} </td>
-                          <td>{capitalizeWords(article?.produit?.name)} </td>
-                          <td>{formatPrice(article?.produit?.price)} </td>
-                          <td>
-                            {formatPrice(
-                              article?.produit?.price * article?.quantity
-                            )}{' '}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <CardFooter>
-                  <div className='p-1'>
                     <div
-                      className='d-flex
-                  justify-content-between align-item-center'
+                      style={{
+                        position: 'absolute',
+                        top: '30px',
+                        left: '30px',
+                      }}
+                      className='d-flex flex-column justify-content-center align-item-center'
                     >
-                      <CardText className={'text-center'}>
-                        Total:{' '}
-                        <strong style={{ fontSize: '14px' }}>
+                      <CardImg
+                        src={outil_2}
+                        style={{
+                          width: '50px',
+                        }}
+                      />
+                      <CardImg
+                        src={outil_1}
+                        style={{
+                          width: '50px',
+                        }}
+                      />
+
+                      <CardImg
+                        src={outil_3}
+                        style={{
+                          width: '50px',
+                        }}
+                      />
+                    </div>
+                    <CardTitle className='text-center '>
+                      <h3 className='text-info fw-bold'>{companyName} </h3>
+                      <p
+                        style={{ margin: '15px', fontSize: '10px' }}
+                        className='text-info fw-bold'
+                      >
+                        {companyAdresse}
+                      </p>
+                      <p
+                        style={{ margin: '15px', fontSize: '10px' }}
+                        className='text-info fw-bold'
+                      >
+                        {companyTel}
+                      </p>
+                      <div className='d-flex  justify-content-center align-item-center'>
+                        <CardImg src={outil_5} style={{ width: '50px' }} />
+                        <CardImg src={outil_8} style={{ width: '50px' }} />
+                        <CardImg src={outil_10} style={{ width: '50px' }} />
+                        <CardImg src={outil_6} style={{ width: '50px' }} />
+                        <CardImg src={outil_11} style={{ width: '50px' }} />
+                        <CardImg src={outil_12} style={{ width: '50px' }} />
+                      </div>
+                    </CardTitle>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '30px',
+                        right: '30px',
+                      }}
+                      className='d-flex flex-column justify-content-center align-item-center'
+                    >
+                      <CardImg src={outil_4} style={{ width: '50px' }} />
+                      <CardImg src={outil_7} style={{ width: '50px' }} />
+                      <CardImg src={outil_9} style={{ width: '50px' }} />
+                    </div>
+                  </CardHeader>
+                  <div className=' my-2 px-2 '>
+                    <div className='d-flex justify-content-between align-item-center mt-2'>
+                      <CardText>
+                        <strong>Facture N°: </strong>
+                        <span className='text-danger'>
                           {formatPrice(
-                            selectedCommande?.paiementCommande
-                              ? selectedCommande?.paiementCommande?.totalAmount
-                              : selectedCommande?.commandeData?.totalAmount
+                            selectedCommande?.commandeData?.commandeId
                           )}{' '}
-                          F
-                        </strong>
+                        </span>
                       </CardText>
-                      <div>
-                        <CardText className='text-center '>
-                          Payé:
+                      <CardText>
+                        <strong> Date:</strong>{' '}
+                        {new Date(
+                          selectedCommande?.commandeData?.createdAt
+                        ).toLocaleDateString()}
+                      </CardText>
+                    </div>
+
+                    {/* Infos Client */}
+                    <div className='d-flex justify-content-between align-item-center  '>
+                      <CardText>
+                        <strong>Client: </strong>
+                        {capitalizeWords(
+                          selectedCommande?.commandeData?.fullName
+                        )}{' '}
+                      </CardText>
+                      <CardText>
+                        <strong>Tél: </strong>
+                        {formatPhoneNumber(
+                          selectedCommande?.commandeData?.phoneNumber
+                        )}
+                      </CardText>
+                    </div>
+                    <CardText className='text-start'>
+                      <strong>Livraison: </strong>
+                      {capitalizeWords(selectedCommande?.commandeData?.adresse)}
+                    </CardText>
+                  </div>
+                  {/* Bordure Séparateur */}
+
+                  <div className='my-2 p-2'>
+                    <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-double border-info text-center'>
+                      <thead>
+                        <tr>
+                          <th>Qté</th>
+                          <th>Désignations</th>
+                          <th>P.U</th>
+                          <th>Montant</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {selectedCommande?.commandeData?.items?.map(
+                          (article) => (
+                            <tr key={article?._id}>
+                              <td>{article?.quantity} </td>
+                              <td>
+                                {capitalizeWords(article?.produit?.name)}{' '}
+                              </td>
+                              <td>{formatPrice(article?.customerPrice)} F </td>
+                              <td>
+                                {formatPrice(
+                                  article?.customerPrice * article?.quantity
+                                )}
+                                {' F'}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <CardFooter>
+                    <div className='p-1'>
+                      <div
+                        className='d-flex
+                  justify-content-between align-item-center'
+                      >
+                        <CardText className={'text-center'}>
+                          Total:{' '}
                           <strong style={{ fontSize: '14px' }}>
-                            {' '}
-                            {selectedCommande?.paiementCommande
-                              ? formatPrice(
-                                  selectedCommande?.paiementCommande?.totalPaye
-                                )
-                              : 0}{' '}
-                            F
-                          </strong>
-                        </CardText>
-                        <CardText className='text-center '>
-                          Réliqua:
-                          <strong style={{ fontSize: '14px' }}>
-                            {' '}
                             {formatPrice(
                               selectedCommande?.paiementCommande
                                 ? selectedCommande?.paiementCommande
-                                    ?.totalAmount -
-                                    selectedCommande?.paiementCommande
-                                      ?.totalPaye
+                                    ?.totalAmount
                                 : selectedCommande?.commandeData?.totalAmount
                             )}{' '}
                             F
                           </strong>
                         </CardText>
+                        <div>
+                          <CardText className='text-center '>
+                            Payé:
+                            <strong style={{ fontSize: '14px' }}>
+                              {' '}
+                              {selectedCommande?.paiementCommande
+                                ? formatPrice(
+                                    selectedCommande?.paiementCommande
+                                      ?.totalPaye
+                                  )
+                                : 0}{' '}
+                              F
+                            </strong>
+                          </CardText>
+                          <CardText className='text-center '>
+                            Réliqua:
+                            <strong style={{ fontSize: '14px' }}>
+                              {' '}
+                              {formatPrice(
+                                selectedCommande?.paiementCommande
+                                  ? selectedCommande?.paiementCommande
+                                      ?.totalAmount -
+                                      selectedCommande?.paiementCommande
+                                        ?.totalPaye
+                                  : selectedCommande?.commandeData?.totalAmount
+                              )}{' '}
+                              F
+                            </strong>
+                          </CardText>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardFooter>
-              </CardBody>
-            </Card>
-          )}
-
+                  </CardFooter>
+                </CardBody>
+              </Card>
+            )}
+          </div>
           {/* Historique de Paiement */}
           <PaiementsHistorique
             id={id}

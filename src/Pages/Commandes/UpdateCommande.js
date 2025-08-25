@@ -55,11 +55,7 @@ export default function UpdateCommande() {
     );
   });
 
-  const {
-    data: selectedCommande,
-    isLoading: isFetchingCommande,
-    error: isErrorToFetch,
-  } = useOneCommande(id);
+  const { data: selectedCommande } = useOneCommande(id);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Ajoute des produits dans le panier sans la base de données
@@ -75,6 +71,7 @@ export default function UpdateCommande() {
       const items = selectedCommande?.commandeData?.items.map((item) => ({
         produit: item.produit,
         quantity: item.quantity,
+        customerPrice: item.customerPrice ?? item.produit.price,
       }));
       setCartsItems(items);
     }
@@ -100,7 +97,10 @@ export default function UpdateCommande() {
       }
 
       //  Sinon on ajoute le produit avec la quantité (1)
-      return [...prevCart, { produit, quantity: 1 }];
+      return [
+        ...prevCart,
+        { produit, quantity: 1, customerPrice: produit.price },
+      ];
     });
   };
 
@@ -136,7 +136,7 @@ export default function UpdateCommande() {
 
   // Fonction pour calculer le total des élements dans le panier
   const totalAmount = cartItems.reduce(
-    (total, item) => total + item.produit.price * item.quantity,
+    (total, item) => total + item.customerPrice * item.quantity,
     0
   );
 
@@ -146,10 +146,10 @@ export default function UpdateCommande() {
     enableReinitialize: true,
 
     initialValues: {
-      fullName: selectedCommande?.commandeData?.fullName || '',
-      phoneNumber: selectedCommande?.commandeData?.phoneNumber || undefined,
-      adresse: selectedCommande?.commandeData?.adresse || '',
-      statut: selectedCommande?.commandeData?.statut || '',
+      fullName: selectedCommande?.commandeData?.fullName || 'non défini',
+      phoneNumber: selectedCommande?.commandeData?.phoneNumber || 0,
+      adresse: selectedCommande?.commandeData?.adresse || 'non défini',
+      statut: selectedCommande?.commandeData?.statut || 'livré',
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -179,6 +179,7 @@ export default function UpdateCommande() {
         items: cartItems.map((item) => ({
           produit: item.produit._id,
           quantity: item.quantity,
+          customerPrice: item.customerPrice,
         })),
         totalAmount,
       };
@@ -224,7 +225,6 @@ export default function UpdateCommande() {
         <Container fluid>
           <Breadcrumbs title='Commandes' breadcrumbItem='Nouvelle Commande' />
 
-          
           {/* ---------------------------------------------------------------------- */}
           {/* ---------------------------------------------------------------------- */}
           {/* Panier */}
@@ -420,8 +420,28 @@ export default function UpdateCommande() {
                       <div>
                         <strong>{capitalizeWords(item.produit.name)}</strong>
                         <div>
-                          {item.quantity} × {formatPrice(item.produit.price)} F
-                          = {formatPrice(item.produit.price * item.quantity)} F
+                          {/* {item.quantity} × {formatPrice(item.produit.price)} F
+                          = {formatPrice(item.produit.price * item.quantity)} F */}
+                          P.U: client
+                          <Input
+                            type='number'
+                            min={0}
+                            value={item.customerPrice}
+                            onChange={(e) => {
+                              const newPrice = parseFloat(e.target.value) || 0;
+                              setCartsItems((prevCart) =>
+                                prevCart.map((i) =>
+                                  i.produit._id === item.produit._id
+                                    ? { ...i, customerPrice: newPrice }
+                                    : i
+                                )
+                              );
+                            }}
+                            style={{
+                              width: '100px',
+                              border: '1px solid #cdc606 ',
+                            }}
+                          />
                         </div>
                       </div>
 
@@ -536,13 +556,13 @@ export default function UpdateCommande() {
                               <CardText className='text-center'>
                                 {capitalizeWords(produit.name)}
                               </CardText>
-                              <CardText className='font-size-15 text-center'>
+                              {/* <CardText className='font-size-15 text-center'>
                                 <strong>Catégorie: </strong>{' '}
                                 <span className='text-info '>
                                   {' '}
                                   {capitalizeWords(produit?.category)}{' '}
                                 </span>
-                              </CardText>
+                              </CardText> */}
 
                               <CardText className='text-center fw-bold'>
                                 {formatPrice(produit.price)} F

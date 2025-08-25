@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dropdown,
@@ -7,23 +7,12 @@ import {
   DropdownItem,
 } from 'reactstrap';
 
-//i18n
-import { withTranslation } from 'react-i18next';
-// Redux
-import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import withRouter from '../withRouter';
-
 import { AuthContext } from '../../../Auth/AuthContext';
 import { connectedUserName } from '../../../Pages/Authentication/userInfos';
 
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
-
-  const [username, setusername] = useState('Admin');
-
-  const navigate = useNavigate();
 
   const { logout } = useContext(AuthContext);
   // const handleLogout = logout();

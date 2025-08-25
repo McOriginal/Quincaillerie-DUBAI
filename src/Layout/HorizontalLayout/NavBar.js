@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
-import { Collapse, Row, Col, Container } from 'reactstrap';
-import classname from 'classnames';
+import { Collapse, Container } from 'reactstrap';
 
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import withRouter from '../../components/Common/withRouter';
 
 const Navbar = (props) => {

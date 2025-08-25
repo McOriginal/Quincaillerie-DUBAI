@@ -142,6 +142,15 @@ export default function ApprovisonnementListe() {
               <Card>
                 <CardBody>
                   <Row className='g-4 mb-3'>
+                    <Col>
+                      <p className='text-center font-size-15 mt-2'>
+                        Approvisonnement Total:{' '}
+                        <span className='text-warning'>
+                          {' '}
+                          {approvisonnementData?.length}{' '}
+                        </span>
+                      </p>
+                    </Col>
                     <Col className='col-sm'>
                       <div className='d-flex justify-content-sm-end'>
                         <div className='search-box me-4'>

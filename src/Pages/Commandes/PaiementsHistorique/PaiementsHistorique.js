@@ -10,7 +10,10 @@ import {
 } from 'reactstrap';
 import FormModal from '../../components/FormModal';
 import LoadingSpiner from '../../components/LoadingSpiner';
-import { formatPrice } from '../../components/capitalizeFunction';
+import {
+  capitalizeWords,
+  formatPrice,
+} from '../../components/capitalizeFunction';
 import { deleteButton } from '../../components/AlerteModal';
 import PaiementsHistoriqueForm from './PaiementsHistoriqueForm';
 import {
@@ -160,20 +163,15 @@ export default function PaiementsHistorique({ id, reliqua }) {
                           >
                             <thead className='table-light'>
                               <tr>
-                                <th
-                                  style={{ width: '50px' }}
-                                  data-sort='paiementDate'
-                                >
+                                <th style={{ width: '50px' }}>
                                   Date de Paiement
                                 </th>
 
-                                <th
-                                  className='text-center'
-                                  data-sort='totaPayer'
-                                >
-                                  Montant
-                                </th>
+                                <th className='text-center'>Montant</th>
 
+                                <th className='text-center'>
+                                  Méthode de paiement
+                                </th>
                                 <th>Status</th>
                                 <th data-sort='action'>Action</th>
                               </tr>
@@ -192,6 +190,9 @@ export default function PaiementsHistorique({ id, reliqua }) {
                                     <td>
                                       {formatPrice(paiement?.amount)}
                                       {' F '}
+                                    </td>
+                                    <td>
+                                      {capitalizeWords(paiement?.methode)}
                                     </td>
 
                                     <td>

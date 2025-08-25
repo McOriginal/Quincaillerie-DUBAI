@@ -106,6 +106,15 @@ export default function ProduitListe() {
                         </Col>
                       )}
                       <Col>
+                        <p className='text-center font-size-15 mt-2'>
+                          Produit Total:{' '}
+                          <span className='text-warning'>
+                            {' '}
+                            {produits?.length}{' '}
+                          </span>
+                        </p>
+                      </Col>
+                      <Col>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (
                             <Button
@@ -229,13 +238,13 @@ export default function ProduitListe() {
                       <CardText className='fs-6 text-center'>
                         {capitalizeWords(prod?.name)}
                       </CardText>
-                      <CardText className='font-size-15 text-center'>
+                      {/* <CardText className='font-size-15 text-center'>
                         <strong>Catégorie: </strong>{' '}
                         <span className='text-info '>
                           {' '}
                           {capitalizeWords(prod?.category)}{' '}
                         </span>
-                      </CardText>
+                      </CardText> */}
 
                       <CardTitle className='text-center'>
                         {formatPrice(prod?.price)} F

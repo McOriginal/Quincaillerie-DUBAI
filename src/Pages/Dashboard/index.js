@@ -9,15 +9,19 @@ import TotalFounisseurs from './TotalFournisseurs';
 import TotalProduit from './TotalProduit';
 import TotalCommande from './TotalCommande';
 import TotalArticleSansStock from './TotalArticleSansStock';
+import { companyName } from '../CompanyInfo/CompanyInfo';
 
 const Dashboard = () => {
-  document.title = 'Santé MARHABA';
+  document.title = `Tableau de Bord | ${companyName} `;
 
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid={true}>
-          <Breadcrumbs title='Santé MARHABA' breadcrumbItem='Tabelau de Bord' />
+          <Breadcrumbs
+            title='Administrateur'
+            breadcrumbItem='Tabelau de Bord'
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 70 }}

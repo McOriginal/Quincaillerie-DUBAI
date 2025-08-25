@@ -8,18 +8,12 @@ import {
   CardTitle,
   Col,
   Container,
-  Form,
-  FormFeedback,
-  FormGroup,
   Input,
-  Label,
   Row,
 } from 'reactstrap';
 
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import LoadingSpiner from '../components/LoadingSpiner';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
 import {
   errorMessageAlert,
@@ -27,10 +21,10 @@ import {
 } from '../components/AlerteModal';
 import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
+import { useCreateDevis } from '../../Api/queriesDevis';
 import { useAllProduit } from '../../Api/queriesProduits';
-import { useCreateCommande } from '../../Api/queriesCommande';
 
-export default function NewCommande() {
+export default function NewDevis() {
   // State de navigation
   const navigate = useNavigate();
 
@@ -50,8 +44,8 @@ export default function NewCommande() {
     );
   });
 
-  // Query pour ajouter une COMMANDE dans la base de données
-  const { mutate: createCommande } = useCreateCommande();
+  // Query pour ajouter un Devis dans la base de données
+  const { mutate: createDevis } = useCreateDevis();
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Ajoute des produits dans le panier sans besoins de la base de données
   const [cartItems, setCartsItems] = useState([]);
@@ -118,243 +112,58 @@ export default function NewCommande() {
   );
 
   // Form validation
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
+  const onSubmit = () => {
+    // Vérification de quantité dans le STOCK
+    if (cartItems.length === 0) return;
 
-    initialValues: {
-      fullName: 'non défini',
-      phoneNumber: undefined || 0,
-      adresse: 'non défini',
-      statut: 'livré',
-    },
-    validationSchema: Yup.object({
-      fullName: Yup.string()
-        .matches(/^[a-zA-ZÀ-ÿ\s'-]+$/, 'Veillez Entrez une valeur correct !')
-        .required('Ce champ est obligatoire'),
+    setIsSubmitting(true);
+    const payload = {
+      // Les ARTICLES de panier
+      items: cartItems.map((item) => ({
+        produit: item.produit._id,
+        quantity: item.quantity,
+        customerPrice: item.customerPrice,
+      })),
+      totalAmount,
+    };
 
-      phoneNumber: Yup.number().required('Ce champ est obligatoire'),
-      adresse: Yup.string().required('Ce champ est obligatoire'),
-      statut: Yup.string().required('Ce champ est obligatoire'),
-    }),
-
-    onSubmit: (values, { resetForm }) => {
-      setIsSubmitting(false);
-
-      // Vérification de quantité dans le STOCK
-      if (cartItems.length === 0) return;
-
-      setIsSubmitting(true);
-      const payload = {
-        // Les informations du clients
-        fullName: values.fullName,
-        adresse: values.adresse,
-        phoneNumber: values.phoneNumber,
-        statut: values.statut,
-        // ------------------------
-        // Les ARTICLES de panier
-        items: cartItems.map((item) => ({
-          produit: item.produit._id,
-          quantity: item.quantity,
-          customerPrice: item.customerPrice,
-        })),
-        totalAmount,
-      };
-
-      // Vérification du stock pour chaque produit
-      const insufficientStockItems = cartItems.filter(
-        (item) => item.quantity > item.produit.stock
-      );
-
-      if (insufficientStockItems.length > 0) {
-        const names = insufficientStockItems
-          .map((item) => `${item.produit.name} (stock: ${item.produit.stock})`)
-          .join(', ');
-        errorMessageAlert(`Stock insuffisant pour : ${capitalizeWords(names)}`);
+    createDevis(payload, {
+      onSuccess: () => {
+        // Après on vide le panier
+        clearCart();
+        successMessageAlert(capitalizeWords('Devis Enregistré avec succès !'));
         setIsSubmitting(false);
-        return;
+        navigate('/devisListe');
+      },
+      onError: (err) => {
+        const message =
+          err?.response?.data?.message ||
+          err.message ||
+          "Erreur lors de l'Enregistrement !";
+        errorMessageAlert(message);
+        setIsSubmitting(false);
+      },
+    });
+
+    setTimeout(() => {
+      if (isLoading) {
+        errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
+        setIsSubmitting(false);
       }
-
-      createCommande(payload, {
-        onSuccess: () => {
-          // Après on vide le panier
-          clearCart();
-          successMessageAlert(
-            capitalizeWords('Commande Enregistrée avec succès !')
-          );
-          setIsSubmitting(false);
-          resetForm();
-          navigate('/paiements');
-        },
-        onError: (err) => {
-          const message =
-            err?.response?.data?.message ||
-            err.message ||
-            "Erreur lors de l'Enregistrement !";
-          errorMessageAlert(message);
-          setIsSubmitting(false);
-        },
-      });
-
-      setTimeout(() => {
-        if (isLoading) {
-          errorMessageAlert('Une erreur est survenue. Veuillez réessayer !');
-          setIsSubmitting(false);
-        }
-      }, 10000);
-    },
-  });
+    }, 10000);
+  };
 
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          <Breadcrumbs title='Commandes' breadcrumbItem='Nouvelle Commande' />
+          <Breadcrumbs title='Devis' breadcrumbItem='Nouveau Devis' />
 
           {/* ---------------------------------------------------------------------- */}
           {/* ---------------------------------------------------------------------- */}
           {/* Panier */}
           <Row>
-            {/* ------------------------------------------------------------- */}
-            {/* Les information sur Client */}
-            {/* ------------------------------------------------------------- */}
-            <Col md={6}>
-              <Card>
-                <CardTitle className='text-center m-2'>
-                  Informations Client
-                </CardTitle>
-                <CardBody>
-                  <Form
-                    className='needs-validation'
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      return false;
-                    }}
-                  >
-                    <Row>
-                      <Col sm={6}>
-                        <FormGroup>
-                          <Label for='fullName'>Nom et Prénom</Label>
-                          <Input
-                            name='fullName'
-                            id='fullName'
-                            type='text'
-                            className='form form-control'
-                            placeholder='Nom et Prénom de Client'
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.fullName || ''}
-                            invalid={
-                              validation.touched.fullName &&
-                              validation.errors.fullName
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.fullName &&
-                          validation.errors.fullName ? (
-                            <FormFeedback type='invalid'>
-                              {validation.errors.fullName}
-                            </FormFeedback>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col sm={6}>
-                        <FormGroup>
-                          <Label for='phoneNumber'>Téléphone</Label>
-                          <Input
-                            name='phoneNumber'
-                            id='phoneNumber'
-                            type='number'
-                            min={0}
-                            className='form form-control'
-                            placeholder='N°Téléphone de Client'
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.phoneNumber || ''}
-                            invalid={
-                              validation.touched.phoneNumber &&
-                              validation.errors.phoneNumber
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.phoneNumber &&
-                          validation.errors.phoneNumber ? (
-                            <FormFeedback type='invalid'>
-                              {validation.errors.phoneNumber}
-                            </FormFeedback>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col sm={6}>
-                        <FormGroup>
-                          <Label for='fullName'>Adresse de Livraison</Label>
-                          <Input
-                            name='adresse'
-                            id='adresse'
-                            type='text'
-                            className='form form-control'
-                            placeholder="Entrez l'adresse de livraison"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.adresse || ''}
-                            invalid={
-                              validation.touched.adresse &&
-                              validation.errors.adresse
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.adresse &&
-                          validation.errors.adresse ? (
-                            <FormFeedback type='invalid'>
-                              {validation.errors.adresse}
-                            </FormFeedback>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col sm={6}>
-                        <FormGroup>
-                          <Label for='statut'>Statut de Livraison</Label>
-                          <Input
-                            name='statut'
-                            id='statut'
-                            type='select'
-                            className='form form-control'
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.statut || ''}
-                            invalid={
-                              validation.touched.statut &&
-                              validation.errors.statut
-                                ? true
-                                : false
-                            }
-                          >
-                            <option value=''>Sélectionner le Statut</option>
-                            <option value='livré'>Livré</option>
-                            <option value='en cours'>
-                              Partiellement Livré
-                            </option>
-                            <option value='en attente'>En Attente</option>
-                          </Input>
-                          {validation.touched.statut &&
-                          validation.errors.statut ? (
-                            <FormFeedback type='invalid'>
-                              {validation.errors.statut}
-                            </FormFeedback>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </Form>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md={6}>
+            <Col sm={12}>
               {/* Bouton */}
               {isSubmitting && <LoadingSpiner />}
 
@@ -372,9 +181,9 @@ export default function NewCommande() {
                     <Button
                       color='primary'
                       className='fw-bold'
-                      onClick={() => validation.handleSubmit()}
+                      onClick={onSubmit}
                     >
-                      Enregistrer la Commande
+                      Enregistrer le Devis
                     </Button>
                   </div>
                 </div>
@@ -406,9 +215,6 @@ export default function NewCommande() {
                       <div>
                         <strong>{capitalizeWords(item.produit.name)}</strong>
                         <div>
-                          {/* {item.quantity} × {formatPrice(item.produit.price)} F
-                          = {formatPrice(item.produit.price * item.quantity)} F */}
-                          {/* Prix client */}
                           P.U: client
                           <Input
                             type='number'

@@ -31,6 +31,8 @@ import {
   outil_2,
 } from '../../CompanyInfo/CompanyInfo';
 import { useOnePaiementHistorique } from '../../../Api/queriesPaiementHistorique';
+import { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 
 const FacturePaiement = ({
   show_modal,
@@ -43,6 +45,8 @@ const FacturePaiement = ({
     error,
     isLoading,
   } = useOnePaiementHistorique(selectedPaiementHistoriqueID);
+  const contentRef = useRef(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
 
   // ------------------------------------------
   // ------------------------------------------
@@ -65,49 +69,6 @@ const FacturePaiement = ({
       .catch((err) => console.error('Error generating PDF:', err));
   };
 
-  // -----------------------------------------
-  // -----------------------------------------
-  // Impression
-  // -----------------------------------------
-  // -----------------------------------------
-
-  const handlePrintFacturePaiementHistorique = () => {
-    const content = document.getElementById('paiementHistorique');
-    // Ouvre une nouvelle fenêtre pour l'impression
-    const printWindow = window.open('', '', 'width=800,height=600');
-
-    // Récupère tous les <style> et <link rel="stylesheet">
-    const styles = Array.from(
-      document.querySelectorAll('style, link[rel="stylesheet"]')
-    )
-      .map((node) => node.outerHTML)
-      .join('');
-
-    printWindow.document.write(`
-    <html>
-      <head>
-        <title>Impression d'Ordonnance</title>
-        ${styles}
-        <style>
-          @media print {
-            body {
-              margin: 20px;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        ${content.innerHTML}
-      </body>
-    </html>
-  `);
-
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  };
-
   return (
     <Modal
       isOpen={show_modal}
@@ -125,14 +86,14 @@ const FacturePaiement = ({
             color='info'
             className='add-btn'
             id='create-btn'
-            onClick={handlePrintFacturePaiementHistorique}
+            onClick={reactToPrintFn}
           >
             <i className='fas fa-print align-center me-1'></i> Imprimer
           </Button>
 
           <Button color='danger' onClick={exportPaiementToPDF}>
             <i className='fas fa-paper-plane  me-1 '></i>
-            Exporter en PDF
+            Télécharger en PDF
           </Button>
         </div>
 
@@ -148,7 +109,7 @@ const FacturePaiement = ({
       </div>
 
       {/* Modal Body */}
-      <div className='modal-body'>
+      <div className='modal-body' ref={contentRef}>
         {!error && !isLoading && (
           <div
             className='mx-5 d-flex justify-content-center'
