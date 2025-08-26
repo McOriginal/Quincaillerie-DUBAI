@@ -150,28 +150,29 @@ export default function LivraisonHistorique({ id, commandeItems }) {
                       </Col>
                     </Row>
                     <div className='col-sm-auto'>
-                      {productDelivredResult?.map((item) => (
-                        <div key={item?.produit} className='text-center my-2'>
-                          <p className='font-size-13'>
-                            <strong className='text-muted'>
-                              {capitalizeWords(item?.produit)}:{' '}
-                            </strong>
-                            <span className='text-success'>
-                              {' '}
-                              {formatPrice(item?.quantityLivree)}
-                            </span>{' '}
-                            Livré sur{' '}
-                            <span className='text-warning'>
-                              {' '}
-                              {formatPrice(item?.quantityCommandee)}
-                            </span>{' '}
-                            Commandé
-                            <span className='text-danger mx-3'>
-                              Restant: {formatPrice(item?.quantityRestante)}
-                            </span>{' '}
-                          </p>
-                        </div>
-                      ))}
+                      {commandeItems?.statut !== 'livré' &&
+                        productDelivredResult?.map((item) => (
+                          <div key={item?.produit} className='text-center my-2'>
+                            <p className='font-size-13'>
+                              <strong className='text-muted'>
+                                {capitalizeWords(item?.produit)}:{' '}
+                              </strong>
+                              <span className='text-success'>
+                                {' '}
+                                {formatPrice(item?.quantityLivree)}
+                              </span>{' '}
+                              Livré sur{' '}
+                              <span className='text-warning'>
+                                {' '}
+                                {formatPrice(item?.quantityCommandee)}
+                              </span>{' '}
+                              Commandé
+                              <span className='text-danger mx-3'>
+                                Restant: {formatPrice(item?.quantityRestante)}
+                              </span>{' '}
+                            </p>
+                          </div>
+                        ))}
                     </div>
                     {error && (
                       <div className='text-danger text-center'>
@@ -181,11 +182,21 @@ export default function LivraisonHistorique({ id, commandeItems }) {
                     {isLoading && <LoadingSpiner />}
 
                     <div className='table-responsive table-card mt-3 mb-1'>
-                      {filterSearchLivraisonHistorique?.length === 0 && (
-                        <div className='text-center text-mutate'>
-                          Aucune Livraison !
+                      {commandeItems?.statut === 'livré' && (
+                        <div className='text-center text-success mt-4'>
+                          <strong className='font-size-18'>
+                            Commande Livrée !
+                          </strong>
                         </div>
                       )}
+                      {filterSearchLivraisonHistorique?.length === 0 &&
+                        commandeItems?.statut !== 'livré' && (
+                          <div className='text-center text-mutate mt-4'>
+                            <strong className='font-size-18'>
+                              Aucune Livraison !
+                            </strong>
+                          </div>
+                        )}
 
                       {/* Liste Historique de Paiement si ça existe */}
                       {!error &&

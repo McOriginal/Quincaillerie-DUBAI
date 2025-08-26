@@ -28,6 +28,8 @@ import LivraisonHistorique from '../Livraison/ListeLivraisonHistorique';
 import {
   companyAdresse,
   companyName,
+  companyOwnerName,
+  companyServices,
   companyTel,
   outil_1,
   outil_10,
@@ -132,7 +134,7 @@ export default function Facture() {
                         top: '30px',
                         left: '30px',
                       }}
-                      className='d-flex flex-column justify-content-center align-item-center'
+                      className='d-flex flex-column gap-3 justify-content-center align-item-center'
                     >
                       <CardImg
                         src={outil_2}
@@ -154,36 +156,41 @@ export default function Facture() {
                         }}
                       />
                     </div>
-                    <CardTitle className='text-center '>
-                      <h3 className='text-info fw-bold'>{companyName} </h3>
-                      <p
-                        style={{ margin: '15px', fontSize: '10px' }}
-                        className='text-info fw-bold'
-                      >
-                        {companyAdresse}
-                      </p>
-                      <p
-                        style={{ margin: '15px', fontSize: '10px' }}
-                        className='text-info fw-bold'
-                      >
+                    <h2 className='text-center text-info '> {companyName} </h2>
+                    <h6
+                      style={{
+                        width: '50%',
+                      }}
+                      className='text-center text-light bg-info  px-2 py-1 rounded-3 mx-auto mb-2'
+                    >
+                      {' '}
+                      {companyOwnerName}{' '}
+                    </h6>
+                    <div className='text-info font-size-11 d-flex flex-column gap-0 justify-content-center align-item-center text-center mb-2'>
+                      <span>Tout Pour la Construction</span>
+                      <span>{companyServices}</span>
+                      <span>{companyAdresse}</span>
+                      <span>
+                        {' '}
+                        <strong className='font-size-12'>Info: </strong>{' '}
                         {companyTel}
-                      </p>
-                      <div className='d-flex  justify-content-center align-item-center'>
-                        <CardImg src={outil_5} style={{ width: '50px' }} />
-                        <CardImg src={outil_8} style={{ width: '50px' }} />
-                        <CardImg src={outil_10} style={{ width: '50px' }} />
-                        <CardImg src={outil_6} style={{ width: '50px' }} />
-                        <CardImg src={outil_11} style={{ width: '50px' }} />
-                        <CardImg src={outil_12} style={{ width: '50px' }} />
-                      </div>
-                    </CardTitle>
+                      </span>
+                    </div>
+                    <div className='d-flex gap-3  justify-content-center align-item-center'>
+                      <CardImg src={outil_5} style={{ width: '50px' }} />
+                      <CardImg src={outil_8} style={{ width: '50px' }} />
+                      <CardImg src={outil_10} style={{ width: '50px' }} />
+                      <CardImg src={outil_6} style={{ width: '50px' }} />
+                      <CardImg src={outil_11} style={{ width: '50px' }} />
+                      <CardImg src={outil_12} style={{ width: '50px' }} />
+                    </div>
                     <div
                       style={{
                         position: 'absolute',
                         top: '30px',
                         right: '30px',
                       }}
-                      className='d-flex flex-column justify-content-center align-item-center'
+                      className='d-flex gap-1 flex-column justify-content-center align-item-center'
                     >
                       <CardImg src={outil_4} style={{ width: '50px' }} />
                       <CardImg src={outil_7} style={{ width: '50px' }} />
@@ -313,6 +320,21 @@ export default function Facture() {
                         </div>
                       </div>
                     </div>
+                    <p className=' mt-2 text-info'>
+                      Arrêté la présente facture à la somme de:{' '}
+                      <strong style={{ fontSize: '14px' }}>
+                        {formatPrice(
+                          selectedCommande?.paiementCommande
+                            ? selectedCommande?.paiementCommande?.totalAmount
+                            : selectedCommande?.commandeData?.totalAmount
+                        )}{' '}
+                        F
+                      </strong>
+                    </p>
+                    <p className='font-size-10 text-center'>
+                      Merci pour votre confiance et votre achat chez{' '}
+                      {companyName}. Nous espérons vous revoir bientôt!
+                    </p>
                   </CardFooter>
                 </CardBody>
               </Card>
