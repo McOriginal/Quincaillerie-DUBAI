@@ -264,20 +264,22 @@ export default function PaiementsListe() {
                                               <i className='bx bx-show align-center text-white'></i>
                                             </button>
                                           </div>
-                                          <div className='edit'>
-                                            <button
-                                              className='btn btn-sm btn-success edit-item-btn'
-                                              onClick={() => {
-                                                setFormModalTitle(
-                                                  'Modifier les données'
-                                                );
-                                                setPaiementToUpdate(paiement);
-                                                tog_form_modal();
-                                              }}
-                                            >
-                                              <i className='ri-pencil-fill text-white'></i>
-                                            </button>
-                                          </div>
+                                          {connectedUserRole === 'admin' && (
+                                            <div className='edit'>
+                                              <button
+                                                className='btn btn-sm btn-success edit-item-btn'
+                                                onClick={() => {
+                                                  setFormModalTitle(
+                                                    'Modifier les données'
+                                                  );
+                                                  setPaiementToUpdate(paiement);
+                                                  tog_form_modal();
+                                                }}
+                                              >
+                                                <i className='ri-pencil-fill text-white'></i>
+                                              </button>
+                                            </div>
+                                          )}
 
                                           {connectedUserRole === 'admin' && (
                                             <div className='remove'>

@@ -227,7 +227,7 @@ export default function CommandeListe() {
                                   <td>{capitalizeWords(comm?.adresse)}</td>
 
                                   <td>
-                                    {comm?.items.length} acticles
+                                    {comm?.items?.length} acticles
                                     {'  '}
                                   </td>
                                   <td>
@@ -259,18 +259,20 @@ export default function CommandeListe() {
                                             <i className=' bx bx-show-alt text-white'></i>
                                           </button>
                                         </div>
-                                        <div className='edit'>
-                                          <button
-                                            className='btn btn-sm btn-success edit-item-btn'
-                                            onClick={() => {
-                                              navigate(
-                                                `/updateCommande/${comm?._id}`
-                                              );
-                                            }}
-                                          >
-                                            <i className='ri-pencil-fill text-white'></i>
-                                          </button>
-                                        </div>
+                                        {connectedUserRole === 'admin' && (
+                                          <div className='edit'>
+                                            <button
+                                              className='btn btn-sm btn-success edit-item-btn'
+                                              onClick={() => {
+                                                navigate(
+                                                  `/updateCommande/${comm?._id}`
+                                                );
+                                              }}
+                                            >
+                                              <i className='ri-pencil-fill text-white'></i>
+                                            </button>
+                                          </div>
+                                        )}
                                         {connectedUserRole === 'admin' && (
                                           <div className='remove'>
                                             <button

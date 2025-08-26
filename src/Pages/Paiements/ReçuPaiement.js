@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardImg,
   CardText,
-  CardTitle,
   Modal,
 } from 'reactstrap';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';

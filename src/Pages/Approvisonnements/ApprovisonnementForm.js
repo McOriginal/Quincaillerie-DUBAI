@@ -157,7 +157,7 @@ const ApprovisonnementForm = () => {
                     {capitalizeWords(selectedProduit?.name)}{' '}
                   </CardTitle>
                   <CardText className='text-warning text-center'>
-                    {formatPrice(selectedProduit?.price)} F
+                    Prix de vente: {formatPrice(selectedProduit?.price)} F
                   </CardText>
                 </div>
               )}
@@ -173,7 +173,7 @@ const ApprovisonnementForm = () => {
                 <Row>
                   <Col sm='6'>
                     <FormGroup className='mb-3'>
-                      <Label htmlFor='price'>Prix d'Achat</Label>
+                      <Label htmlFor='price'>Prix Unitaire d'Achat</Label>
                       <Input
                         name='price'
                         placeholder='Entrez un prix'
