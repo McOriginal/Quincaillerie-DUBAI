@@ -1,35 +1,68 @@
+const mongoose = require('mongoose');
 const Approvisonement = require('../models/ApprovisonementModel');
 const Produit = require('../models/ProduitModel');
+const Depense = require('../models/DepenseModel');
 
 // Create a new approvisonement
 exports.createApprovisonement = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { produit, quantity, price, ...restOfData } = req.body;
-    // On change les valeurs quantity et price en nombres
-    formatQuantity = Number(quantity);
-    formatPrice = Number(price);
+    const formatQuantity = Number(quantity);
+    const formatPrice = Number(price);
 
-    // Vérification si le Produit existe
+    // Vérification si le produit est fourni
     if (!produit) {
-      return res.status(404).json({ message: 'Produit non trouvée' });
+      throw new Error('Produit non trouvé');
     }
-    // On ajoute la quantité sur le stock disponible de Produit
-    await Produit.findByIdAndUpdate(
+
+    // 1. Mise à jour du stock produit
+    const updatedProduct = await Produit.findByIdAndUpdate(
       produit,
       { $inc: { stock: formatQuantity } },
-      { new: true }
+      { new: true, session }
     );
-    // On crée l'approvisionnement
-    const approvisonement = await Approvisonement.create({
-      produit,
-      quantity: formatQuantity,
-      price: formatPrice,
-      ...restOfData,
-    });
 
-    return res.status(201).json(approvisonement);
+    if (!updatedProduct) {
+      throw new Error('Produit introuvable en base');
+    }
+
+    // 2. Création de l’approvisionnement
+    const approvisonement = await Approvisonement.create(
+      [
+        {
+          produit,
+          quantity: formatQuantity,
+          price: formatPrice,
+          ...restOfData,
+        },
+      ],
+      { session }
+    );
+
+    // 3. Création de la dépense
+    await Depense.create(
+      [
+        {
+          totalAmount: formatPrice * formatQuantity,
+          motifDepense: `Approvisionnement de ${formatQuantity} unité(s) du produit ${updatedProduct.name}`,
+          dateOfDepense: approvisonement[0].deliveryDate,
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(201).json(approvisonement[0]);
   } catch (error) {
-    console.log(error);
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error(error);
     res.status(400).json({ message: error.message });
   }
 };
