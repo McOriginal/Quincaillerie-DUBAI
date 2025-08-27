@@ -134,10 +134,22 @@ const Login = () => {
                           height='54'
                           className='auth-logo logo-dark mx-auto'
                         />
-                        <h5 className=' text-info mt-2 text-center'>
+                        <h2
+                          className=' mt-2 text-center'
+                          style={{ color: ' #e5beba' }}
+                        >
                           {companyName}
-                        </h5>
-                        <h6 className='text-info'>{companyOwnerName}</h6>
+                        </h2>
+                        <h6
+                          style={{
+                            color: ' #ffff',
+                            background: ' #e5beba',
+                            padding: '5px',
+                            borderRadius: '5px',
+                          }}
+                        >
+                          {companyOwnerName}
+                        </h6>
                         <p className='my-3 text-center'>
                           Entrez vos coordonnées pour vous connecter à votre
                           compte.

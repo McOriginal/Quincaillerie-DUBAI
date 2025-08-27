@@ -4,14 +4,6 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-//i18n
-import { withTranslation } from 'react-i18next';
-
-//import images
-import logoSm from '../../assets/images/logo-sm.png';
-import logoDark from '../../assets/images/logo-dark.png';
-import logoLight from '../../assets/images/logo-light.png';
-
 // Redux Store
 import {
   showRightSidebarAction,
@@ -55,26 +47,6 @@ const Header = (props) => {
       <header id='page-topbar'>
         <div className='navbar-header'>
           <div className='d-flex'>
-            <div className='navbar-brand-box text-center'>
-              <Link to='/' className='logo logo-dark'>
-                <span className='logo-sm'>
-                  <img src={logoSm} alt='logo-sm-dark' height='22' />
-                </span>
-                <span className='logo-lg'>
-                  <img src={logoDark} alt='logo-dark' height='24' />
-                </span>
-              </Link>
-
-              <Link to='/' className='logo logo-light'>
-                <span className='logo-sm'>
-                  <img src={logoSm} alt='logo-sm-light' height='22' />
-                </span>
-                <span className='logo-lg'>
-                  <img src={logoLight} alt='logo-light' height='24' />
-                </span>
-              </Link>
-            </div>
-
             <button
               type='button'
               className='btn btn-sm px-3 font-size-16 d-lg-none header-item'
@@ -195,4 +167,4 @@ export default connect(mapStatetoProps, {
   showRightSidebarAction,
   toggleLeftmenu,
   changeSidebarType,
-})(withTranslation()(Header));
+})(Header);

@@ -60,6 +60,13 @@ const UserProfile = () => {
                       <div className='text-muted'>
                         <h5> {connectedUserName}</h5>
                         <p className='mb-1'>{connectedUserEmail}</p>
+                        <h5 className='text-warning'>
+                          {' '}
+                          Rôle:{' '}
+                          {connectedUserRole === 'admin'
+                            ? 'Administrateur'
+                            : 'Utilisateur'}{' '}
+                        </h5>
                       </div>
                     </div>
 
