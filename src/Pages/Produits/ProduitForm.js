@@ -33,7 +33,6 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
 
     initialValues: {
       name: produitToEdit?.name || '',
-      // category: produitToEdit?.category || '',
       price: produitToEdit?.price || undefined,
       stock: produitToEdit?.stock || undefined,
       imageUrl: produitToEdit?.imageUrl || '',
@@ -42,7 +41,6 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
       name: Yup.string().required('Ce champ est obligatoire'),
       stock: Yup.string().required('Ce champ est obligatoire'),
       price: Yup.number().required('Ce champ est obligatoire'),
-      category: Yup.string().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {
@@ -136,41 +134,6 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
           </FormGroup>
         </Col>
       </Row>
-      {/* <Row>
-        <Col md='12'>
-          <FormGroup className='mb-3'>
-            <Label htmlFor='category'>Catégorie</Label>
-            <Input
-              name='category'
-              type='select'
-              className='form-control'
-              id='category'
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.category || ''}
-              invalid={
-                validation.touched.category && validation.errors.category
-                  ? true
-                  : false
-              }
-            >
-              <option value=''>Sélectionner une catégorie</option>
-              <option value='construction'>Construction</option>
-              <option value='électronique'>Électronique</option>
-              <option value='decoration'>Décoration</option>
-              <option value='menuisier'>Menuisier</option>
-              <option value='métalique'>Métalique</option>
-              <option value='plomberie'>Plomberie</option>
-              <option value='divers'>Divers</option>
-            </Input>
-            {validation.touched.category && validation.errors.category ? (
-              <FormFeedback type='invalid'>
-                {validation.errors.category}
-              </FormFeedback>
-            ) : null}
-          </FormGroup>
-        </Col>
-      </Row> */}
 
       <Row>
         <Col md='6'>
