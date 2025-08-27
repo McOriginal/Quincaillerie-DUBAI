@@ -65,7 +65,7 @@ export default function LivraisonHistorique({ id, commandeItems }) {
       (livItem) => livItem?.produit === commItem?.produit.name
     );
 
-    const totalQuantityDelivry = livraisonFilter.reduce(
+    const totalQuantityDelivry = livraisonFilter?.reduce(
       (current, value) => (current += value.quantity),
       0
     );

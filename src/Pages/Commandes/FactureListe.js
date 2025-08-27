@@ -82,7 +82,11 @@ export default function FactureListe() {
             </div>
           )}
           {isLoading && <LoadingSpiner />}
-
+          {commandes?.factures?.length === 0 && !isLoading && (
+            <div className='text-center text-danger'>
+              Aucune facture pour le moment.
+            </div>
+          )}
           {!error &&
             !isLoading &&
             commandes?.factures?.length > 0 &&
