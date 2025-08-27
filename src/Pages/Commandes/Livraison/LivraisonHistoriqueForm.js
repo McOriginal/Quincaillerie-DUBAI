@@ -164,6 +164,7 @@ const LivraisonHistoriqueForm = ({
       );
     }
   }, [
+    selectedLivraisonToUpdate,
     selectedCommandeData,
     validation.values.produit,
     livraisonHistoriqueData,

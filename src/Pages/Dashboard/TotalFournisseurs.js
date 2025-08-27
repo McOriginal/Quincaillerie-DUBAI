@@ -1,4 +1,4 @@
-import { Card, CardBody, CardImg, CardTitle, Col } from 'reactstrap';
+import { Card, CardBody, CardImg, CardTitle } from 'reactstrap';
 import { useAllFournisseur } from '../../Api/queriesFournisseur';
 import fourImg from './../../assets/images/delivery.png';
 import LoadingSpiner from '../components/LoadingSpiner';

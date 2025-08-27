@@ -1,4 +1,4 @@
-import { Card, CardBody, CardImg, CardTitle, Col } from 'reactstrap';
+import { Card, CardBody, CardImg, CardTitle } from 'reactstrap';
 import LoadingSpiner from '../components/LoadingSpiner';
 
 import comImg from './../../assets/images/passer-la-commande.png';

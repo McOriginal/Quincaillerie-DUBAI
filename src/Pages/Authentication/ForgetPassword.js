@@ -44,12 +44,6 @@ const ForgetPasswordPage = () => {
 
   // State de navigation
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-
-  // handle show password toggle
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   // Formmik
   const validation = useFormik({

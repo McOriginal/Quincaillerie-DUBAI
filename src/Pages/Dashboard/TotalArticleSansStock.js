@@ -2,10 +2,7 @@ import { Card, CardBody, CardImg, CardTitle } from 'reactstrap';
 import LoadingSpiner from '../components/LoadingSpiner';
 
 import articleImg from './../../assets/images/package.png';
-import {
-  useAllProduit,
-  useAllProduitWithStockInferieure,
-} from '../../Api/queriesProduits';
+import { useAllProduit } from '../../Api/queriesProduits';
 
 export default function TotalArticleSansStock() {
   // Article Data

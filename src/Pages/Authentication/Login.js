@@ -30,7 +30,7 @@ import {
 } from '../CompanyInfo/CompanyInfo';
 
 const Login = () => {
-  document.title = `Connexion | Santé MARHABA ${companyName} `;
+  document.title = `Connexion | ${companyName} `;
 
   // Query de Login
   const { mutate: loginUser } = useLogin();
