@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import FormModal from '../components/FormModal';
-import { Link } from 'react-router-dom';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   capitalizeWords,
@@ -26,24 +25,30 @@ export default function PaiementsListe() {
 
   // State de Recherche
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterReliqua, setFilterReliqua] = useState(false);
 
   // Fonction de Rechercher
-  const filterSearchPaiement = paiementsData?.filter((paiement) => {
-    const search = searchTerm.toLowerCase();
-    return (
-      `${paiement?.commande?.fulltName}`.toLowerCase().includes(search) ||
-      paiement?.commande?.adresse.toLowerCase().includes(search) ||
-      (paiement?.commande?.phoneNumber || '').toString().includes(search) ||
-      paiement?.totalAmount.toString().includes(search) ||
-      (paiement?.totalPaye || '').toString().includes(search) ||
-      (paiement?.reduction || 0).toString().includes(search) ||
-      paiement?.statut.toLowerCase().includes(search) ||
-      (
-        paiement?.paiementDate &&
-        new Date(paiement?.paiementDate).toLocaleDateString()
-      ).includes(search)
-    );
-  });
+  const filterSearchPaiement = paiementsData
+    ?.filter((paiement) => {
+      const search = searchTerm.toLowerCase();
+      return (
+        `${paiement?.commande?.fulltName}`.toLowerCase().includes(search) ||
+        paiement?.commande?.adresse.toLowerCase().includes(search) ||
+        (paiement?.commande?.phoneNumber || '').toString().includes(search) ||
+        paiement?.totalAmount.toString().includes(search) ||
+        (paiement?.totalPaye || '').toString().includes(search) ||
+        (paiement?.reduction || 0).toString().includes(search) ||
+        (
+          paiement?.paiementDate &&
+          new Date(paiement?.paiementDate).toLocaleDateString()
+        ).includes(search)
+      );
+    })
+    ?.filter((paiement) => {
+      if (!filterReliqua) return true; // pas de filtre
+      const reliqua = (paiement?.totalAmount || 0) - (paiement?.totalPaye || 0);
+      return reliqua > 0;
+    });
 
   // Ouverture de Modal Form
   function tog_form_modal() {
@@ -87,8 +92,8 @@ export default function PaiementsListe() {
               <Card>
                 <CardBody>
                   <div id='paiementsList'>
-                    <Row className='g-4 mb-3'>
-                      <Col className='col-sm-auto'>
+                    <Row className='g-4 mb-3 '>
+                      <Col className='col-sm-auto '>
                         <div className='d-flex gap-1'>
                           <Button
                             color='info'
@@ -105,6 +110,21 @@ export default function PaiementsListe() {
                           </Button>
                         </div>
                       </Col>
+                      <Col className='d-flex gap-2 justify-content-center align-self-center '>
+                        <input
+                          type='checkbox'
+                          className='form-check-input'
+                          id='filterReliqua'
+                          onChange={() => setFilterReliqua(!filterReliqua)}
+                        />
+                        <label
+                          className='form-check-label'
+                          htmlFor='filterReliqua'
+                        >
+                          Filtrer les Impayés
+                        </label>
+                      </Col>
+
                       <Col className='col-sm'>
                         <div className='d-flex justify-content-sm-end gap-2'>
                           {searchTerm !== '' && (
@@ -308,36 +328,6 @@ export default function PaiementsListe() {
                             </tbody>
                           </table>
                         )}
-                      <div className='noresult' style={{ display: 'none' }}>
-                        <div className='text-center'>
-                          <lord-icon
-                            src='https://cdn.lordicon.com/msoeawqm.json'
-                            trigger='loop'
-                            colors='primary:#121331,secondary:#08a88a'
-                            style={{ width: '75px', height: '75px' }}
-                          ></lord-icon>
-                          <h5 className='mt-2'>Sorry! No Result Found</h5>
-                          <p className='text-muted mb-0'>
-                            We've searched more than 150+ Orders We did not find
-                            any orders for you search.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className='d-flex justify-content-end'>
-                      <div className='pagination-wrap hstack gap-2'>
-                        <Link
-                          className='page-item pagination-prev disabled'
-                          to='#'
-                        >
-                          Previous
-                        </Link>
-                        <ul className='pagination listjs-pagination mb-0'></ul>
-                        <Link className='page-item pagination-next' to='#'>
-                          Next
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 </CardBody>

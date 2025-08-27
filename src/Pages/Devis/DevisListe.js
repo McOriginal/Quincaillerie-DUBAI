@@ -4,8 +4,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
-  CardImg,
   CardText,
   Col,
   Container,
@@ -15,31 +13,13 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 import LoadingSpiner from '../components/LoadingSpiner';
 import { capitalizeWords, formatPrice } from '../components/capitalizeFunction';
-import {
-  companyAdresse,
-  companyName,
-  companyOwnerName,
-  companyServices,
-  companyTel,
-} from '../CompanyInfo/CompanyInfo';
 
-import outil_1 from '../../assets/images/outil (1).png';
-import outil_2 from '../../assets/images/outil (2).png';
-import outil_3 from '../../assets/images/outil (3).png';
-import outil_4 from '../../assets/images/outil (4).png';
-import outil_5 from '../../assets/images/outil (5).png';
-import outil_6 from '../../assets/images/outil (6).png';
-import outil_7 from '../../assets/images/outil (7).png';
-import outil_8 from '../../assets/images/outil (8).png';
-import outil_9 from '../../assets/images/outil (9).png';
-import outil_10 from '../../assets/images/outil (10).png';
-import outil_11 from '../../assets/images/outil (11).png';
-import outil_12 from '../../assets/images/outil (12).png';
-import { html2pdf } from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 import { useReactToPrint } from 'react-to-print';
 import { useAllDevis, useDeleteDevis } from '../../Api/queriesDevis';
 import { useNavigate } from 'react-router-dom';
 import { deleteButton } from '../components/AlerteModal';
+import FactureHeader from '../Commandes/Details/FactureHeader';
 
 // Export En PDF
 // ------------------------------------------
@@ -150,6 +130,7 @@ export default function DevisListe() {
 
                 <Card
                   ref={contentRef}
+                  id='facture'
                   className='d-flex justify-content-center border border-info'
                   style={{
                     boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
@@ -160,84 +141,7 @@ export default function DevisListe() {
                   }}
                 >
                   <CardBody>
-                    <CardHeader
-                      style={{
-                        border: '2px solid rgba(100, 169, 238, 0.5)',
-                        borderRadius: '5px',
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '30px',
-                          left: '30px',
-                        }}
-                        className='d-flex flex-column gap-3 justify-content-center align-item-center'
-                      >
-                        <CardImg
-                          src={outil_2}
-                          style={{
-                            width: '50px',
-                          }}
-                        />
-                        <CardImg
-                          src={outil_1}
-                          style={{
-                            width: '50px',
-                          }}
-                        />
-
-                        <CardImg
-                          src={outil_3}
-                          style={{
-                            width: '50px',
-                          }}
-                        />
-                      </div>
-                      <h2 className='text-center text-info '>
-                        {' '}
-                        {companyName}{' '}
-                      </h2>
-                      <h6
-                        style={{
-                          width: '50%',
-                        }}
-                        className='text-center text-light bg-info  px-2 py-1 rounded-3 mx-auto mb-2'
-                      >
-                        {' '}
-                        {companyOwnerName}{' '}
-                      </h6>
-                      <div className='text-info font-size-11 d-flex flex-column gap-0 justify-content-center align-item-center text-center mb-2'>
-                        <span>Tout Pour la Construction</span>
-                        <span>{companyServices}</span>
-                        <span>{companyAdresse}</span>
-                        <span>
-                          {' '}
-                          <strong className='font-size-12'>Info: </strong>{' '}
-                          {companyTel}
-                        </span>
-                      </div>
-                      <div className='d-flex gap-3  justify-content-center align-item-center'>
-                        <CardImg src={outil_5} style={{ width: '50px' }} />
-                        <CardImg src={outil_8} style={{ width: '50px' }} />
-                        <CardImg src={outil_10} style={{ width: '50px' }} />
-                        <CardImg src={outil_6} style={{ width: '50px' }} />
-                        <CardImg src={outil_11} style={{ width: '50px' }} />
-                        <CardImg src={outil_12} style={{ width: '50px' }} />
-                      </div>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '30px',
-                          right: '30px',
-                        }}
-                        className='d-flex gap-1 flex-column justify-content-center align-item-center'
-                      >
-                        <CardImg src={outil_4} style={{ width: '50px' }} />
-                        <CardImg src={outil_7} style={{ width: '50px' }} />
-                        <CardImg src={outil_9} style={{ width: '50px' }} />
-                      </div>
-                    </CardHeader>
+                    <FactureHeader />
                     <div className='d-flex justify-content-between align-item-center mt-2'>
                       <CardText className='font-size-18'>
                         <strong>Motif: Devis des articles </strong>{' '}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
+import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LoadingSpiner from '../components/LoadingSpiner';
 import {
   capitalizeWords,
@@ -152,7 +152,15 @@ export default function ApprovisonnementListe() {
                       </p>
                     </Col>
                     <Col className='col-sm'>
-                      <div className='d-flex justify-content-sm-end'>
+                      <div className='d-flex gap-3 justify-content-sm-end'>
+                        {searchTerm !== '' && (
+                          <Button
+                            color='danger'
+                            onClick={() => setSearchTerm('')}
+                          >
+                            <i className='fas fa-window-close'></i>
+                          </Button>
+                        )}
                         <div className='search-box me-4'>
                           <input
                             type='text'
@@ -189,7 +197,7 @@ export default function ApprovisonnementListe() {
                             id='approvisonnementTable'
                           >
                             <thead className='table-light'>
-                              <tr>
+                              <tr className='text-center'>
                                 <th scope='col' style={{ width: '50px' }}>
                                   Date d'arrivée
                                 </th>
@@ -200,16 +208,16 @@ export default function ApprovisonnementListe() {
                                   Fournisseur
                                 </th>
 
-                                <th data-sort='phone'>Téléphone</th>
-                                <th data-sort='adresse'>Adresse</th>
+                                <th>Téléphone</th>
+                                <th>Adresse</th>
 
-                                <th data-sort='action'>Action</th>
+                                <th>Action</th>
                               </tr>
                             </thead>
 
                             <tbody className='list form-check-all text-center'>
                               {filterSearchApprovisonnement?.map((appro) => (
-                                <tr key={appro._id}>
+                                <tr key={appro._id} className='text-center'>
                                   <th scope='row'>
                                     {' '}
                                     {new Date(
@@ -295,21 +303,6 @@ export default function ApprovisonnementListe() {
                             </tbody>
                           </table>
                         )}
-                    </div>
-
-                    <div className='d-flex justify-content-end'>
-                      <div className='pagination-wrap hstack gap-2'>
-                        <Link
-                          className='page-item pagination-prev disabled'
-                          to='#'
-                        >
-                          Previous
-                        </Link>
-                        <ul className='pagination listjs-pagination mb-0'></ul>
-                        <Link className='page-item pagination-next' to='#'>
-                          Next
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 </CardBody>

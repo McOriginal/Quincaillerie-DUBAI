@@ -1,38 +1,13 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  CardImg,
-  CardText,
-  CardTitle,
-  Modal,
-} from 'reactstrap';
+import { Button, Card, CardBody, CardText, Modal } from 'reactstrap';
 import {
   capitalizeWords,
   formatPrice,
 } from '../../components/capitalizeFunction';
 import html2pdf from 'html2pdf.js';
-import {
-  companyAdresse,
-  companyName,
-  companyTel,
-  outil_4,
-  outil_7,
-  outil_9,
-  outil_12,
-  outil_11,
-  outil_6,
-  outil_10,
-  outil_8,
-  outil_5,
-  outil_3,
-  outil_1,
-  outil_2,
-} from '../../CompanyInfo/CompanyInfo';
 import { useOnePaiementHistorique } from '../../../Api/queriesPaiementHistorique';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import FactureHeader from '../Details/FactureHeader';
 
 const FacturePaiement = ({
   show_modal,
@@ -125,77 +100,7 @@ const FacturePaiement = ({
               }}
             >
               <CardBody>
-                <CardHeader
-                  style={{
-                    border: '2px solid rgba(100, 169, 238, 0.5)',
-                    borderRadius: '5px',
-                  }}
-                >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '30px',
-                      left: '30px',
-                    }}
-                    className='d-flex flex-column justify-content-center align-item-center'
-                  >
-                    <CardImg
-                      src={outil_2}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-                    <CardImg
-                      src={outil_1}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-
-                    <CardImg
-                      src={outil_3}
-                      style={{
-                        width: '50px',
-                      }}
-                    />
-                  </div>
-                  <CardTitle className='text-center '>
-                    <h3>Reçu de Paiement</h3>
-                    <h4 className='text-info fw-bold'>{companyName} </h4>
-                    <p
-                      style={{ margin: '15px', fontSize: '10px' }}
-                      className='text-info fw-bold'
-                    >
-                      {companyAdresse}
-                    </p>
-                    <p
-                      style={{ margin: '15px', fontSize: '10px' }}
-                      className='text-info fw-bold'
-                    >
-                      {companyTel}
-                    </p>
-                    <div className='d-flex  justify-content-center align-item-center'>
-                      <CardImg src={outil_5} style={{ width: '50px' }} />
-                      <CardImg src={outil_8} style={{ width: '50px' }} />
-                      <CardImg src={outil_10} style={{ width: '50px' }} />
-                      <CardImg src={outil_6} style={{ width: '50px' }} />
-                      <CardImg src={outil_11} style={{ width: '50px' }} />
-                      <CardImg src={outil_12} style={{ width: '50px' }} />
-                    </div>
-                  </CardTitle>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '30px',
-                      right: '30px',
-                    }}
-                    className='d-flex flex-column justify-content-center align-item-center'
-                  >
-                    <CardImg src={outil_4} style={{ width: '50px' }} />
-                    <CardImg src={outil_7} style={{ width: '50px' }} />
-                    <CardImg src={outil_9} style={{ width: '50px' }} />
-                  </div>
-                </CardHeader>
+                <FactureHeader />
 
                 <div
                   sm='12'

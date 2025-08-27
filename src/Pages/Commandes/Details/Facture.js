@@ -3,8 +3,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
-  CardImg,
   CardText,
   Col,
   Container,
@@ -24,37 +22,17 @@ import html2pdf from 'html2pdf.js';
 
 import PaiementsHistorique from '../PaiementsHistorique/PaiementsHistorique';
 import LivraisonHistorique from '../Livraison/ListeLivraisonHistorique';
-import {
-  companyAdresse,
-  companyName,
-  companyOwnerName,
-  companyServices,
-  companyTel,
-  outil_1,
-  outil_10,
-  outil_11,
-  outil_12,
-  outil_2,
-  outil_3,
-  outil_4,
-  outil_5,
-  outil_6,
-  outil_7,
-  outil_8,
-  outil_9,
-} from '../../CompanyInfo/CompanyInfo';
+
 import { useReactToPrint } from 'react-to-print';
 import { useRef } from 'react';
+import { companyName } from '../../CompanyInfo/CompanyInfo';
+import FactureHeader from './FactureHeader';
 
 export default function Facture() {
   const { id } = useParams();
   const { data: selectedCommande, isLoading, error } = useOneCommande(id);
   const contentRef = useRef();
   const reactToPrintFn = useReactToPrint({ contentRef });
-  // const reactToPrintFn = useReactToPrint({
-  //   content: () => contentRef.current,
-  //   documentTitle: 'Facture',
-  // });
 
   // ------------------------------------------
   // ------------------------------------------
@@ -111,6 +89,7 @@ export default function Facture() {
           <div ref={contentRef} className='mt-4'>
             {!error && !isLoading && (
               <Card
+                id='facture'
                 className='d-flex justify-content-center border border-info'
                 style={{
                   boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
@@ -121,81 +100,7 @@ export default function Facture() {
                 }}
               >
                 <CardBody>
-                  <CardHeader
-                    style={{
-                      border: '2px solid rgba(100, 169, 238, 0.5)',
-                      borderRadius: '5px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '30px',
-                        left: '30px',
-                      }}
-                      className='d-flex flex-column gap-3 justify-content-center align-item-center'
-                    >
-                      <CardImg
-                        src={outil_2}
-                        style={{
-                          width: '50px',
-                        }}
-                      />
-                      <CardImg
-                        src={outil_1}
-                        style={{
-                          width: '50px',
-                        }}
-                      />
-
-                      <CardImg
-                        src={outil_3}
-                        style={{
-                          width: '50px',
-                        }}
-                      />
-                    </div>
-                    <h2 className='text-center text-info '> {companyName} </h2>
-                    <h6
-                      style={{
-                        width: '50%',
-                      }}
-                      className='text-center text-light bg-info  px-2 py-1 rounded-3 mx-auto mb-2'
-                    >
-                      {' '}
-                      {companyOwnerName}{' '}
-                    </h6>
-                    <div className='text-info font-size-11 d-flex flex-column gap-0 justify-content-center align-item-center text-center mb-2'>
-                      <span>Tout Pour la Construction</span>
-                      <span>{companyServices}</span>
-                      <span>{companyAdresse}</span>
-                      <span>
-                        {' '}
-                        <strong className='font-size-12'>Info: </strong>{' '}
-                        {companyTel}
-                      </span>
-                    </div>
-                    <div className='d-flex gap-3  justify-content-center align-item-center'>
-                      <CardImg src={outil_5} style={{ width: '50px' }} />
-                      <CardImg src={outil_8} style={{ width: '50px' }} />
-                      <CardImg src={outil_10} style={{ width: '50px' }} />
-                      <CardImg src={outil_6} style={{ width: '50px' }} />
-                      <CardImg src={outil_11} style={{ width: '50px' }} />
-                      <CardImg src={outil_12} style={{ width: '50px' }} />
-                    </div>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '30px',
-                        right: '30px',
-                      }}
-                      className='d-flex gap-1 flex-column justify-content-center align-item-center'
-                    >
-                      <CardImg src={outil_4} style={{ width: '50px' }} />
-                      <CardImg src={outil_7} style={{ width: '50px' }} />
-                      <CardImg src={outil_9} style={{ width: '50px' }} />
-                    </div>
-                  </CardHeader>
+                  <FactureHeader />
                   <div className=' my-2 px-2 '>
                     <div className='d-flex justify-content-between align-item-center mt-2'>
                       <CardText>

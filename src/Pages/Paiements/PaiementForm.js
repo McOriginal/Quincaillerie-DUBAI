@@ -133,7 +133,6 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
       }, 10000);
     },
   });
-  console.log('Paiement to Edit: ', paiementToEdit);
 
   // Calcule de Somme Total en fonction de commande Sélectionné
   useEffect(() => {
