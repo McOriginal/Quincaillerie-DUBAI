@@ -107,6 +107,7 @@ export default function FactureListe() {
                     width: '583px',
                     margin: '20px auto',
                     position: 'relative',
+                    padding: '10px 0',
                   }}
                 >
                   <CardBody>

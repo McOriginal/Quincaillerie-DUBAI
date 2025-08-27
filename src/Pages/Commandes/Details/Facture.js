@@ -86,10 +86,9 @@ export default function Facture() {
           )}
           {isLoading && <LoadingSpiner />}
 
-          <div ref={contentRef} className='mt-4'>
+          <div ref={contentRef} className='mt-4 py-3' id='facture'>
             {!error && !isLoading && (
               <Card
-                id='facture'
                 className='d-flex justify-content-center border border-info'
                 style={{
                   boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',

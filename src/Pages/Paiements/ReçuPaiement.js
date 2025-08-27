@@ -81,8 +81,8 @@ const ReçuPaiement = ({ show_modal, tog_show_modal, selectedPaiementID }) => {
       <div className='modal-body' ref={contentRef}>
         {!error && !isLoading && (
           <div
-            className='mx-5 d-flex justify-content-center'
-            id={'reçupaiement'}
+            className='mx-5 py-3 d-flex justify-content-center'
+            id='reçupaiement'
           >
             <Card
               style={{
@@ -91,6 +91,7 @@ const ReçuPaiement = ({ show_modal, tog_show_modal, selectedPaiementID }) => {
                 width: '583px',
                 margin: '20px auto',
                 position: 'relative',
+                padding: '10px 0',
               }}
             >
               <CardBody>

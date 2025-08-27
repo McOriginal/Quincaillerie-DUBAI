@@ -84,12 +84,9 @@ const FacturePaiement = ({
       </div>
 
       {/* Modal Body */}
-      <div className='modal-body' ref={contentRef}>
+      <div className='modal-body' ref={contentRef} id='paiementHistorique'>
         {!error && !isLoading && (
-          <div
-            className='mx-5 d-flex justify-content-center'
-            id={'paiementHistorique'}
-          >
+          <div className='mx-5 d-flex justify-content-center'>
             <Card
               style={{
                 boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
