@@ -117,7 +117,9 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
               name='motifDepense'
               placeholder='Quel est la raison de ce depense'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
+              border-1
+              border-dark
               id='motifDepense'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -148,7 +150,8 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
               name='totalAmount'
               type='number'
               min={0}
-              className='form-control'
+              className='form-control border-1 border-dark'
+              placeholder='Somme total dépensée'
               id='totalAmount'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -175,7 +178,7 @@ const DepenseForm = ({ depenseToEdit, tog_form_modal }) => {
               name='dateOfDepense'
               type='date'
               max={new Date().toISOString().split('T')[0]}
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='dateOfDepense'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}

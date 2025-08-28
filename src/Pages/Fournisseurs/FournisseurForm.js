@@ -132,7 +132,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               name='firstName'
               placeholder='Entrez un nom...'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='firstName'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -157,7 +157,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               name='lastName'
               placeholder='Entrez un prénom...'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='lastName'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -184,7 +184,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               name='phoneNumber'
               placeholder='70 00 00 00'
               type='tel'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='phoneNumber'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -209,7 +209,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               name='adresse'
               placeholder='Kabala...'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.adresse || ''}
@@ -236,7 +236,7 @@ const FournisseurForm = ({ fournisseurToEdit, tog_form_modal }) => {
               name='emailAdresse'
               type='mail'
               placeholder='fournisseur@gmail.com'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='emailAdresse'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}

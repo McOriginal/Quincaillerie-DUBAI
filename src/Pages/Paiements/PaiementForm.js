@@ -191,7 +191,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               <Input
                 name='commande'
                 type='select'
-                className='form-control'
+                className='form-control border-1 border-dark'
                 id='commande'
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
@@ -232,7 +232,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               min={0}
               max={validation.values.totalAmount || 0}
               placeholder='Somme Payé'
-              className='form-control no-spinner'
+              className='form-control no-spinner border-1 border-dark'
               id='totalPaye'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -261,7 +261,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               min={0}
               max={validation.values.totalAmount || 0}
               placeholder='Réduction appliquée'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='reduction'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -289,7 +289,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
               name='paiementDate'
               type='date'
               max={new Date().toISOString().split('T')[0]} // Prevent future dates
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='paiementDate'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -315,7 +315,7 @@ const PaiementForm = ({ paiementToEdit, tog_form_modal }) => {
             <Input
               name='methode'
               type='select'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='methode'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}

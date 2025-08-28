@@ -143,7 +143,7 @@ const PaiementsHistoriqueForm = ({
                 selectedCommandeData?.paiementCommande?.totalPaye
               }
               placeholder='Somme Payé'
-              className='form-control no-spinner'
+              className='form-control no-spinner border-1 border-dark'
               id='amount'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -171,7 +171,7 @@ const PaiementsHistoriqueForm = ({
               name='paiementDate'
               type='date'
               max={new Date().toISOString().split('T')[0]} // Prevent future dates
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='paiementDate'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -199,7 +199,7 @@ const PaiementsHistoriqueForm = ({
             <Input
               name='methode'
               type='select'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='methode'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}

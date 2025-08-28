@@ -16,7 +16,6 @@ import {
   successMessageAlert,
 } from '../components/AlerteModal';
 import LoadingSpiner from '../components/LoadingSpiner';
-import { Link } from 'react-router-dom';
 import { useCreateProduit, useUpdateProduit } from '../../Api/queriesProduits';
 
 const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
@@ -117,7 +116,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               name='name'
               placeholder='Entrez le nom de produit'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='name'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -144,7 +143,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               placeholder='Stock initial disponible'
               type='number'
               min={0}
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='stock'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -169,7 +168,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               name='price'
               placeholder='Entrez les prix de produit'
               type='number'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='price'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -200,7 +199,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               name='imageUrl'
               placeholder='Veillez copiez une image en ligne.....'
               type='text'
-              className='form-control'
+              className='form-control border-1 border-dark'
               id='imageUrl'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -211,8 +210,8 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
                   : false
               }
             />
-            <Link
-              to={`https://www.google.com/search?sca_esv=36ac96dba69ebed1&sxsrf=AE3TifPFX9Ag6g7OHGRvbMuvmwEvx86_AA:1748385419157&q=${
+            <a
+              href={`https://www.google.com/search?sca_esv=36ac96dba69ebed1&sxsrf=AE3TifPFX9Ag6g7OHGRvbMuvmwEvx86_AA:1748385419157&q=${
                 validation.values.name || 'produit quincaillerie'
               }&udm=2&fbs=AIIjpHx4nJjfGojPVHhEACUHPiMQ_pbg5bWizQs3A_kIenjtcpTTqBUdyVgzq0c3_k8z34GAwf0jHaPgz38H1UrFi4JZ_wsbaZy5bcislJwEjK9aKAAgw7EDHBpnhJERxbAHVFJEPpsPJRN2Lf5NIxh4Y6E23jLfuJM1k2vNHWwZgjeinct1k1SwMNRPIUfhAwFDaWeIbf0gNPayotFQo8sw3bnjAaBRZQ&sa=X&ved=2ahUKEwj6otue28SNAxWJKvsDHURDCkcQtKgLegQIFRAB&biw=1280&bih=585&dpr=1.5`}
               target='blank'
@@ -220,10 +219,12 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
                 color: 'blue',
                 textAlign: 'center',
                 display: 'block',
+                margin: '10px 0',
+                textDecoration: 'underline #0000ff',
               }}
             >
               cliquer ici pour rechercher une image en ligne
-            </Link>
+            </a>
           </FormGroup>
         </Col>
       </Row>
