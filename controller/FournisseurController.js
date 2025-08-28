@@ -5,20 +5,13 @@ const textValidation = require('./regexValidation');
 // Créer un Fournisseur
 exports.createFournisseur = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      emailAdresse,
-      marchandise,
-      adresse,
-      ...resOfData
-    } = req.body;
+    const { firstName, lastName, emailAdresse, adresse, ...resOfData } =
+      req.body;
     // Changer les données en miniscule
     const lowerFirstName = firstName.toLowerCase();
     const lowerLastName = lastName.toLowerCase();
     const lowerAdresse = adresse.toLowerCase();
     const lowerEmail = emailAdresse.toLowerCase();
-    const lowerMarchandise = marchandise.toLowerCase();
 
     const phoneNumber = Number(req.body.phoneNumber);
 
@@ -26,8 +19,7 @@ exports.createFournisseur = async (req, res) => {
       !textValidation.stringValidator(lowerFirstName) ||
       !textValidation.stringValidator(lowerLastName) ||
       !textValidation.stringValidator(lowerAdresse) ||
-      (emailAdresse != '' && !textValidation.emailValidation(emailAdresse)) ||
-      !textValidation.stringValidator(marchandise)
+      (emailAdresse != '' && !textValidation.emailValidation(emailAdresse))
     ) {
       return res.status(400).json({
         status: 'error',
@@ -54,10 +46,13 @@ exports.createFournisseur = async (req, res) => {
       });
     }
 
-    if (req.body.phoneNumber.toString().length !== 8) {
+    if (
+      req.body.phoneNumber.toString().length < 8 ||
+      req.body.phoneNumber.toString().length > 16
+    ) {
       return res.status(409).json({
         status: 'error',
-        message: 'Le numéro de téléphone doit contenir exactement 8 chiffres',
+        message: 'Le numéro de téléphone doit être entre 8 et 15 chiffres',
       });
     }
 
@@ -67,7 +62,6 @@ exports.createFournisseur = async (req, res) => {
       lastName: lowerLastName,
       emailAdresse: lowerEmail,
       adresse: lowerAdresse,
-      marchandise: lowerMarchandise,
       ...resOfData,
     });
     return res.status(201).json(newFournisseur);
@@ -109,59 +103,67 @@ exports.getFournisseur = async (req, res) => {
 
 // Mettre à jour un Fournisseur
 exports.updateFournisseur = async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    emailAdresse,
-    adresse,
-    marchandise,
-    phoneNumber,
-    ...resOfData
-  } = req.body;
-  // Changer les données en miniscule
-  const lowerFirstName = firstName.toLowerCase();
-  const lowerLastName = lastName.toLowerCase();
-  const lowerAdresse = adresse.toLowerCase();
-  const lowerEmail = emailAdresse.toLowerCase();
-  const lowerMarchandise = marchandise.toLowerCase();
-
-  if (
-    !textValidation.stringValidator(lowerFirstName) ||
-    !textValidation.stringValidator(lowerLastName) ||
-    !textValidation.stringValidator(lowerAdresse) ||
-    !textValidation.emailValidation(emailAdresse)
-  ) {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Vous avez mal saisie les données',
-    });
-  }
-
-  // Conversion des numéros (protection contre les strings)
-  const phoneNum = Number(phoneNumber);
-
-  // Vérification des doublons (en excluant l'fournisseur actuel)
-  const existingFournisseur = await Fournisseur.findOne({
-    _id: { $ne: req.params.id }, // Exclure l'fournisseur actuel
-    $or: [{ emailAdresse: lowerEmail }, { phoneNumber: phoneNum }],
-  }).exec();
-
-  if (existingFournisseur) {
-    const duplicateFields = [];
-
-    if (existingFournisseur.emailAdresse === lowerEmail) {
-      duplicateFields.push('email');
-    }
-    if (existingFournisseur.phoneNumber === phoneNum) {
-      duplicateFields.push('téléphone');
-    }
-
-    return res.status(409).json({
-      status: 'error',
-      message: `Le champs: ${duplicateFields.join('\n ')} existe déjà`,
-    });
-  }
   try {
+    const {
+      firstName,
+      lastName,
+      emailAdresse,
+      adresse,
+      phoneNumber,
+      ...resOfData
+    } = req.body;
+    // Changer les données en miniscule
+    const lowerFirstName = firstName.toLowerCase();
+    const lowerLastName = lastName.toLowerCase();
+    const lowerAdresse = adresse.toLowerCase();
+    const lowerEmail = emailAdresse.toLowerCase();
+
+    if (
+      !textValidation.stringValidator(lowerFirstName) ||
+      !textValidation.stringValidator(lowerLastName) ||
+      !textValidation.stringValidator(lowerAdresse) ||
+      !textValidation.emailValidation(emailAdresse)
+    ) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Vous avez mal saisie les données',
+      });
+    }
+
+    // Conversion des numéros (protection contre les strings)
+    const phoneNum = Number(phoneNumber);
+
+    // Vérification des doublons (en excluant l'fournisseur actuel)
+    const existingFournisseur = await Fournisseur.findOne({
+      _id: { $ne: req.params.id }, // Exclure l'fournisseur actuel
+      $or: [{ emailAdresse: lowerEmail }, { phoneNumber: phoneNum }],
+    }).exec();
+
+    if (existingFournisseur) {
+      const duplicateFields = [];
+
+      if (existingFournisseur.emailAdresse === lowerEmail) {
+        duplicateFields.push('email');
+      }
+      if (existingFournisseur.phoneNumber === phoneNum) {
+        duplicateFields.push('téléphone');
+      }
+
+      return res.status(409).json({
+        status: 'error',
+        message: `Le champs: ${duplicateFields.join('\n ')} existe déjà`,
+      });
+    }
+
+    if (
+      req.body.phoneNumber.toString().length < 8 ||
+      req.body.phoneNumber.toString().length > 16
+    ) {
+      return res.status(409).json({
+        status: 'error',
+        message: 'Le numéro de téléphone doit être entre 8 et 15 chiffres',
+      });
+    }
     //  Si il n y a pas d'erreur on met ajour
     const updated = await Fournisseur.findByIdAndUpdate(
       req.params.id,
@@ -171,7 +173,6 @@ exports.updateFournisseur = async (req, res) => {
         emailAdresse: lowerEmail,
         adresse: lowerAdresse,
         phoneNumber: phoneNum,
-        marchandise: lowerMarchandise,
         ...resOfData,
       },
       {
