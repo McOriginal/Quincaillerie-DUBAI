@@ -87,7 +87,7 @@ export default function DevisListe() {
                 className='d-flex flex-column justify-content-center'
               >
                 {/* // Bouton */}
-                <Col className='col-sm-auto'>
+                <Col className='col-sm-auto mb-3'>
                   <div className='d-flex gap-4  justify-content-center align-items-center'>
                     <Button
                       color='info'
@@ -136,7 +136,7 @@ export default function DevisListe() {
                     boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
                     borderRadius: '15px',
                     width: '583px',
-                    margin: '20px auto',
+                    margin: '5px auto',
                     position: 'relative',
                   }}
                 >

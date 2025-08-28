@@ -92,7 +92,7 @@ const FacturePaiement = ({
                 boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
                 borderRadius: '15px',
                 width: '583px',
-                margin: '20px auto',
+                margin: '10px auto',
                 position: 'relative',
               }}
             >

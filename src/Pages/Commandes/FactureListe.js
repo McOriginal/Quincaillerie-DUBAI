@@ -78,7 +78,7 @@ export default function FactureListe() {
               >
                 {/* // Bouton */}
                 <Col className='col-sm-auto'>
-                  <div className='d-flex gap-4  justify-content-center align-items-center'>
+                  <div className='d-flex gap-4 mb-3  justify-content-center align-items-center'>
                     <Button
                       color='info'
                       className='add-btn'
@@ -107,7 +107,6 @@ export default function FactureListe() {
                     width: '583px',
                     margin: '20px auto',
                     position: 'relative',
-                    padding: '10px 0',
                   }}
                 >
                   <CardBody>
@@ -130,7 +129,7 @@ export default function FactureListe() {
                           <strong>Client: </strong>
                           {capitalizeWords(comm?.commande?.fullName)}{' '}
                         </CardText>
-                        <CardText>
+                        <CardText className='me-2'>
                           <strong>Tél: </strong>
                           {formatPhoneNumber(comm?.commande?.phoneNumber) ||
                             '-----'}

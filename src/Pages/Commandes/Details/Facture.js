@@ -61,7 +61,7 @@ export default function Facture() {
         <Container fluid>
           <Breadcrumbs title='Commande' breadcrumbItem='Factures' />
 
-          <Col className='col-sm-auto'>
+          <Col className='col-sm-auto mb-3'>
             <div className='d-flex gap-4  justify-content-center align-items-center'>
               <Button
                 color='info'
@@ -86,7 +86,7 @@ export default function Facture() {
           )}
           {isLoading && <LoadingSpiner />}
 
-          <div ref={contentRef} className='mt-4 py-3' id='facture'>
+          <div ref={contentRef} id='facture'>
             {!error && !isLoading && (
               <Card
                 className='d-flex justify-content-center border border-info'
@@ -94,7 +94,7 @@ export default function Facture() {
                   boxShadow: '0px 0px 10px rgba(100, 169, 238, 0.5)',
                   borderRadius: '15px',
                   width: '583px',
-                  margin: '20px auto',
+                  margin: '5px auto',
                   position: 'relative',
                 }}
               >

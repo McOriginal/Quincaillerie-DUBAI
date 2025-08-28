@@ -136,14 +136,14 @@ const Login = () => {
                         />
                         <h2
                           className=' mt-2 text-center'
-                          style={{ color: ' #e5beba' }}
+                          style={{ color: ' #b89794' }}
                         >
                           {companyName}
                         </h2>
                         <h6
                           style={{
                             color: ' #ffff',
-                            background: ' #e5beba',
+                            background: ' #b89794',
                             padding: '5px',
                             borderRadius: '5px',
                           }}

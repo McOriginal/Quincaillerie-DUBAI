@@ -35,8 +35,7 @@ export default function FournisseurListe() {
         .includes(search) ||
       fournisseur.emailAdresse.toLowerCase().includes(search) ||
       fournisseur.adresse.toLowerCase().includes(search) ||
-      fournisseur.phoneNumber.toString().includes(search) ||
-      fournisseur.marchandise.toLowerCase().includes(search)
+      fournisseur.phoneNumber.toString().includes(search)
     );
   });
 
@@ -157,9 +156,6 @@ export default function FournisseurListe() {
                                 <th className='sort' data-sort='email'>
                                   Prénom
                                 </th>
-                                <th className='sort' data-sort='genre'>
-                                  Genre
-                                </th>
 
                                 <th className='sort' data-sort='email'>
                                   Adresse Email
@@ -171,9 +167,7 @@ export default function FournisseurListe() {
                                 <th className='sort' data-sort='phone'>
                                   Téléphone
                                 </th>
-                                <th className='sort' data-sort='marchandise'>
-                                  Marchandise
-                                </th>
+
                                 <th className='sort' data-sort='action'>
                                   Action
                                 </th>
@@ -191,9 +185,6 @@ export default function FournisseurListe() {
                                     <td className='firstName'>
                                       {capitalizeWords(fournisseur.lastName)}{' '}
                                     </td>
-                                    <td className='gender'>
-                                      {fournisseur.gender}{' '}
-                                    </td>
 
                                     <td className='email'>
                                       {fournisseur.emailAdresse}{' '}
@@ -206,9 +197,6 @@ export default function FournisseurListe() {
                                       {formatPhoneNumber(
                                         fournisseur.phoneNumber
                                       )}
-                                    </td>
-                                    <td className='speciality'>
-                                      {capitalizeWords(fournisseur.marchandise)}{' '}
                                     </td>
 
                                     <td>
