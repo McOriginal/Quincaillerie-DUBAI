@@ -167,7 +167,7 @@ export default function DevisListe() {
                           {dev?.items.map((article) => (
                             <tr key={article._id}>
                               <td>{article?.quantity} </td>
-                              <td>
+                              <td className='text-wrap'>
                                 {capitalizeWords(article?.produit?.name)}{' '}
                               </td>
                               <td>{formatPrice(article?.customerPrice)} F </td>

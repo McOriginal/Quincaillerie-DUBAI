@@ -143,7 +143,7 @@ export default function FournisseurListe() {
                             id='fournisseurTable'
                           >
                             <thead className='table-light'>
-                              <tr>
+                              <tr className='text-center'>
                                 <th scope='col' style={{ width: '50px' }}>
                                   ID
                                 </th>
@@ -177,7 +177,10 @@ export default function FournisseurListe() {
                             <tbody className='list form-check-all text-center'>
                               {filteredFournisseurs?.map(
                                 (fournisseur, index) => (
-                                  <tr key={fournisseur._id}>
+                                  <tr
+                                    key={fournisseur._id}
+                                    className='text-center'
+                                  >
                                     <th scope='row'>{index + 1}</th>
                                     <td className='firstName'>
                                       {capitalizeWords(fournisseur.firstName)}{' '}
@@ -187,7 +190,7 @@ export default function FournisseurListe() {
                                     </td>
 
                                     <td className='email'>
-                                      {fournisseur.emailAdresse}{' '}
+                                      {fournisseur.emailAdresse || '-------'}{' '}
                                     </td>
 
                                     <td className='adresse'>
