@@ -184,28 +184,28 @@ export default function ProduitListe() {
                           </DropdownToggle>
                           <DropdownMenu className='dropdown-menu-end'>
                             <DropdownItem
-                              className='edit-item-btn'
+                              className='edit-item-btn  text-secondary'
                               onClick={() => {
                                 setFormModalTitle('Modifier les données');
                                 setProduitToUpdate(prod);
                                 tog_form_modal();
                               }}
                             >
-                              <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
+                              <i className='ri-pencil-fill align-bottom me-2 '></i>
                               Modifier
                             </DropdownItem>
                             <DropdownItem
-                              className='edit-item-btn'
+                              className='edit-item-btn text-warning'
                               onClick={() => {
                                 navigateToProduitApprovisonnement(prod?._id);
                               }}
                             >
-                              <i className='bx bx-analyse align-bottom me-2 text-muted'></i>
+                              <i className='bx bx-analyse align-bottom me-2 '></i>
                               Approvisonner
                             </DropdownItem>
 
                             <DropdownItem
-                              className='remove-item-btn'
+                              className='remove-item-btn text-danger '
                               onClick={() => {
                                 deleteButton(
                                   prod?._id,
@@ -215,8 +215,8 @@ export default function ProduitListe() {
                               }}
                             >
                               {' '}
-                              <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>{' '}
-                              Delete{' '}
+                              <i className='ri-delete-bin-fill align-bottom me-2 '></i>{' '}
+                              Supprimer{' '}
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>

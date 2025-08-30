@@ -29,6 +29,7 @@ import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAllProduit } from '../../Api/queriesProduits';
 import { useOneCommande, useUpdateCommande } from '../../Api/queriesCommande';
+import showToastAlert from '../components/ToasMessage';
 
 export default function UpdateCommande() {
   // State de navigation
@@ -95,6 +96,10 @@ export default function UpdateCommande() {
             : item
         );
       }
+
+      existingItem
+        ? showToastAlert('Quantité + 1')
+        : showToastAlert('Ajoute avec succès');
 
       //  Sinon on ajoute le produit avec la quantité (1)
       return [

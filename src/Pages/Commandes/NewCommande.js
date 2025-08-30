@@ -29,6 +29,7 @@ import defaultImg from './../../assets/images/no_image.png';
 import { useNavigate } from 'react-router-dom';
 import { useAllProduit } from '../../Api/queriesProduits';
 import { useCreateCommande } from '../../Api/queriesCommande';
+import showToastAlert from '../components/ToasMessage';
 
 export default function NewCommande() {
   // State de navigation
@@ -66,12 +67,19 @@ export default function NewCommande() {
 
       //  Si le produit existe on incrémente la quantité
       if (existingItem) {
-        return prevCart.map((item) =>
-          item.produit._id === produit._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+        prevCart.map((item) => {
+          // const itemId = item.produit._id === produit._id;
+          if (item.produit._id === produit._id) {
+            showToastAlert('Quantité + 1');
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
+        });
       }
+
+      existingItem
+        ? showToastAlert('Quantité + 1')
+        : showToastAlert('Ajoute avec succès');
 
       //  Sinon on ajoute le produit avec la quantité (1)
       return [
@@ -358,7 +366,7 @@ export default function NewCommande() {
               {/* Bouton */}
               {isSubmitting && <LoadingSpiner />}
 
-              {cartItems.length > 0 && !isSubmitting && (
+              {cartItems?.length > 0 && !isSubmitting && (
                 <div className='d-flex gap-4 my-3'>
                   <Button
                     color='warning'
@@ -392,15 +400,15 @@ export default function NewCommande() {
                     </div>
                   </CardTitle>
 
-                  {cartItems.length === 0 && (
+                  {cartItems?.length === 0 && (
                     <p className='text-center'>
                       Veuillez cliquez sur un produit pour l'ajouter dans le
                       panier
                     </p>
                   )}
-                  {cartItems.map((item) => (
+                  {cartItems?.map((item, index) => (
                     <div
-                      key={item.produit._id}
+                      key={index}
                       className='d-flex justify-content-between align-items-center mb-2 border-bottom border-black p-2 shadow shadow-md'
                     >
                       <div>
