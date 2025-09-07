@@ -39,7 +39,7 @@ const SidebarData = [
   },
 
   {
-    label: 'Commande',
+    label: 'Historique de Ventes',
     icon: 'fas fa-server',
     isHasArrow: true,
     url: '/commandes',
@@ -52,7 +52,7 @@ const SidebarData = [
   },
 
   {
-    label: 'Factures',
+    label: 'Historique de Factures',
     icon: 'fas fa-receipt',
     isHasArrow: true,
     url: '/factures',

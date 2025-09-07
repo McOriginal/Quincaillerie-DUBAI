@@ -57,17 +57,6 @@ const Header = (props) => {
             >
               <i className='fa fa-fw fa-bars' />
             </button>
-
-            <form className='app-search d-none d-lg-block'>
-              <div className='position-relative'>
-                <input
-                  type='text'
-                  className='form-control'
-                  placeholder='Search...'
-                />
-                <span className='ri-search-line'></span>
-              </div>
-            </form>
           </div>
 
           <div className='d-flex'>
@@ -90,25 +79,7 @@ const Header = (props) => {
                     : 'dropdown-menu dropdown-menu-lg dropdown-menu-end p-0'
                 }
                 aria-labelledby='page-header-search-dropdown'
-              >
-                <form className='p-3'>
-                  <div className='form-group m-0'>
-                    <div className='input-group'>
-                      <input
-                        type='text'
-                        className='form-control'
-                        placeholder='Search ...'
-                        aria-label="Recipient's username"
-                      />
-                      <div className='input-group-append'>
-                        <button className='btn btn-primary' type='submit'>
-                          <i className='ri-search-line' />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
+              ></div>
             </div>
 
             <div className='dropdown d-none d-lg-inline-block ms-1'>
