@@ -39,7 +39,7 @@ const SidebarData = [
   },
 
   {
-    label: 'Historique de Ventes',
+    label: 'Historique des Commandes',
     icon: 'fas fa-server',
     isHasArrow: true,
     url: '/commandes',
@@ -69,8 +69,9 @@ const SidebarData = [
     label: 'Comptabilité',
     icon: 'fas fa-euro-sign',
     subItem: [
-      { sublabel: 'Entrées (Paiement)', link: '/paiements' },
-      { sublabel: 'Sorties (Dépense)', link: '/depenses' },
+      { sublabel: 'Entrées / Paiement', link: '/paiements' },
+      { sublabel: 'Sorties / Dépense', link: '/depenses' },
+      { sublabel: 'Achat', link: '/achats' },
     ],
   },
 

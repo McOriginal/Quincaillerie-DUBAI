@@ -139,7 +139,29 @@ export default function Facture() {
                     </CardText>
                   </div>
                   {/* Bordure Séparateur */}
-
+                  {selectedCommande?.paiementCommande?.totalAmount -
+                    selectedCommande?.paiementCommande?.totalPaye ===
+                    0 &&
+                    selectedCommande?.commandeData?.statut === 'livré' && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: '20px',
+                          transform: 'rotate(-45deg)',
+                          opacity: '0.5',
+                          border: '1px dashed #003f9f',
+                          color: ' #003f9f',
+                          fontSize: ' 34px',
+                          fontweight: 'bold',
+                          width: '100%',
+                          textAlign: 'cente',
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <p> Payé et Livré</p>
+                      </div>
+                    )}
                   <div className='my-2 p-2'>
                     <table className='table align-middle table-nowrap table-hover table-bordered border-2 border-double border-info text-center'>
                       <thead>

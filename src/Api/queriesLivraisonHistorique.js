@@ -37,8 +37,10 @@ export const useOneLivraisonHistorique = (id) =>
     queryKey: ['livraison_historique', id],
     queryFn: () =>
       api
-        .get(`/livraison_historique/getAllLivraisonHistorique/:${id}`)
+        .get(`/livraison_historique/getOneLivraisonHistorique/${id}`)
         .then((res) => res.data),
+    enabled: Boolean(id),
+    staleTime: 1000 * 60 * 5,
   });
 
 // Supprimer une livraison_historique

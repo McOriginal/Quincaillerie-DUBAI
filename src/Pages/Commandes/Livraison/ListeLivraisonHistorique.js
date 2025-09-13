@@ -20,6 +20,8 @@ import {
   useDeleteLivraisonHistorique,
 } from '../../../Api/queriesLivraisonHistorique';
 import LivraisonHistoriqueForm from './LivraisonHistoriqueForm';
+import { connectedUserRole } from '../../Authentication/userInfos';
+import FactureLivraison from './FactureLivraison';
 
 export default function LivraisonHistorique({ id, commandeItems }) {
   const [form_modal, setForm_modal] = useState(false);
@@ -35,12 +37,21 @@ export default function LivraisonHistorique({ id, commandeItems }) {
     useDeleteLivraisonHistorique();
 
   const [livraisonToUpdate, setLivraisonToUpdate] = useState(null);
+  const [facture_modal, setFacture_modal] = useState(false);
+
+  const [selectedLivraison, setSelectedLivraison] = useState(null);
+  const [lastLivraisonDate, setLastLivraisonDate] = useState(null);
+
   const [formTitle, setFormTitle] = useState('');
   // Ouverture de Modal Form
   function tog_form_modal() {
     setForm_modal(!form_modal);
   }
 
+  // Ouverture de Modal Form
+  function tog_facture_modal() {
+    setFacture_modal(!facture_modal);
+  }
   // State de Recherche
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -85,6 +96,15 @@ export default function LivraisonHistorique({ id, commandeItems }) {
       <div className='page-content'>
         <Container fluid>
           {/* -------------------------- */}
+
+          <FactureLivraison
+            tog_show_modal={setFacture_modal}
+            show_modal={facture_modal}
+            selectedLivraisonHistoriqueCommandes={selectedLivraison}
+            delivredProducts={productDelivredResult}
+            lastDelivreDate={lastLivraisonDate}
+          />
+          {/* -------------------------- */}
           <FormModal
             form_modal={form_modal}
             setForm_modal={setForm_modal}
@@ -100,206 +120,230 @@ export default function LivraisonHistorique({ id, commandeItems }) {
           />
 
           {/* -------------------- */}
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <CardTitle className='text-center mb-4 mt-2 font-size-20 '>
-                  Historique de Livraison
-                </CardTitle>
-                <CardBody>
-                  <div id='Livraison HistoriqueList'>
-                    <Row className='g-4 mb-3 justify-content-between align-items-center'>
-                      <Col className='col-sm-auto'>
-                        <div className='d-flex gap-1'>
-                          <Button
-                            color='info'
-                            className='add-btn'
-                            id='create-btn'
-                            onClick={() => {
-                              setLivraisonToUpdate(null);
-                              setFormTitle('Ajouter une Livraison');
-                              tog_form_modal();
-                            }}
-                          >
-                            <i className='fas fa-plus align-center me-1'></i>{' '}
-                            Ajouter une Livraison
-                          </Button>
-                        </div>
-                      </Col>
 
-                      <Col className='col-sm-auto'>
-                        <div className='d-flex justify-content-sm-end gap-2'>
-                          {searchTerm !== '' && (
+          <Card></Card>
+          {commandeItems?.statut === 'livré' ? (
+            <div className='text-center text-success mt-4'>
+              <strong className='font-size-18'>Commande Livrée !</strong>
+            </div>
+          ) : (
+            <Row>
+              <Col lg={12}>
+                <Card>
+                  <CardTitle className='text-center mb-4 mt-2 font-size-20 '>
+                    Historique de Livraison
+                  </CardTitle>
+                  <CardBody>
+                    <div id='Livraison HistoriqueList'>
+                      <Button
+                        color='secondary'
+                        className='add-btn my-4 text-center d-flex justify-content-center align-items-center'
+                        id='create-btn'
+                        onClick={() => {
+                          setSelectedLivraison(
+                            livraisonHistoriqueData[0]?.commande
+                          );
+                          setLastLivraisonDate(livraisonHistoriqueData[0]);
+
+                          tog_facture_modal();
+                        }}
+                      >
+                        <i className='bx bx-show align-center me-1'></i> Reçue
+                        de Livraison
+                      </Button>
+                      <Row className='g-4 mb-3 justify-content-between align-items-center'>
+                        <Col className='col-sm-auto'>
+                          <div className='d-flex gap-1'>
                             <Button
-                              color='danger'
-                              onClick={() => setSearchTerm('')}
+                              color='info'
+                              className='add-btn'
+                              id='create-btn'
+                              onClick={() => {
+                                setLivraisonToUpdate(null);
+                                setFormTitle('Ajouter une Livraison');
+                                tog_form_modal();
+                              }}
                             >
-                              <i className='fas fa-window-close'></i>
+                              <i className='fas fa-plus align-center me-1'></i>{' '}
+                              Ajouter une Livraison
                             </Button>
-                          )}
-                          <div className='search-box me-4'>
-                            <input
-                              type='text'
-                              className='form-control search border border-dark rounded'
-                              placeholder='Rechercher...'
-                              value={searchTerm}
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                            />
                           </div>
-                        </div>
-                      </Col>
-                    </Row>
-                    <div className='col-sm-auto'>
-                      {commandeItems?.statut !== 'livré' &&
-                        productDelivredResult?.map((item) => (
-                          <div key={item?.produit} className='text-center my-2'>
-                            <p className='font-size-13'>
-                              <strong className='text-muted'>
-                                {capitalizeWords(item?.produit)}:{' '}
-                              </strong>
-                              <span className='text-success'>
-                                {' '}
-                                {formatPrice(item?.quantityLivree)}
-                              </span>{' '}
-                              Livré sur{' '}
-                              <span className='text-warning'>
-                                {' '}
-                                {formatPrice(item?.quantityCommandee)}
-                              </span>{' '}
-                              Commandé
-                              <span className='text-danger mx-3'>
-                                Restant: {formatPrice(item?.quantityRestante)}
-                              </span>{' '}
-                            </p>
-                          </div>
-                        ))}
-                    </div>
-                    {error && (
-                      <div className='text-danger text-center'>
-                        Erreur de chargement des données
-                      </div>
-                    )}
-                    {isLoading && <LoadingSpiner />}
+                        </Col>
 
-                    <div className='table-responsive table-card mt-3 mb-1'>
-                      {commandeItems?.statut === 'livré' && (
-                        <div className='text-center text-success mt-4'>
-                          <strong className='font-size-18'>
-                            Commande Livrée !
-                          </strong>
+                        <Col className='col-sm-auto'>
+                          <div className='d-flex justify-content-sm-end gap-2'>
+                            {searchTerm !== '' && (
+                              <Button
+                                color='danger'
+                                onClick={() => setSearchTerm('')}
+                              >
+                                <i className='fas fa-window-close'></i>
+                              </Button>
+                            )}
+                            <div className='search-box me-4'>
+                              <input
+                                type='text'
+                                className='form-control search border border-dark rounded'
+                                placeholder='Rechercher...'
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                      <div className='col-sm-auto'>
+                        {commandeItems?.statut !== 'livré' &&
+                          productDelivredResult?.map((item) => (
+                            <div
+                              key={item?.produit}
+                              className='text-center my-2'
+                            >
+                              <p className='font-size-13'>
+                                <strong className='text-muted'>
+                                  {capitalizeWords(item?.produit)}:{' '}
+                                </strong>
+                                <span className='text-success'>
+                                  {' '}
+                                  {formatPrice(item?.quantityLivree)}
+                                </span>{' '}
+                                Livré sur{' '}
+                                <span className='text-warning'>
+                                  {' '}
+                                  {formatPrice(item?.quantityCommandee)}
+                                </span>{' '}
+                                Commandé
+                                <span className='text-danger mx-3'>
+                                  Restant: {formatPrice(item?.quantityRestante)}
+                                </span>{' '}
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+                      {error && (
+                        <div className='text-danger text-center'>
+                          Erreur de chargement des données
                         </div>
                       )}
-                      {filterSearchLivraisonHistorique?.length === 0 &&
-                        commandeItems?.statut !== 'livré' && (
-                          <div className='text-center text-mutate mt-4'>
-                            <strong className='font-size-18'>
-                              Aucune Livraison !
-                            </strong>
-                          </div>
-                        )}
+                      {isLoading && <LoadingSpiner />}
 
-                      {/* Liste Historique de Paiement si ça existe */}
-                      {!error &&
-                        !isLoading &&
-                        filterSearchLivraisonHistorique?.length > 0 && (
-                          <table
-                            className='table align-middle  border-all border-2 border-secondary table-nowrap table-hover text-center'
-                            id='paiementTable'
-                          >
-                            <thead className='table-light'>
-                              <tr>
-                                <th
-                                  style={{ width: '50px' }}
-                                  data-sort='paiementDate'
-                                >
-                                  Date de Livraison
-                                </th>
+                      <div className='table-responsive table-card mt-3 mb-1'>
+                        {filterSearchLivraisonHistorique?.length === 0 &&
+                          commandeItems?.statut !== 'livré' && (
+                            <div className='text-center text-mutate mt-4'>
+                              <strong className='font-size-18'>
+                                Aucune Livraison !
+                              </strong>
+                            </div>
+                          )}
 
-                                <th
-                                  className='text-center'
-                                  data-sort='totaPayer'
-                                >
-                                  Produit
-                                </th>
+                        {/* Liste Historique de Paiement si ça existe */}
+                        {!error &&
+                          !isLoading &&
+                          filterSearchLivraisonHistorique?.length > 0 && (
+                            <table
+                              className='table align-middle  border-all border-2 border-secondary table-nowrap table-hover text-center'
+                              id='paiementTable'
+                            >
+                              <thead className='table-light'>
+                                <tr>
+                                  <th
+                                    style={{ width: '50px' }}
+                                    data-sort='paiementDate'
+                                  >
+                                    Date de Livraison
+                                  </th>
 
-                                <th>Quantité Livré</th>
-                                <th data-sort='action'>Action</th>
-                              </tr>
-                            </thead>
+                                  <th
+                                    className='text-center'
+                                    data-sort='totaPayer'
+                                  >
+                                    Produit
+                                  </th>
 
-                            <tbody className='list form-check-all'>
-                              {filterSearchLivraisonHistorique?.length > 0 &&
-                                filterSearchLivraisonHistorique?.map(
-                                  (livraison) => (
-                                    <tr key={livraison?._id}>
-                                      <th scope='row'>
-                                        {new Date(
-                                          livraison?.livraisonDate
-                                        ).toLocaleDateString()}
-                                      </th>
+                                  <th>Quantité Livré</th>
+                                  {connectedUserRole === 'admin' && (
+                                    <th data-sort='action'>Action</th>
+                                  )}
+                                </tr>
+                              </thead>
 
-                                      <td>
-                                        {capitalizeWords(livraison?.produit)}
-                                      </td>
+                              <tbody className='list form-check-all'>
+                                {filterSearchLivraisonHistorique?.length > 0 &&
+                                  filterSearchLivraisonHistorique?.map(
+                                    (livraison) => (
+                                      <tr key={livraison?._id}>
+                                        <th scope='row'>
+                                          {new Date(
+                                            livraison?.livraisonDate
+                                          ).toLocaleDateString()}
+                                        </th>
 
-                                      <td>
-                                        {formatPrice(livraison?.quantity)}
-                                      </td>
+                                        <td>
+                                          {capitalizeWords(livraison?.produit)}
+                                        </td>
 
-                                      <td>
-                                        {isDeleting && <LoadingSpiner />}
-                                        {!isDeleting && (
-                                          <div className='d-flex gap-2 justify-content-center alitgn-items-center'>
-                                            <div>
-                                              <button
-                                                className='btn btn-sm btn-warning show-item-btn'
-                                                data-bs-toggle='modal'
-                                                data-bs-target='#showModal'
-                                                onClick={() => {
-                                                  setLivraisonToUpdate(
-                                                    livraison
-                                                  );
-                                                  setFormTitle(
-                                                    'Modifier la Livraison'
-                                                  );
-                                                  tog_form_modal();
-                                                }}
-                                              >
-                                                <i className='bx bx-pencil align-center text-white'></i>
-                                              </button>
-                                            </div>
+                                        <td>
+                                          {formatPrice(livraison?.quantity)}
+                                        </td>
 
-                                            <div className='remove'>
-                                              <button
-                                                className='btn btn-sm btn-danger remove-item-btn'
-                                                data-bs-toggle='modal'
-                                                data-bs-target='#deleteRecordModal'
-                                                onClick={() => {
-                                                  deleteButton(
-                                                    livraison?._id,
-                                                    livraison?.produit,
-                                                    deleteLivraisonHistorique
-                                                  );
-                                                }}
-                                              >
-                                                <i className='ri-delete-bin-fill text-white'></i>
-                                              </button>
-                                            </div>
-                                          </div>
+                                        {connectedUserRole === 'admin' && (
+                                          <td>
+                                            {isDeleting && <LoadingSpiner />}
+                                            {!isDeleting && (
+                                              <div className='d-flex gap-2 justify-content-center alitgn-items-center'>
+                                                <div>
+                                                  <button
+                                                    className='btn btn-sm btn-warning show-item-btn'
+                                                    data-bs-toggle='modal'
+                                                    data-bs-target='#showModal'
+                                                    onClick={() => {
+                                                      setLivraisonToUpdate(
+                                                        livraison
+                                                      );
+                                                      setFormTitle(
+                                                        'Modifier la Livraison'
+                                                      );
+                                                      tog_form_modal();
+                                                    }}
+                                                  >
+                                                    <i className='bx bx-pencil align-center text-white'></i>
+                                                  </button>
+                                                </div>
+
+                                                <div className='remove'>
+                                                  <button
+                                                    className='btn btn-sm btn-danger remove-item-btn'
+                                                    data-bs-toggle='modal'
+                                                    data-bs-target='#deleteRecordModal'
+                                                    onClick={() => {
+                                                      deleteButton(
+                                                        livraison?._id,
+                                                        livraison?.produit,
+                                                        deleteLivraisonHistorique
+                                                      );
+                                                    }}
+                                                  >
+                                                    <i className='ri-delete-bin-fill text-white'></i>
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            )}
+                                          </td>
                                         )}
-                                      </td>
-                                    </tr>
-                                  )
-                                )}
-                            </tbody>
-                          </table>
-                        )}
+                                      </tr>
+                                    )
+                                  )}
+                              </tbody>
+                            </table>
+                          )}
+                      </div>
                     </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          )}
         </Container>
       </div>
     </React.Fragment>

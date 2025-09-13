@@ -70,7 +70,7 @@ const Login = () => {
 
           resetForm();
           // Afficher un message de succès ou une alerte
-          successMessageAlert('Connexion réussie !');
+          successMessageAlert('Vous êtes Conneté avec succès !');
           // Redirection vers le tableau de bord
           setTimeout(() => {
             try {

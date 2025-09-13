@@ -31,6 +31,7 @@ import NewCommande from '../Pages/Commandes/NewCommande.js';
 import DevisListe from '../Pages/Devis/DevisListe.js';
 import NewDevis from '../Pages/Devis/NewDevis.js';
 import UpdateDevis from '../Pages/Devis/UpdateDevis.js';
+import AchatListe from '../Pages/Achats/AchatListe.js';
 
 const sharedRoutes = [
   // Produit de la Boutique
@@ -84,6 +85,9 @@ const authProtectedRoutes = [
 
   // Dépenses
   { path: '/depenses', component: <DepenseListe /> },
+
+  // Achats
+  { path: '/achats', component: <AchatListe /> },
 
   // Profile
   { path: '/userprofile', component: <UserProfile /> },
