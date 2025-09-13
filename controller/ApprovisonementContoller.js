@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Approvisonement = require('../models/ApprovisonementModel');
 const Produit = require('../models/ProduitModel');
-const Depense = require('../models/DepenseModel');
 
 // Create a new approvisonement
 exports.createApprovisonement = async (req, res) => {
@@ -37,18 +36,6 @@ exports.createApprovisonement = async (req, res) => {
           quantity: formatQuantity,
           price: formatPrice,
           ...restOfData,
-        },
-      ],
-      { session }
-    );
-
-    // 3. Création de la dépense
-    await Depense.create(
-      [
-        {
-          totalAmount: formatPrice * formatQuantity,
-          motifDepense: `Approvisionnement de ${formatQuantity} unité(s) du produit ${updatedProduct.name}`,
-          dateOfDepense: approvisonement[0].deliveryDate,
         },
       ],
       { session }

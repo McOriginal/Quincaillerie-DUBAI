@@ -33,7 +33,7 @@ exports.getAllLivraisonHistorique = async (req, res) => {
     const livraison = await LivraisonHistorique.find({
       commande: req.params.id,
     })
-      .sort({ createdAt: -1 })
+      .sort({ livraisonDate: -1 })
       .populate('commande');
 
     // Vérfion pour chaque produit livré si la quantité livré correspond au quantité commandée alors on met à jours le status de commande par "Livré"
