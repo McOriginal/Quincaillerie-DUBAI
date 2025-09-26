@@ -8,7 +8,6 @@ exports.createProduit = async (req, res) => {
     const { name, price, stock, ...resOfData } = req.body;
 
     const lowerName = name.toLowerCase();
-    const formatStock = Number(stock);
     const formatPrice = Number(price);
 
     // Vérifier s'il existe déjà une matière avec ces critères
@@ -26,7 +25,7 @@ exports.createProduit = async (req, res) => {
     // Création de la matière
     const produit = await Produit.create({
       name: lowerName,
-      stock: formatStock,
+      stock: stock,
       price: formatPrice,
       ...resOfData,
     });
@@ -45,7 +44,6 @@ exports.updateProduit = async (req, res) => {
     const lowerName = name.toLowerCase();
     const formatPrice = Number(price);
     const formatAchatPrice = Number(achatPrice);
-    const formatStock = Number(stock);
 
     // Vérifier s'il existe déjà un produit avec ces critères
     const existingProduits = await Produit.findOne({
@@ -65,7 +63,7 @@ exports.updateProduit = async (req, res) => {
       req.params.id,
       {
         name: lowerName,
-        stock: formatStock,
+        stock: stock,
         price: formatPrice,
         achatPrice: formatAchatPrice,
         ...resOfData,
