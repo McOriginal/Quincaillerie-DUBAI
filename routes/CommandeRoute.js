@@ -12,7 +12,7 @@ router.get('/getAllCommandes', commandeController.getAllCommandes);
 router.get('/getOneCommande/:id', commandeController.getOneCommande);
 
 // PRoduit le plu Commandé
-router.post('/topProduitsCommande', commandeController.getTopProduits);
+router.get('/topProduitsCommande', commandeController.getTopProduits);
 
 router.put('/updateCommande/:commandeId', commandeController.updateCommande);
 
