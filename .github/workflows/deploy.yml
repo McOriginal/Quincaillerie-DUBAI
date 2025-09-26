@@ -1,0 +1,19 @@
+name: Dépoiement de Frontent
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Déploiement sur RENDER
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+
+      - name: Statut de Depoiement
+        run: echo "✨Déployé avec succès✅"

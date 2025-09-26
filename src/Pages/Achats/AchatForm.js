@@ -47,6 +47,7 @@ const AchatForm = ({ achatToEdit, tog_form_modal }) => {
       fournisseur: achatToEdit?.fournisseur?._id || undefined,
       article: achatToEdit?.article || '',
       articleTotalAmount: achatToEdit?.totalAmount || undefined,
+      quantity: achatToEdit?.quantity || undefined,
       totalAmountPaye: achatToEdit?.totalAmount || undefined,
       dateOfAchat: achatToEdit?.dateOfAchat?.substring(0, 10) || '',
     },
@@ -160,7 +161,7 @@ const AchatForm = ({ achatToEdit, tog_form_modal }) => {
         </Col>
       </Row>
       <Row>
-        <Col md='12'>
+        <Col md='6'>
           <FormGroup className='mb-3'>
             <Label htmlFor='articleTotalAmount'>Montant d'Achat</Label>
 
@@ -185,6 +186,33 @@ const AchatForm = ({ achatToEdit, tog_form_modal }) => {
             validation.errors.articleTotalAmount ? (
               <FormFeedback type='invalid'>
                 {validation.errors.articleTotalAmount}
+              </FormFeedback>
+            ) : null}
+          </FormGroup>
+        </Col>
+        <Col md='6'>
+          <FormGroup className='mb-3'>
+            <Label htmlFor='quantity'>Quantité Acheté</Label>
+
+            <Input
+              name='quantity'
+              type='number'
+              min={1}
+              className='form-control border-1 border-dark'
+              placeholder="Entrez la quantité total de l'achat"
+              id='quantity'
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.quantity || ''}
+              invalid={
+                validation.touched.quantity && validation.errors.quantity
+                  ? true
+                  : false
+              }
+            />
+            {validation.touched.quantity && validation.errors.quantity ? (
+              <FormFeedback type='invalid'>
+                {validation.errors.quantity}
               </FormFeedback>
             ) : null}
           </FormGroup>

@@ -131,6 +131,7 @@ export default function NewCommande() {
       phoneNumber: undefined || 0,
       adresse: 'non défini',
       statut: 'livré',
+      commandeDate: new Date().toISOString().substring(0, 10) || undefined,
     },
     validationSchema: Yup.object({
       fullName: Yup.string()
@@ -140,6 +141,7 @@ export default function NewCommande() {
       phoneNumber: Yup.number().required('Ce champ est obligatoire'),
       adresse: Yup.string().required('Ce champ est obligatoire'),
       statut: Yup.string().required('Ce champ est obligatoire'),
+      commandeDate: Yup.date().required('Ce champ est obligatoire'),
     }),
 
     onSubmit: (values, { resetForm }) => {
@@ -154,6 +156,7 @@ export default function NewCommande() {
         fullName: values.fullName,
         adresse: values.adresse,
         phoneNumber: values.phoneNumber,
+        commandeDate: values.commandeDate,
         statut: values.statut,
         // ------------------------
         // Les ARTICLES de panier
@@ -349,6 +352,34 @@ export default function NewCommande() {
                           validation.errors.statut ? (
                             <FormFeedback type='invalid'>
                               {validation.errors.statut}
+                            </FormFeedback>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                      <Col md='6'>
+                        <FormGroup className='mb-3'>
+                          <Label htmlFor='commandeDate'>Date de Commande</Label>
+                          <Input
+                            name='commandeDate'
+                            type='date'
+                            max={new Date().toISOString().split('T')[0]}
+                            className='form-control border-1 border-dark'
+                            id='commandeDate'
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.commandeDate || ''}
+                            invalid={
+                              validation.touched.commandeDate &&
+                              validation.errors.commandeDate
+                                ? true
+                                : false
+                            }
+                          />
+
+                          {validation.touched.commandeDate &&
+                          validation.errors.commandeDate ? (
+                            <FormFeedback type='invalid'>
+                              {validation.errors.commandeDate}
                             </FormFeedback>
                           ) : null}
                         </FormGroup>

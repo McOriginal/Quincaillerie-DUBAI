@@ -121,7 +121,9 @@ export default function CommandeListe() {
         comm?.adresse.toLowerCase().includes(search) ||
         comm?.items?.length.toString().includes(search) ||
         comm?.statut.toLowerCase().includes(search) ||
-        new Date(comm?.createdAt).toLocaleDateString('fr-FR').includes(search)
+        new Date(comm?.createdAt || comm?.commandeDate)
+          .toLocaleDateString('fr-FR')
+          .includes(search)
       );
     })
     ?.filter((item) => {
@@ -173,102 +175,115 @@ export default function CommandeListe() {
               <Card>
                 <CardBody>
                   <div id='commandeList'>
-                    <div className=' d-flex align-items-center gap-3 mb-4 justify-content-end'>
-                      {searchTerm !== '' && (
-                        <Button
-                          color='danger'
-                          onClick={() => setSearchTerm('')}
-                        >
-                          <i className='fas fa-window-close'></i>
-                        </Button>
-                      )}
-                      <div className='search-box me-2'>
-                        <input
-                          type='text'
-                          className='form-control search border border-dark rounded'
-                          placeholder='Rechercher...'
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                    <Col md={12}>
+                      <div className=' d-flex align-items-center gap-3 mb-4 justify-content-end'>
+                        {searchTerm !== '' && (
+                          <Button
+                            color='danger'
+                            onClick={() => setSearchTerm('')}
+                          >
+                            <i className='fas fa-window-close'></i>
+                          </Button>
+                        )}
+                        <div className='search-box me-2'>
+                          <input
+                            type='text'
+                            className='form-control search border border-dark rounded'
+                            placeholder='Rechercher...'
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className='d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4'>
-                      <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
-                        <label
-                          className='form-check-label'
-                          htmlFor='filterToday'
-                        >
-                          Commande d'Aujourd'hui
-                        </label>{' '}
-                        <input
-                          type='checkbox'
-                          className='form-check-input'
-                          id='filterToday'
-                          onChange={() => setTodayCommande(!todayCommande)}
-                        />
+                    </Col>
+                    <Col md={12}>
+                      <div className='d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4'>
+                        <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
+                          <label
+                            className='form-check-label'
+                            htmlFor='filterToday'
+                          >
+                            Commande d'Aujourd'hui
+                          </label>{' '}
+                          <input
+                            type='checkbox'
+                            className='form-check-input'
+                            id='filterToday'
+                            onChange={() => setTodayCommande(!todayCommande)}
+                          />
+                        </div>
+                        <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
+                          <label
+                            className='form-check-label'
+                            htmlFor='filterDelivredCommande'
+                          >
+                            Commandes En Cours
+                          </label>{' '}
+                          <input
+                            type='checkbox'
+                            className='form-check-input'
+                            id='filterDelivredCommande'
+                            onChange={() =>
+                              setDelivredCommande(!delivredCommande)
+                            }
+                          />
+                        </div>
+                        <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
+                          <label
+                            className='form-check-label'
+                            htmlFor='filterNotDelivredCommande'
+                          >
+                            Commande En Attente
+                          </label>
+                          <input
+                            type='checkbox'
+                            className='form-check-input'
+                            id='filterNotDelivredCommande'
+                            onChange={() =>
+                              setNotdelivredCommande(!notDelivredCommande)
+                            }
+                          />
+                        </div>
                       </div>
-                      <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
-                        <label
-                          className='form-check-label'
-                          htmlFor='filterDelivredCommande'
-                        >
-                          Commandes En Cours
-                        </label>{' '}
-                        <input
-                          type='checkbox'
-                          className='form-check-input'
-                          id='filterDelivredCommande'
-                          onChange={() =>
-                            setDelivredCommande(!delivredCommande)
-                          }
-                        />
-                      </div>
-                      <div className='d-flex flex-column justify-content-center align-items-center gap-2 text-warning'>
-                        <label
-                          className='form-check-label'
-                          htmlFor='filterNotDelivredCommande'
-                        >
+                    </Col>
+
+                    <Row className='mt-4 d-flex flex-wrap justify-content-center align-items-center'>
+                      <Col
+                        md={3}
+                        className='d-flex flex-column justify-content-center align-items-center'
+                      >
+                        <h6 className='text-center font-size-15 mt-2'>
+                          Commande Enregistrée
+                        </h6>
+                        <span className='text-info font-size-18'>
+                          {' '}
+                          {formatPrice(totalCommandesLivres)}
+                        </span>
+                      </Col>
+
+                      <Col
+                        md={3}
+                        className='d-flex flex-column justify-content-center align-items-center'
+                      >
+                        <h6 className='text-center font-size-15 mt-2'>
+                          Commande En Cours
+                        </h6>
+                        <span className='text-info font-size-18'>
+                          {' '}
+                          {formatPrice(commandesEnCours?.length)}
+                        </span>
+                      </Col>
+                      <Col
+                        md={3}
+                        className='d-flex flex-column justify-content-center align-items-center'
+                      >
+                        <h6 className='text-center font-size-15 mt-2'>
                           Commande En Attente
-                        </label>
-                        <input
-                          type='checkbox'
-                          className='form-check-input'
-                          id='filterNotDelivredCommande'
-                          onChange={() =>
-                            setNotdelivredCommande(!notDelivredCommande)
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    <Row className='mt-4'>
-                      <Col>
-                        <h6 className='text-center font-size-15 mt-2'>
-                          Commande Enregistrée:{' '}
-                          <span className='text-info font-size-18'>
-                            {' '}
-                            {formatPrice(totalCommandesLivres)}
-                          </span>
                         </h6>
-                      </Col>
-
-                      <Col>
-                        <h6 className='text-center font-size-15 mt-2'>
-                          Commande En Cours:{' '}
-                          <span className='text-info font-size-18'>
-                            {' '}
-                            {formatPrice(commandesEnCours?.length)}
-                          </span>
-                        </h6>
-                      </Col>
-                      <Col>
-                        <h6 className='text-center font-size-15 mt-2'>
-                          Commande En Attente:{' '}
-                          <span className='text-danger font-size-18'>
-                            {' '}
-                            {formatPrice(commandesEnAttente?.length)}
-                          </span>
-                        </h6>
+                        <span className='text-danger font-size-18'>
+                          {' '}
+                          {formatPrice(commandesEnAttente?.length)}
+                        </span>
                       </Col>
                     </Row>
 
@@ -335,7 +350,7 @@ export default function CommandeListe() {
                                   </th>
                                   <th>
                                     {new Date(
-                                      comm?.createdAt
+                                      comm?.commandeDate
                                     ).toLocaleDateString('fr-Fr', {
                                       weekday: 'short',
                                       year: 'numeric',

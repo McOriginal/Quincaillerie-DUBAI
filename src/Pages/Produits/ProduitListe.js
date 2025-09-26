@@ -223,6 +223,15 @@ export default function ProduitListe() {
                       </UncontrolledDropdown>
                     </div>
                   )}
+                  <CardTitle
+                    style={{
+                      position: 'absolute',
+                      top: '5%',
+                      left: '5%',
+                    }}
+                  >
+                    {formatPrice(prod?.achatPrice ?? 0)} F
+                  </CardTitle>
                   <img
                     className='img-fluid'
                     style={{
@@ -246,6 +255,7 @@ export default function ProduitListe() {
                     <CardTitle className='text-center'>
                       {formatPrice(prod?.price)} F
                     </CardTitle>
+
                     <CardTitle className='text-center'>
                       Stock:
                       {prod?.stock >= 10 ? (

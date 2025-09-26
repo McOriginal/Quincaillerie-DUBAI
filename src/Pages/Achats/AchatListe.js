@@ -34,6 +34,7 @@ export default function AchatListe() {
           .includes(search) ||
         (achat.fournisseur?.phoneNumber || '').toString().includes(search) ||
         achat.articleTotalAmount.toString().includes(search) ||
+        achat.quantity.toString().includes(search) ||
         achat.totalAmountPaye.toString().includes(search) ||
         new Date(achat.dateOfAchat)
           .toLocaleDateString('fr-Fr')
@@ -178,6 +179,7 @@ export default function AchatListe() {
 
                               <th>Article Acheté</th>
                               <th>Montant d'Achat</th>
+                              <th>Quantité Acheté</th>
                               <th>Montant Payé</th>
                               <th>Fournisseur</th>
                               <th>Contact Fournisseur</th>
@@ -203,6 +205,7 @@ export default function AchatListe() {
                                     {formatPrice(achat.articleTotalAmount)}
                                     {' F '}
                                   </td>
+                                  <td>{formatPrice(achat.quantity || 0)}</td>
                                   <td className='text-success'>
                                     {formatPrice(achat.totalAmountPaye)}
                                     {' F '}

@@ -17,21 +17,10 @@ const RapportByDay = () => {
   // Calcul de Nombre total de COMMANDE pour le mois sélectionné
   const totalCommandesNumber = useMemo(() => {
     return commandes?.commandesListe?.filter((item) => {
-      const date = new Date(item.createdAt).toISOString().slice(0, 10);
+      const date = new Date(item.commandeDate).toISOString().slice(0, 10);
       return date === selectedDate;
     }).length;
   }, [commandes, selectedDate]);
-
-  // Calcul le total de COMMANDE pour le mois sélectionné
-  // const totalCommandeAmount = useMemo(() => {
-  //   return commandes?.commandesListe?.reduce((acc, item) => {
-  //     const date = new Date(item.createdAt).toISOString().slice(0, 10);
-  //     if (date === selectedDate) {
-  //       acc += Number(item.totalAmount || 0);
-  //     }
-  //     return acc;
-  //   }, 0);
-  // }, [commandes, selectedDate]);
 
   // Calcul le total de somme Paiyés pour le mois sélectionné
   const totalPaiements = useMemo(() => {
@@ -57,20 +46,10 @@ const RapportByDay = () => {
   // Calcul le total de somme Impayés pour le mois sélectionné
   const totalAmountNotPayed = totalPaiements - totalPaiementsAmountPayed || 0;
 
-  // useMemo(() => {
-  //   return paiementsData?.reduce((acc, item) => {
-  //     const date = new Date(item?.paiementDate).toISOString().slice(0, 10);
-  //     if (date === selectedDate) {
-  //       acc += Number(item?.totalAmount - item?.totalPaye || 0);
-  //     }
-  //     return acc;
-  //   }, 0);
-  // }, [paiementsData, selectedDate]);
-
   // Calcul le total pour Dépenses pour le mois sélectionné
   const totalDepenses = useMemo(() => {
     return depenseData.reduce((acc, item) => {
-      const date = new Date(item.createdAt).toISOString().slice(0, 10);
+      const date = new Date(item.dateOfDepense).toISOString().slice(0, 10);
       if (date === selectedDate) {
         acc += Number(item.totalAmount || 0);
       }
@@ -78,10 +57,44 @@ const RapportByDay = () => {
     }, 0);
   }, [depenseData, selectedDate]);
 
-  // Calculer Le revenu (Bénéfice) pour le mois sélectionné
-  const profit = useMemo(() => {
-    return totalPaiements - totalDepenses;
-  }, [totalPaiements, totalDepenses]);
+  // ---------------------------------------------------
+  // ---------------------------------------------------
+  const { totalAchat, benefice } = useMemo(() => {
+    if (!paiementsData) {
+      return { totalAchat: 0, benefice: 0 };
+    }
+
+    // On filtre d'abord les paiements par date sélectionnée
+    const paiementsFiltres = paiementsData?.filter((item) => {
+      const date = new Date(item?.paiementDate).toISOString().slice(0, 10);
+      return date === selectedDate;
+    });
+
+    // let totalCA = 0; // chiffre d’affaires
+    let totalAchat = 0; // coût d’achat
+
+    paiementsFiltres.forEach((paiement) => {
+      paiement.commande?.items?.forEach((item) => {
+        const produit = item?.produit;
+        if (!produit) return;
+
+        // totalCA += (item?.customerPrice || 0) * (item?.quantity || 0);
+        totalAchat += (produit?.achatPrice || 0) * (item?.quantity || 0);
+      });
+    });
+
+    const total = totalPaiementsAmountPayed - totalAchat;
+    const benefice = total - totalDepenses;
+
+    return { totalAchat, benefice };
+  }, [paiementsData, selectedDate, totalPaiementsAmountPayed, totalDepenses]);
+
+  // --------------------------------
+  const paiementsFiltres = paiementsData?.filter((item) => {
+    const date = new Date(item?.paiementDate).toISOString().slice(0, 10);
+    return date === selectedDate;
+  });
+  console.log('FILT: ', paiementsFiltres);
 
   return (
     <React.Fragment>
@@ -132,11 +145,11 @@ const RapportByDay = () => {
               }}
             >
               {' '}
-              <h5 className='mb-1 text-white'>Bénéfice (Revenue)</h5>
-              {profit <= 0 ? (
-                <h4 className='text-danger'>{formatPrice(profit)} F</h4>
+              <h5 className='mb-1 text-white'>Bénéfice</h5>
+              {benefice <= 0 ? (
+                <h4 className='text-danger'>{formatPrice(benefice)} F</h4>
               ) : (
-                <h4 className='text-success'>{formatPrice(profit)} F</h4>
+                <h4 className='text-success'>{formatPrice(benefice)} F</h4>
               )}
             </Card>{' '}
           </Col>
@@ -155,7 +168,29 @@ const RapportByDay = () => {
               </h5>
 
               <p className='text-white'>
-                Entrées (Paiements)
+                Revenue (Chiffre d'Affaire)
+                <i
+                  className='fas fa-level-down-alt ms-2 fs-4'
+                  style={{ color: '#00f504' }}
+                ></i>
+              </p>
+            </Card>{' '}
+          </Col>
+          <Col sm={6} lg={4}>
+            <Card
+              style={{
+                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100px',
+              }}
+            >
+              <h5 className='my-1' style={{ color: ' #00f504' }}>
+                {formatPrice(totalAchat)} F
+              </h5>
+
+              <p className='text-white'>
+                Achat sur Revenue
                 <i
                   className='fas fa-level-down-alt ms-2 fs-4'
                   style={{ color: '#00f504' }}
@@ -179,7 +214,7 @@ const RapportByDay = () => {
                 {formatPrice(totalDepenses)} F
               </h4>
               <p className='text-white'>
-                Sortie (Dépenses)
+                Dépenses
                 <i
                   className='fas fa-level-up-alt ms-2 fs-4'
                   style={{ color: ' #901E3E' }}
@@ -205,7 +240,7 @@ const RapportByDay = () => {
             </Card>{' '}
           </Col>
 
-          <Col md={8}>
+          <Col sm={6} lg={4}>
             <Card
               style={{
                 background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
@@ -215,7 +250,7 @@ const RapportByDay = () => {
               }}
             >
               <h5 className='my-1 text-light'>
-                À Payé:{' '}
+                Somme À Payé:{' '}
                 <span className='text-light'>
                   {' '}
                   {formatPrice(totalPaiements)} F

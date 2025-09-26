@@ -32,6 +32,7 @@ import DevisListe from '../Pages/Devis/DevisListe.js';
 import NewDevis from '../Pages/Devis/NewDevis.js';
 import UpdateDevis from '../Pages/Devis/UpdateDevis.js';
 import AchatListe from '../Pages/Achats/AchatListe.js';
+import TopProduits from '../Pages/Produits/TopProduits.js';
 
 const sharedRoutes = [
   // Produit de la Boutique
@@ -62,6 +63,8 @@ const authProtectedRoutes = [
   },
   // Commandes
   { path: '/commandes', component: <CommandeListe /> },
+
+  { path: '/topProduit', component: <TopProduits /> },
 
   // Nouveau Devis
   { path: '/newDevis', component: <NewDevis /> },

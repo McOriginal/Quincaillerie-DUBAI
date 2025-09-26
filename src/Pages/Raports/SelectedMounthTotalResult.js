@@ -35,17 +35,6 @@ const SelectedMounthTotalResult = () => {
     }).length;
   }, [commandes, selectedMonth]);
 
-  // Calcul de somme total de Commandes pour le mois sélectionné
-  // const totalTraitementAmount = useMemo(() => {
-  //   return commandes?.commandesListe?.reduce((acc, item) => {
-  //     const date = new Date(item.createdAt);
-  //     if (!isNaN(date) && date.getMonth() === selectedMonth) {
-  //       acc += Number(item.totalAmount || 0);
-  //     }
-  //     return acc;
-  //   }, 0);
-  // }, [commandes, selectedMonth]);
-
   // Calcul de somme total de Paiements pour le mois sélectionné
   const totalPaiementsToPaye = useMemo(() => {
     return paiementsData?.reduce((acc, item) => {
@@ -84,9 +73,37 @@ const SelectedMounthTotalResult = () => {
   }, [depenseData, selectedMonth]);
 
   // Calculer Le revenu (Bénéfice) pour le mois sélectionné
-  const profit = useMemo(() => {
-    return totalPaiementsToPaye - totalDepenses;
-  }, [totalPaiementsToPaye, totalDepenses]);
+  // ---------------------------------------------------
+  // ---------------------------------------------------
+  const { totalAchat, benefice } = useMemo(() => {
+    if (!paiementsData) {
+      return { totalAchat: 0, benefice: 0 };
+    }
+
+    // On filtre d'abord les paiements par date sélectionnée
+    const paiementsFiltres = paiementsData?.filter((item) => {
+      const date = new Date(item?.paiementDate).getMonth();
+      return date === selectedMonth;
+    });
+
+    // let totalCA = 0; // chiffre d’affaires
+    let totalAchat = 0; // coût d’achat
+
+    paiementsFiltres.forEach((paiement) => {
+      paiement.commande?.items.forEach((item) => {
+        const produit = item?.produit;
+        if (!produit) return;
+
+        // totalCA += (item?.customerPrice || 0) * (item?.quantity || 0);
+        totalAchat += (produit?.achatPrice || 0) * (item?.quantity || 0);
+      });
+    });
+
+    const total = totalPaiementsToPaye - totalAchat;
+    const benefice = total - totalDepenses;
+
+    return { totalAchat, benefice };
+  }, [paiementsData, selectedMonth, totalPaiementsToPaye, totalDepenses]);
 
   return (
     <React.Fragment>
@@ -139,11 +156,11 @@ const SelectedMounthTotalResult = () => {
               }}
             >
               {' '}
-              <h5 className='mb-1 text-white'>Bénéfice (Revenue)</h5>
-              {profit <= 0 ? (
-                <h4 className='text-danger'>{formatPrice(profit)} F</h4>
+              <h5 className='mb-1 text-white'>Bénéfice </h5>
+              {benefice <= 0 ? (
+                <h4 className='text-danger'>{formatPrice(benefice)} F</h4>
               ) : (
-                <h4 className='text-success'>{formatPrice(profit)} F</h4>
+                <h4 className='text-success'>{formatPrice(benefice)} F</h4>
               )}
             </Card>{' '}
           </Col>
@@ -161,7 +178,28 @@ const SelectedMounthTotalResult = () => {
                 {formatPrice(totalPaiementsAmountPaye)} F
               </h4>
               <p className='text-white'>
-                Entrée (Paiements)
+                Revenue (Chiffre d'Affaire)
+                <i
+                  className='fas fa-level-down-alt ms-2 fs-4'
+                  style={{ color: '#B6F500' }}
+                ></i>
+              </p>
+            </Card>{' '}
+          </Col>
+          <Col sm={6} lg={4}>
+            <Card
+              style={{
+                background: 'linear-gradient(to top right ,#654ea3, #eaafc8)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100px',
+              }}
+            >
+              <h4 className='mb-1' style={{ color: '#B6F500' }}>
+                {formatPrice(totalAchat)} F
+              </h4>
+              <p className='text-white'>
+                Achat sur Revenue
                 <i
                   className='fas fa-level-down-alt ms-2 fs-4'
                   style={{ color: '#B6F500' }}
@@ -185,7 +223,7 @@ const SelectedMounthTotalResult = () => {
                 {formatPrice(totalDepenses)} F
               </h4>
               <p className='text-white'>
-                Sortie (Dépenses)
+                Dépenses
                 <i
                   className='fas fa-level-up-alt ms-2 fs-4'
                   style={{ color: '#901E3E' }}
@@ -218,14 +256,14 @@ const SelectedMounthTotalResult = () => {
               }}
             >
               <h5 className='my-1'>
-                À Payé:{' '}
+                Somme À Payé:{' '}
                 <span className='text-light ps-3'>
                   {' '}
                   {formatPrice(totalPaiementsToPaye)} F
                 </span>
               </h5>
               <h5 className='my-1'>
-                Payé:{' '}
+                Net Payé:{' '}
                 <span className='text-success ps-3'>
                   {' '}
                   {formatPrice(totalPaiementsAmountPaye)} F

@@ -33,6 +33,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
     initialValues: {
       name: produitToEdit?.name || '',
       price: produitToEdit?.price || undefined,
+      achatPrice: produitToEdit?.achatPrice || undefined,
       stock: produitToEdit?.stock || undefined,
       imageUrl: produitToEdit?.imageUrl || '',
     },
@@ -147,7 +148,7 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
               id='stock'
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.stock || ''}
+              value={validation.values.stock || 0}
               invalid={
                 validation.touched.stock && validation.errors.stock
                   ? true
@@ -162,6 +163,33 @@ const ProduitForm = ({ produitToEdit, tog_form_modal }) => {
           </FormGroup>
         </Col>
         <Col md='6'>
+          <FormGroup className='mb-3'>
+            <Label htmlFor='achatPrice'>Prix d'Achat</Label>
+            <Input
+              name='achatPrice'
+              placeholder='Entrez les prix de produit'
+              type='number'
+              className='form-control border-1 border-dark'
+              id='achatPrice'
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.achatPrice || ''}
+              invalid={
+                validation.touched.achatPrice && validation.errors.achatPrice
+                  ? true
+                  : false
+              }
+            />
+            {validation.touched.achatPrice && validation.errors.achatPrice ? (
+              <FormFeedback type='invalid'>
+                {validation.errors.achatPrice}
+              </FormFeedback>
+            ) : null}
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col md='12'>
           <FormGroup className='mb-3'>
             <Label htmlFor='price'>Prix de Vente</Label>
             <Input

@@ -10,6 +10,7 @@ import {
 import { AuthContext } from '../../../Auth/AuthContext';
 import { connectedUserName } from '../../../Pages/Authentication/userInfos';
 import { Link } from 'react-router-dom';
+import { capitalizeWords } from '../../../Pages/components/capitalizeFunction';
 
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
@@ -31,7 +32,7 @@ const ProfileMenu = (props) => {
           tag='button'
         >
           <span className='fw-bold font-size-11 text-warning d-inline-block ms-2 me-2'>
-            {connectedUserName}
+            {capitalizeWords(connectedUserName)}
           </span>
           <i className='mdi mdi-chevron-down d-xl-inline-block' />
         </DropdownToggle>
