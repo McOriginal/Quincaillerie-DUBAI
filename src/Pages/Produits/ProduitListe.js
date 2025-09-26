@@ -58,6 +58,15 @@ export default function ProduitListe() {
   function tog_form_modal() {
     setForm_modal(!form_modal);
   }
+
+  const totalProduitAchatPrice = filterSearchProduits?.reduce(
+    (acc, item) => (acc += item?.achatPrice * item?.stock),
+    0
+  );
+  // -----------------------------------------------------------------
+  // -----------------------------------------------------------------
+  // -----------------------------------------------------------------
+  // -----------------------------------------------------------------
   return (
     <React.Fragment>
       <div className='page-content'>
@@ -111,6 +120,13 @@ export default function ProduitListe() {
                           <span className='text-warning'>
                             {' '}
                             {produits?.length}{' '}
+                          </span>
+                        </p>
+                        <p className='text-center font-size-15 mt-2'>
+                          Valeur de Boutique:{' '}
+                          <span className='text-warning'>
+                            {' '}
+                            {formatPrice(totalProduitAchatPrice)}{' '}
                           </span>
                         </p>
                       </Col>

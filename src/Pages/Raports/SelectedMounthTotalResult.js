@@ -89,7 +89,7 @@ const SelectedMounthTotalResult = () => {
     // let totalCA = 0; // chiffre d’affaires
     let totalAchat = 0; // coût d’achat
 
-    paiementsFiltres.forEach((paiement) => {
+    paiementsFiltres?.forEach((paiement) => {
       paiement.commande?.items.forEach((item) => {
         const produit = item?.produit;
         if (!produit) return;
@@ -149,14 +149,14 @@ const SelectedMounthTotalResult = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #654ea3, #eaafc8)',
+                background: ' #0d1b2a',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
               {' '}
-              <h5 className='mb-1 text-white'>Bénéfice </h5>
+              <h5 className='mb-1 text-white'>Bénéfice</h5>
               {benefice <= 0 ? (
                 <h4 className='text-danger'>{formatPrice(benefice)} F</h4>
               ) : (
@@ -168,15 +168,12 @@ const SelectedMounthTotalResult = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right ,#654ea3, #eaafc8)',
+                background: ' #1b263b',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
-              <h4 className='mb-1' style={{ color: '#B6F500' }}>
-                {formatPrice(totalPaiementsAmountPaye)} F
-              </h4>
               <p className='text-white'>
                 Revenue (Chiffre d'Affaire)
                 <i
@@ -184,27 +181,24 @@ const SelectedMounthTotalResult = () => {
                   style={{ color: '#B6F500' }}
                 ></i>
               </p>
+              <h4 className='mb-1' style={{ color: ' #B6F500' }}>
+                {formatPrice(totalPaiementsAmountPaye)} F
+              </h4>
             </Card>{' '}
           </Col>
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right ,#654ea3, #eaafc8)',
+                background: ' #415a77',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
+              <p className='text-white'>Achat sur Revenue</p>
               <h4 className='mb-1' style={{ color: '#B6F500' }}>
                 {formatPrice(totalAchat)} F
               </h4>
-              <p className='text-white'>
-                Achat sur Revenue
-                <i
-                  className='fas fa-level-down-alt ms-2 fs-4'
-                  style={{ color: '#B6F500' }}
-                ></i>
-              </p>
             </Card>{' '}
           </Col>
 
@@ -212,16 +206,13 @@ const SelectedMounthTotalResult = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #654ea3, #eaafc8)',
+                background: ' #778da9',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
               {' '}
-              <h4 className='mb-1' style={{ color: '#901E3E' }}>
-                {formatPrice(totalDepenses)} F
-              </h4>
               <p className='text-white'>
                 Dépenses
                 <i
@@ -229,6 +220,9 @@ const SelectedMounthTotalResult = () => {
                   style={{ color: '#901E3E' }}
                 ></i>
               </p>
+              <h4 className='mb-1' style={{ color: '#901E3E' }}>
+                {formatPrice(totalDepenses)} F
+              </h4>
             </Card>{' '}
           </Col>
 
@@ -236,40 +230,41 @@ const SelectedMounthTotalResult = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right ,#654ea3, #eaafc8)',
+                background: ' #0077b6',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
-              <h5 className='text-warning my-1'>{totalCommandesNumber}</h5>
               <p className='text-white'>Commandes</p>
+              <h5 className='text-warning my-1'>{totalCommandesNumber}</h5>
             </Card>{' '}
           </Col>
-          <Col md={8}>
+          <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #654ea3, #eaafc8)',
+                background: ' #03045e',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: 'start',
                 height: '100px',
+                padding: '0px 10px',
               }}
             >
-              <h5 className='my-1'>
-                Somme À Payé:{' '}
+              <h5 className='my-1 text-light'>
+                Total À Payé:{' '}
                 <span className='text-light ps-3'>
                   {' '}
                   {formatPrice(totalPaiementsToPaye)} F
                 </span>
               </h5>
-              <h5 className='my-1'>
+              <h5 className='my-1 text-light'>
                 Net Payé:{' '}
                 <span className='text-success ps-3'>
                   {' '}
                   {formatPrice(totalPaiementsAmountPaye)} F
                 </span>
               </h5>
-              <h5 className='my-1'>
+              <h5 className='my-1 text-light'>
                 Impayé:{' '}
                 <span className='text-danger ps-3'>
                   {' '}

@@ -138,14 +138,14 @@ const RapportByDay = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                background: ' #250902',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
               {' '}
-              <h5 className='mb-1 text-white'>Bénéfice</h5>
+              <h5 className='mb-1 text-white'>Bénéfice </h5>
               {benefice <= 0 ? (
                 <h4 className='text-danger'>{formatPrice(benefice)} F</h4>
               ) : (
@@ -157,45 +157,37 @@ const RapportByDay = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                background: ' #38040e',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
-              <h5 className='my-1' style={{ color: ' #00f504' }}>
-                {formatPrice(totalPaiementsAmountPayed)} F
-              </h5>
-
               <p className='text-white'>
-                Revenue (Chiffre d'Affaire)
+                Revenue (Chiffre d'Affaires)
                 <i
                   className='fas fa-level-down-alt ms-2 fs-4'
                   style={{ color: '#00f504' }}
                 ></i>
               </p>
+              <h5 className='my-1' style={{ color: ' #00f504' }}>
+                {formatPrice(totalPaiementsAmountPayed)} F
+              </h5>
             </Card>{' '}
           </Col>
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                background: ' #640d14',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
               }}
             >
+              <p className='text-white'>Achat sur Revenue</p>
               <h5 className='my-1' style={{ color: ' #00f504' }}>
                 {formatPrice(totalAchat)} F
               </h5>
-
-              <p className='text-white'>
-                Achat sur Revenue
-                <i
-                  className='fas fa-level-down-alt ms-2 fs-4'
-                  style={{ color: '#00f504' }}
-                ></i>
-              </p>
             </Card>{' '}
           </Col>
 
@@ -203,7 +195,7 @@ const RapportByDay = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                background: ' #f58549',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
@@ -227,7 +219,7 @@ const RapportByDay = () => {
           <Col sm={6} lg={4}>
             <Card
               style={{
-                background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
+                background: ' #ad2831',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100px',
@@ -245,31 +237,32 @@ const RapportByDay = () => {
               style={{
                 background: 'linear-gradient(to top right , #3E0703, #cbcaa5)',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: 'start',
                 height: '100px',
+                padding: '0 10px',
               }}
             >
-              <h5 className='my-1 text-light'>
-                Somme À Payé:{' '}
+              <h6 className='my-1 text-light'>
+                Total À Payé:{' '}
                 <span className='text-light'>
                   {' '}
                   {formatPrice(totalPaiements)} F
                 </span>
-              </h5>
-              <h5 className='my-1 text-light'>
+              </h6>
+              <h6 className='my-1 text-light'>
                 Net Payé:{' '}
                 <span className='text-success'>
                   {' '}
                   {formatPrice(totalPaiementsAmountPayed)} F
                 </span>
-              </h5>
-              <h5 className='my-1 text-light'>
+              </h6>
+              <h6 className='my-1 text-light'>
                 Impayé:{' '}
                 <span className='text-danger'>
                   {' '}
                   {formatPrice(totalAmountNotPayed)} F
                 </span>
-              </h5>
+              </h6>
             </Card>
           </Col>
         </Row>
