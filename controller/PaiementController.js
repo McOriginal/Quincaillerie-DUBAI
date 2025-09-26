@@ -62,7 +62,10 @@ exports.getAllPaiements = async (req, res) => {
     const paiements = await Paiement.find()
       // Trie par date de création, du plus récent au plus ancien
       .sort({ createdAt: -1 })
-      .populate('commande');
+      .populate({
+        path: 'commande',
+        populate: { path: 'items.produit' },
+      });
     return res.status(200).json(paiements);
   } catch (err) {
     res.status(400).json({ status: 'error', message: err.message });

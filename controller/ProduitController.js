@@ -1,5 +1,6 @@
 const Produit = require('../models/ProduitModel');
 const Commande = require('../models/CommandeModel');
+const Approvisonnement = require('../models/ApprovisonementModel');
 
 // Enregistrer un Produit
 exports.createProduit = async (req, res) => {
@@ -39,10 +40,11 @@ exports.createProduit = async (req, res) => {
 // Mettre à jour une Produit
 exports.updateProduit = async (req, res) => {
   try {
-    const { name, price, stock, ...resOfData } = req.body;
+    const { name, price, achatPrice, stock, ...resOfData } = req.body;
 
     const lowerName = name.toLowerCase();
     const formatPrice = Number(price);
+    const formatAchatPrice = Number(achatPrice);
     const formatStock = Number(stock);
 
     // Vérifier s'il existe déjà un produit avec ces critères
@@ -65,6 +67,7 @@ exports.updateProduit = async (req, res) => {
         name: lowerName,
         stock: formatStock,
         price: formatPrice,
+        achatPrice: formatAchatPrice,
         ...resOfData,
       },
       {

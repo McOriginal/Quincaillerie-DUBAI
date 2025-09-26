@@ -6,6 +6,11 @@ const achatSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    quantity: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
     articleTotalAmount: {
       type: Number,
       required: true,

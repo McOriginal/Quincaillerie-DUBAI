@@ -40,6 +40,11 @@ const commandeSchema = new mongoose.Schema(
         },
       },
     ],
+    commandeDate: {
+      type: Date,
+      default: new Date(),
+      require: true,
+    },
     totalAmount: {
       type: Number,
       required: [true, "Le total de l'ordonnance est requis"],
